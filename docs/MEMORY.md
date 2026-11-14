@@ -31,10 +31,10 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ### P1 Engine (`feat/engine`)
 
-- Current task: (not started)
-- Done: (none)
+- Current task: E1 (`rng.ts`)
+- Done: Checkpoint 0 (E0.1–E0.6): scaffold with the exact dependencies and scripts from ARCHITECTURE 2, path alias `@/*`, Tailwind 3, Vitest jsdom; contracts copied verbatim; module stubs for engine, guidance, storage, app services; `docs/MEMORY.md` present. Gate: typecheck 0, 3/3 tests pass, build 0.
 - Blocked by: (none)
-- Notes:
+- Notes: scaffold stylesheet is `src/ui/styles/app.css` (Tailwind entry); P3 owns `src/ui/styles` from checkpoint 0 on. Installed majors within ARCHITECTURE 2: typescript 5.9.3, vite 5.4.21, vitest 2.1.9.
 
 ### P2 Guidance and platform (`feat/guidance`)
 
@@ -96,4 +96,4 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ## 11. Session log (one line per session: `YYYY-MM-DD HH:MM [role] what was done; what is next`)
 
-(none yet)
+2026-11-14 10:20 [P1] Checkpoint 0 merged: scaffold, contracts, stubs, gate green; next E1 rng, E2 simulator, E3 scenarios.
