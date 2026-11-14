@@ -8,7 +8,7 @@ import type {
 import { LIBRARY } from './library';
 
 // Wellbeing rules per ARCHITECTURE.md 7.6.
-// No scores, no labels such as "depressed" or "anxious". Notes are stored on device only.
+// No scores and no clinical labels. Notes are stored on device only.
 
 function urgentEscalation(): Escalation {
   return {
