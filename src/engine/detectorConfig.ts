@@ -29,7 +29,11 @@ export const PERSIST_WINDOW = 7;
 export const PERSIST_MIN_DAYS = 5;
 export const PERSIST_Z = 1.0;
 export const PERSIST_MIN_OBSERVED = 4;
-export const PATTERN_ONSET_GAP = 14;
+// Tuning-seed check 2026-11-14: gaps 14-21 were identical on seeds 1000-1099
+// (0.66 false alarms/100 days, 100/100 slow_drift detected, median 17 days).
+// 15 keeps changes that start about two weeks apart in one pattern; evaluation
+// was rerun once after this change.
+export const PATTERN_ONSET_GAP = 15;
 export const SPIKE_Z = 5;
 export const POOR_QUALITY_MISSING_FRACTION = 0.4;
 export const BASELINE_MIN_N = 14;
