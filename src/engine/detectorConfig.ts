@@ -20,14 +20,14 @@ export interface DetectorConfig {
   radiationFlagRatio: number;
 }
 
-/* Start values from ARCHITECTURE.md 6.6; the 6.9 tuning run may change them. */
-export const CUSUM_K = 0.5;
+/* Frozen 2026-11-14 by the 6.9 tuning protocol on seeds 1000-1099 only. */
+export const CUSUM_K = 1.25;
 export const H_WATCH = 3;
-export const H_FLAG = 6;
+export const H_FLAG = 8;
 export const Z_CLAMP = 6;
 export const PERSIST_WINDOW = 7;
-export const PERSIST_MIN_DAYS = 4;
-export const PERSIST_Z = 0.75;
+export const PERSIST_MIN_DAYS = 5;
+export const PERSIST_Z = 1.0;
 export const PERSIST_MIN_OBSERVED = 4;
 export const PATTERN_ONSET_GAP = 14;
 export const SPIKE_Z = 5;
