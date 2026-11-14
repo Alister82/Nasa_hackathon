@@ -45,10 +45,43 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ### P3 Interface (`feat/ui`)
 
-- Current task: (not started)
-- Done: (none)
+- Current task: Feature freeze and Checkpoint 3 merge prep (U1–U17 complete)
+- Done:
+  - U1: Tokens (`tokens.css`), Tailwind config colors, Atkinson Hyperlegible font, visible focus rings, reduced motion, `StatusChip`, inline SVG icons, `DisclaimerBanner`, `OfflineBadge`.
+  - U2: Mocks per CONTRACTS section 5 (`mockDataset.ts`, `mockAnalysis.ts`, `mockCards.ts`) and `services.ts` facade.
+  - U3: App shell (`HashRouter`), `TopBar` (crew picker, mission pill, persistent "Urgent help" button), `BottomNav`, `ErrorBoundary`.
+  - U4: `BodyMap` with exact 9 SVG shapes, keyboard navigation, selection outline, legend, and `DomainRow`.
+  - U5: `TimelineScrubber` (180 days, markers for flagged days, keyboard navigation, demo runner) and `demo.ts`.
+  - U6: `AlertCardView` procedure-sheet layout (numbered Do now, evidence "Show days" toggle, supply fallback alternative, sources).
+  - U7: `TodayPage` assembly (2-column desktop, single-column mobile).
+  - U8: `IndicatorChart` (Recharts, nulls as gaps, dashed expected line, baseline band) and `DomainDetailPage`.
+  - U9: `LogPage` with `MeasurementForm`, plausible range check, `classifyValue` chips, and urgent callouts.
+  - U10: `CheckInPage` with `CheckInForm` (3 sliders, note max 500 chars), urgent help trigger, 30-day trend chart, and `/urgent` screen with exact copy.
+  - U11: `MissionPage` with `MissionPicker` and `SupplyChecklist`.
+  - U12: Integration: `USE_MOCKS = false`, wired to real `engine`, `guidance`, and `storage` modules; memoized analysis; end-to-end demo story verified.
+  - U13: `LabPage` with `SystemsComparison` table and shared timeline, injection shortcuts.
+  - U14: `ProofPage` with `ProofChart`, numerical metrics table reading `./data/results.json`, graceful empty state.
+  - U15: `JournalPage` (IndexedDB newest first) and `AboutPage` (NASA risk coverage map from ARCHITECTURE 7.7, sources list).
+  - U16: Polish and accessibility audit (44px touch targets, Atkinson Hyperlegible font, visible focus rings, reduced motion, no color-only signals).
+  - U17: UI test suites (`u1_u2.test.tsx`, `u3.test.tsx`, `u4_u7.test.tsx`, `integration.test.tsx`, `u13_u17.test.tsx`) — all 22 test files, 289 tests passing, 0 failures; typecheck and build pass cleanly.
 - Blocked by: (none)
+- Component tree:
+  - App (Shell with TopBar, DisclaimerBanner, Navigation, ErrorBoundary)
+    - TopBar (AppName, CrewPicker, MissionPill, OfflineBadge, UrgentHelpButton)
+    - DisclaimerBanner (DISCLAIMER_BANNER text)
+    - Routes:
+      - / (Today): TimelineScrubber, BodyMap, DomainRow list, WhatNeedsAttention (AlertCardView list), EmptyState
+      - /domain/:domainId: DomainHeader, StatusChip, IndicatorChart list, MeasurementHelp expander, DomainAlertCards, CheckInTrend (for behavioral)
+      - /log: MeasurementForm, StatusChip (via classifyValue), PromptStrip, UrgentCallout
+      - /checkin: CheckInForm (3 sliders + note), UrgentHelpButton, CheckInResultCard, 30-day TrendChart
+      - /urgent: UrgentHelpScreen (exact copy, deep_space conditional line)
+      - /lab: ScenarioLabControls, SystemsComparison timeline/table, AlertCards for viewed day
+      - /proof: ProofChart (Recharts), ScenarioSummaryTable, Methodology note
+      - /mission: MissionPicker, SupplyChecklist
+      - /journal: LogEntryList (newest first), AddJournalForm
+      - /about: ProjectOverview, NASA Risk Coverage Map (ARCHITECTURE 7.7), SourcesList
 - Notes:
+  - All screens implemented against exact DESIGN.md requirements, safety copy strings, and contrast requirements. No clinical diagnostic claims or forbidden words. Tested end to end.
 
 ## 4. Open questions (add `[role] YYYY-MM-DD HH:MM question`; humans answer inline and mark RESOLVED)
 
@@ -105,3 +138,4 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 2026-11-14 10:20 [P1] Checkpoint 0 merged: scaffold, contracts, stubs, gate green; next E1 rng, E2 simulator, E3 scenarios.
 2026-11-14 10:45 [P1] E1–E9: engine, systems, metrics, tuned and frozen constants, harness written; next checkpoint 2 merge and E10 performance.
 2026-11-14 10:55 [P1] Checkpoint 2 merged (tag `checkpoint-2`): frozen detector config `CUSUM_K` 1.25 / `H_FLAG` 8 / `PERSIST_Z` 1.0 / `PERSIST_MIN_DAYS` 5, evaluation results on seeds 1–100 committed; E10 measured 6.1 ms. Next: E11 support, no open requests.
+2026-11-14 12:20 [P3] Completed U1–U17: tokens, shell, body map, scrubber, alert cards, domain detail, log, checkin, urgent, lab, proof, mission, journal, about, real integration (USE_MOCKS=false), accessibility, and all tests passing (22 files, 289 tests, 100% green); build clean.

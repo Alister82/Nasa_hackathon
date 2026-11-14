@@ -444,11 +444,9 @@ function buildCardFromFinding(
         if (!libNextMeasurements.includes(nm)) libNextMeasurements.push(nm);
       }
     }
-    if (finding.kind !== 'multi_signal_pattern') {
-      const firstEntry = libEntries[0];
-      if (firstEntry) {
-        libActions = resolveActions(firstEntry.actions, ctx);
-      }
+    const firstEntry = libEntries[0];
+    if (firstEntry) {
+      libActions = resolveActions(firstEntry.actions, ctx);
     }
   }
 

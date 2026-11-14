@@ -113,3 +113,4 @@ export const mockCards: AlertCard[] = [
     sourceIds: ['src_hrp_risks', 'src_general_clinical'],
   },
 ];
+

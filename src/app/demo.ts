@@ -12,3 +12,4 @@ export interface DemoConfig {
 export function getDemoStoryConfig(): DemoConfig {
   return DEMO_STORY;
 }
+

@@ -39,3 +39,4 @@ export function OfflineBadge(_props: OfflineBadgeProps) {
     </span>
   );
 }
+

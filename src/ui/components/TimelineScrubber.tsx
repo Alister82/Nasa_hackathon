@@ -135,3 +135,4 @@ export function TimelineScrubber({
     </div>
   );
 }
+

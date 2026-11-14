@@ -102,15 +102,14 @@ describe('U2: Mock contract invariants', () => {
     }
   });
 
-  it('services facade returns mocks when USE_MOCKS is true', async () => {
-    expect(USE_MOCKS).toBe(true);
+  it('services facade returns valid dataset and analysis', async () => {
     const ds = await getDataset('crew-1');
-    expect(ds).toBe(mockDataset);
+    expect(ds.records.length).toBe(210);
 
     const analysis = getAnalysis(ds, 120);
     expect(analysis.upToDay).toBe(120);
 
     const cards = getCards(analysis, { setting: 'deep_space', supplies: { bp_cuff: true, thermometer: true, glucometer: true, wrist_hr_monitor: true, exercise_equipment: true, sleep_mask: true } });
-    expect(cards).toHaveLength(2);
+    expect(cards.length).toBeGreaterThan(0);
   });
 });

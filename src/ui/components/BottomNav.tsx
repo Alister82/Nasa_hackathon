@@ -116,3 +116,4 @@ export function BottomNav({ onResetData }: BottomNavProps) {
     </>
   );
 }
+

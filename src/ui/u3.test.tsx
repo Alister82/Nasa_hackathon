@@ -55,3 +55,4 @@ describe('U3: ErrorBoundary', () => {
     expect(screen.getByRole('link', { name: 'Back to Today' })).toBeInTheDocument();
   });
 });
+

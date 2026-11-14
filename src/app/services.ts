@@ -5,26 +5,63 @@ import type {
   MissionContext,
   ResultsFile,
   ScenarioId,
+  ScenarioConfig,
 } from '@/contracts/types';
+import { DEFAULT_CREW, DEFAULT_MISSION_SETTING } from '@/contracts/constants';
+import { generateScenario, mergeEntries, analyze } from '@/engine';
+import { buildAlertCards } from '@/guidance';
+import { loadEntries } from '@/storage';
 import { mockDataset } from '@/mocks/mockDataset';
 import { mockAnalysis } from '@/mocks/mockAnalysis';
 import { mockCards } from '@/mocks/mockCards';
 
-export const USE_MOCKS = true;
+// Checkpoint 2 integration flag
+export const USE_MOCKS = false;
 
-// Simple memoization caches
+// Memoization caches
+const datasetCache = new Map<string, CrewDataset>();
 const analysisCache = new Map<string, AnalysisResult>();
 
 export async function getDataset(
-  _crewId: string,
-  _scenarioId?: ScenarioId,
-  _seed?: number,
+  crewId: string,
+  scenarioId?: ScenarioId,
+  seed?: number,
 ): Promise<CrewDataset> {
   if (USE_MOCKS) {
     return mockDataset;
   }
-  // Integration will connect to engine and storage
-  return mockDataset;
+
+  const defaultCrewInfo = DEFAULT_CREW.find((c) => c.crewId === crewId) ?? DEFAULT_CREW[0]!;
+  const usedScenario = scenarioId ?? defaultCrewInfo.scenarioId;
+  const usedSeed = seed ?? defaultCrewInfo.seed;
+  const usedSetting = DEFAULT_MISSION_SETTING;
+
+  const config: ScenarioConfig = {
+    crewId,
+    crewName: defaultCrewInfo.crewName,
+    scenarioId: usedScenario,
+    seed: usedSeed,
+    missionSetting: usedSetting,
+  };
+
+  const cacheKey = `${crewId}:${usedScenario}:${usedSeed}:${usedSetting}`;
+  let baseDs = datasetCache.get(cacheKey);
+  if (!baseDs) {
+    baseDs = generateScenario(config);
+    datasetCache.set(cacheKey, baseDs);
+  }
+
+  // Load manual entries from storage and merge
+  try {
+    const entries = await loadEntries(crewId);
+    if (entries && entries.length > 0) {
+      return mergeEntries(baseDs, entries);
+    }
+  } catch {
+    // If storage unavailable, return base dataset
+  }
+
+  return baseDs;
 }
 
 export function getAnalysis(dataset: CrewDataset, viewDay: number): AnalysisResult {
@@ -35,22 +72,25 @@ export function getAnalysis(dataset: CrewDataset, viewDay: number): AnalysisResu
       upToDay: viewDay,
     };
   }
-  const key = `${dataset.crewId}:${dataset.seed}:${dataset.scenarioId}:${viewDay}`;
-  const cached = analysisCache.get(key);
+
+  const cacheKey = `${dataset.crewId}:${dataset.scenarioId}:${dataset.seed}:${dataset.missionSetting}:${viewDay}`;
+  const cached = analysisCache.get(cacheKey);
   if (cached) return cached;
 
-  // Real engine analysis will be called when USE_MOCKS is false
-  return mockAnalysis;
+  const result = analyze(dataset, viewDay);
+  analysisCache.set(cacheKey, result);
+  return result;
 }
 
-export function getCards(analysis: AnalysisResult, _ctx: MissionContext): AlertCard[] {
+export function getCards(analysis: AnalysisResult, ctx: MissionContext): AlertCard[] {
   if (USE_MOCKS) {
     return mockCards.map((c) => ({
       ...c,
       day: analysis.upToDay,
     }));
   }
-  return mockCards;
+
+  return buildAlertCards(analysis, ctx);
 }
 
 export async function loadResults(): Promise<ResultsFile | null> {

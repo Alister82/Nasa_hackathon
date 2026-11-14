@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import type { DomainId, MissionContext } from '@/contracts/types';
+import type { DomainId, MissionContext, AnalysisResult } from '@/contracts/types';
 import { DOMAIN_ORDER } from '@/contracts/indicators';
 import { DEFAULT_VIEW_DAY } from '@/contracts/constants';
 import { BodyMap } from '@/ui/components/BodyMap';
@@ -8,8 +8,9 @@ import { DomainRow } from '@/ui/components/DomainRow';
 import { TimelineScrubber, type ScrubberMarker } from '@/ui/components/TimelineScrubber';
 import { AlertCardView } from '@/ui/components/AlertCardView';
 import { getDataset, getAnalysis, getCards } from '@/app/services';
+import { generateScenario } from '@/engine';
 import { getDemoStoryConfig } from '@/app/demo';
-import { mockSources } from '@/mocks/mockSources';
+import { SOURCES } from '@/guidance';
 
 interface TodayPageProps {
   initialDay?: number;
@@ -33,23 +34,16 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
     },
   };
 
-  const [analysis, setAnalysis] = useState(() => {
-    const ds = getDemoStoryConfig();
-    return getAnalysis(
-      {
-        crewId: ds.crewId,
-        crewName: 'Crew 1',
-        seed: ds.seed,
-        scenarioId: ds.scenarioId,
-        missionSetting: ds.missionSetting,
-        preflightDays: 30,
-        missionDays: 180,
-        records: [],
-        groundTruth: [],
-        synthetic: true,
-      },
-      viewDay,
-    );
+  const [analysis, setAnalysis] = useState<AnalysisResult>(() => {
+    const demo = getDemoStoryConfig();
+    const ds = generateScenario({
+      crewId: demo.crewId,
+      crewName: 'Crew 1',
+      scenarioId: demo.scenarioId,
+      seed: demo.seed,
+      missionSetting: demo.missionSetting,
+    });
+    return getAnalysis(ds, initialDay);
   });
 
   useEffect(() => {
@@ -74,13 +68,23 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
     label: f.kind.replace('_', ' '),
   }));
 
+  const hrVal = analysis.indicators.heart_rate?.lastValue ?? 64;
+  const bpSysVal = analysis.indicators.bp_sys?.lastValue ?? 116;
+  const sleepVal = analysis.indicators.sleep_hours?.lastValue ?? 6.8;
+  const moodVal = analysis.indicators.mood?.lastValue ?? 3.8;
+  const stressVal = analysis.indicators.stress?.lastValue ?? 2.2;
+  const tempVal = analysis.indicators.body_temp?.lastValue ?? 36.6;
+  const glucoseVal = analysis.indicators.glucose?.lastValue ?? 90;
+  const radVal = analysis.indicators.radiation_dose?.lastValue ?? 1.8;
+  const exVal = analysis.indicators.exercise_minutes?.lastValue ?? 120;
+
   const summaries: Record<DomainId, string> = {
-    cardiovascular: 'Heart rate 73 bpm, systolic BP 124 mmHg',
-    sleep_recovery: 'Sleep 5.6 hrs, down from 6.8 hrs baseline',
-    physical_performance: 'Exercise adherence 95 min, steady',
-    behavioral: 'Mood score 2.9, stress score 3.1',
-    metabolic_general: 'Temperature 36.6 °C, glucose 90 mg/dL',
-    radiation: 'Dose 1.8 mSv/day, within deep-space expectation',
+    cardiovascular: `Heart rate ${hrVal} bpm, systolic BP ${bpSysVal} mmHg`,
+    sleep_recovery: `Sleep ${sleepVal} hrs/day`,
+    physical_performance: `Exercise adherence ${exVal} min`,
+    behavioral: `Mood score ${moodVal}, stress score ${stressVal}`,
+    metabolic_general: `Temperature ${tempVal} °C, glucose ${glucoseVal} mg/dL`,
+    radiation: `Dose ${radVal} mSv/day`,
   };
 
   const handleOpenDomain = (domainId: DomainId) => {
@@ -175,7 +179,7 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
                 <AlertCardView
                   key={card.id}
                   card={card}
-                  sources={mockSources}
+                  sources={SOURCES}
                   onLog={() => navigate('/journal')}
                 />
               ))
@@ -197,7 +201,7 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
                   <div className="p-4 pt-0 border-t border-line divide-y divide-line">
                     {infoCards.map((card) => (
                       <div key={card.id} className="pt-3">
-                        <AlertCardView card={card} sources={mockSources} />
+                        <AlertCardView card={card} sources={SOURCES} />
                       </div>
                     ))}
                   </div>

@@ -31,3 +31,4 @@ export function UrgentPage({ missionSetting = 'deep_space' }: UrgentPageProps) {
     </div>
   );
 }
+

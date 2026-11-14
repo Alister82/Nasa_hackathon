@@ -122,9 +122,8 @@ export function AlertCardView({ card, sources, onLog, defaultOpen }: AlertCardVi
                 {[1, 2, 3].map((seg) => (
                   <span
                     key={seg}
-                    className={`w-4 h-2 rounded-sm ${
-                      seg <= filledSegments ? 'bg-instrument' : 'bg-ceramic'
-                    }`}
+                    className={`w-4 h-2 rounded-sm ${seg <= filledSegments ? 'bg-instrument' : 'bg-ceramic'
+                      }`}
                   />
                 ))}
               </div>
@@ -151,7 +150,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen }: AlertCardVi
               <h3 className="text-xs font-bold uppercase tracking-wider text-ink-soft mb-2">Do now</h3>
               <ol className="list-decimal pl-5 space-y-2 text-ink">
                 {card.recommendedActions.map((action, idx) => (
-                  <li key={action.id || idx} className="leading-relaxed">
+                  <li key={`${card.id}-${action.id || 'act'}-${idx}`} className="leading-relaxed">
                     {action.supplyAvailable ? (
                       <span>{action.text}</span>
                     ) : (

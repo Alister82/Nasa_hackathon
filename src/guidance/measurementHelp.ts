@@ -90,7 +90,7 @@ export const MEASUREMENT_HELP: Record<IndicatorId, MeasurementHelp> = {
     indicatorId: 'mood',
     howToMeasure:
       'Rate how your mood feels overall today on a scale of 1 (low) to 5 (good). ' +
-      'Choose the number that best reflects how you have felt for most of the day.',
+      'Choose the number that best reflects how your mood felt for most of the day.',
     whyItMatters:
       'Mood is tracked as part of behavioral health monitoring, since isolation, confinement, and distance from home can affect wellbeing over long missions.',
     hazards: [HRP_HAZARDS.isolation, HRP_HAZARDS.distance, HRP_HAZARDS.hostile],
