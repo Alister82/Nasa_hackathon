@@ -109,26 +109,70 @@ export function BodyMap({ domains, summaries, selected, onSelect }: BodyMapProps
           {/* Left arm -> physical_performance */}
           <g {...getRegionProps('physical_performance', 'Left arm')}>
             <rect x="38" y="80" width="20" height="110" rx="10" />
+            <rect
+              x="29"
+              y="79"
+              width="38"
+              height="112"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
           </g>
 
           {/* Right arm -> physical_performance */}
           <g {...getRegionProps('physical_performance', 'Right arm')}>
             <rect x="142" y="80" width="20" height="110" rx="10" />
+            <rect
+              x="133"
+              y="79"
+              width="38"
+              height="112"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
           </g>
 
           {/* Left leg -> physical_performance */}
           <g {...getRegionProps('physical_performance', 'Left leg')}>
             <rect x="72" y="196" width="26" height="150" rx="12" />
+            <rect
+              x="66"
+              y="196"
+              width="38"
+              height="150"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
           </g>
 
           {/* Right leg -> physical_performance */}
           <g {...getRegionProps('physical_performance', 'Right leg')}>
             <rect x="102" y="196" width="26" height="150" rx="12" />
+            <rect
+              x="96"
+              y="196"
+              width="38"
+              height="150"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
           </g>
 
           {/* Sleep badge -> sleep_recovery */}
           <g {...getRegionProps('sleep_recovery', 'Sleep badge')}>
             <circle cx="160" cy="40" r="14" />
+            <circle
+              cx="160"
+              cy="40"
+              r="19"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
             <foreignObject x="150" y="30" width="20" height="20" className="pointer-events-none">
               <div className="w-full h-full flex items-center justify-center text-ink-soft">
                 <MoonCrescentIcon className="w-3.5 h-3.5" />
@@ -139,6 +183,14 @@ export function BodyMap({ domains, summaries, selected, onSelect }: BodyMapProps
           {/* Radiation badge -> radiation */}
           <g {...getRegionProps('radiation', 'Radiation badge')}>
             <circle cx="40" cy="40" r="14" />
+            <circle
+              cx="40"
+              cy="40"
+              r="19"
+              fill="transparent"
+              pointerEvents="all"
+              aria-hidden="true"
+            />
             <foreignObject x="30" y="30" width="20" height="20" className="pointer-events-none">
               <div className="w-full h-full flex items-center justify-center text-ink-soft">
                 <RadiationIcon className="w-3.5 h-3.5" />

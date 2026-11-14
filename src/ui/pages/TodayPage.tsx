@@ -147,7 +147,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
           </div>
         </section>
 
-        <section aria-label="Health domains and attention items" className="w-full flex flex-col gap-6">
+        <section aria-label="Health domains and attention items" className="w-full min-w-0 flex flex-col gap-6">
           <div className="bg-panel rounded-sheet border border-line overflow-hidden">
             <div className="px-4 py-3 border-b border-line flex items-center justify-between">
               <h2 className="font-bold text-base text-ink">Body systems and domains</h2>
@@ -171,7 +171,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
               <h2 className="font-bold text-lg text-ink">What needs attention</h2>
               <Link
                 to="/log"
-                className="text-xs sm:text-sm font-semibold text-instrument hover:underline"
+                className="text-xs sm:text-sm font-semibold text-instrument hover:underline inline-flex items-center min-h-[44px]"
               >
                 Log today&apos;s measurements
               </Link>

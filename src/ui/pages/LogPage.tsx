@@ -24,7 +24,9 @@ export function LogPage() {
     setEntriesVersion((version) => version + 1);
   };
 
-  const formKey = `${viewDay}:${JSON.stringify(existing)}`;
+  // Keep the form mounted when saved entries reload so its success status can be
+  // read and focused. The existing-values effect updates the fields in place.
+  const formKey = String(viewDay);
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6">
