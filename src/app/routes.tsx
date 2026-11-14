@@ -11,12 +11,16 @@ import { ProofPage } from '@/ui/pages/ProofPage';
 import { MissionPage } from '@/ui/pages/MissionPage';
 import { JournalPage } from '@/ui/pages/JournalPage';
 import { AboutPage } from '@/ui/pages/AboutPage';
+import { DailyCheckPage } from '@/ui/pages/DailyCheckPage';
+import { HealthMonitorPage } from '@/ui/pages/HealthMonitorPage';
 import { DevKitPage } from '@/ui/pages/DevKitPage';
 
 export function AppRoutes() {
   return (
     <Routes>
       <Route path="/" element={<ErrorBoundary><TodayPage /></ErrorBoundary>} />
+      <Route path="/check" element={<ErrorBoundary><DailyCheckPage /></ErrorBoundary>} />
+      <Route path="/monitor" element={<ErrorBoundary><HealthMonitorPage /></ErrorBoundary>} />
       <Route path="/domain/:domainId" element={<ErrorBoundary><DomainDetailPage /></ErrorBoundary>} />
       <Route path="/log" element={<ErrorBoundary><LogPage /></ErrorBoundary>} />
       <Route path="/checkin" element={<ErrorBoundary><CheckInPage /></ErrorBoundary>} />
