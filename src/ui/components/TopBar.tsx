@@ -2,6 +2,7 @@ import React from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { APP_NAME, DEFAULT_CREW } from '@/contracts/constants';
 import type { MissionSettingId } from '@/contracts/types';
+import { MISSION_SETTINGS } from '@/guidance';
 import { OfflineBadge } from './OfflineBadge';
 import { AlertTriangleIcon } from './Icons';
 
@@ -11,17 +12,11 @@ interface TopBarProps {
   missionSetting: MissionSettingId;
 }
 
-const SETTING_LABELS: Record<MissionSettingId, string> = {
-  station: 'Space station',
-  lunar_base: 'Lunar base',
-  deep_space: 'Deep space',
-};
-
 export function TopBar({ selectedCrewId, onCrewChange, missionSetting }: TopBarProps) {
   const navigate = useNavigate();
 
   return (
-    <header className="h-14 bg-panel border-b border-line px-4 flex items-center justify-between gap-2 sm:gap-4 select-none">
+    <header className="min-h-14 bg-panel border-b border-line px-3 sm:px-4 py-1 flex flex-wrap items-center justify-between gap-2 sm:gap-4 select-none">
       {/* Left: App Name */}
       <div className="flex items-center gap-4 flex-shrink-0">
         <Link
@@ -56,15 +51,13 @@ export function TopBar({ selectedCrewId, onCrewChange, missionSetting }: TopBarP
           className="inline-flex items-center px-3 py-1.5 bg-instrument-soft text-instrument text-xs sm:text-sm font-medium rounded-pill border border-line hover:border-instrument min-h-[44px]"
           title="Mission setting and supplies"
         >
-          {SETTING_LABELS[missionSetting] ?? 'Mission'}
+          {MISSION_SETTINGS[missionSetting].label}
         </Link>
       </div>
 
       {/* Right: Offline Badge + Urgent Help Button */}
       <div className="flex items-center gap-2 sm:gap-3 flex-shrink-0">
-        <div className="hidden sm:block">
-          <OfflineBadge />
-        </div>
+        <OfflineBadge />
         <button
           type="button"
           onClick={() => navigate('/urgent')}

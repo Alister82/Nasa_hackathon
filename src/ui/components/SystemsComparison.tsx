@@ -12,37 +12,39 @@ const SYSTEM_LABELS: Record<SystemId, string> = {
   zscore: 'Rolling z-score',
 };
 
-const SYSTEM_COLORS: Record<SystemId, { dot: string; text: string }> = {
-  vigil: { dot: 'bg-instrument', text: 'text-instrument' },
-  threshold: { dot: 'bg-status-watch', text: 'text-status-watch' },
-  zscore: { dot: 'bg-status-review', text: 'text-status-review' },
+const SYSTEM_COLORS: Record<SystemId, string> = {
+  vigil: 'bg-instrument',
+  threshold: 'bg-status-watch',
+  zscore: 'bg-status-review',
 };
 
+const SYSTEMS: SystemId[] = ['vigil', 'threshold', 'zscore'];
+
+function positionPercent(day: number, missionDays: number): number {
+  if (missionDays <= 1) return 0;
+  return Math.max(0, Math.min(100, ((day - 1) / (missionDays - 1)) * 100));
+}
+
 export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
-  const medicalEvent = dataset.groundTruth.find((e) => e.isMedical);
-  const onsetDay = medicalEvent?.onsetDay ?? null;
+  const onsetDay = dataset.groundTruth[0]?.onsetDay ?? null;
 
-  const systems: SystemId[] = ['vigil', 'threshold', 'zscore'];
+  const stats = SYSTEMS.map((systemId) => {
+    const systemFlags = flags[systemId] ?? [];
+    const flaggedDays = systemFlags.filter((flag) => flag.flagged).map((flag) => flag.day);
+    const firstFlagDay = flaggedDays[0] ?? null;
 
-  // Calculate first flag day, days after onset, flags before onset
-  const stats = systems.map((sysId) => {
-    const sysFlags = flags[sysId] ?? [];
-    const flaggedDays = sysFlags.filter((f) => f.flagged).map((f) => f.day);
-    const firstFlagDay = flaggedDays.length > 0 ? flaggedDays[0]! : null;
-
-    let daysAfterOnset: number | string = '—';
+    let daysAfterOnset = '-';
     if (onsetDay !== null && firstFlagDay !== null) {
-      const diff = firstFlagDay - onsetDay;
-      daysAfterOnset = diff >= 0 ? `+${diff}` : `${diff}`;
+      const difference = firstFlagDay - onsetDay;
+      daysAfterOnset = difference >= 0 ? `+${difference}` : `${difference}`;
     }
 
-    const flagsBeforeOnset = onsetDay !== null
-      ? flaggedDays.filter((d) => d < onsetDay).length
-      : 0;
+    const flagsBeforeOnset =
+      onsetDay !== null ? flaggedDays.filter((day) => day < onsetDay).length : 0;
 
     return {
-      sysId,
-      label: SYSTEM_LABELS[sysId],
+      systemId,
+      label: SYSTEM_LABELS[systemId],
       firstFlagDay: firstFlagDay !== null ? `Day ${firstFlagDay}` : 'None',
       daysAfterOnset,
       flagsBeforeOnset,
@@ -51,15 +53,15 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
   });
 
   return (
-    <div className="bg-panel border border-line rounded-sheet p-5 shadow-sm flex flex-col gap-6">
+    <div className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-6">
       <div>
         <h2 className="text-lg font-bold text-ink mb-1">Who flags first</h2>
         <p className="text-xs sm:text-sm text-ink-soft">
-          Detection timing and false alerts comparison across systems for this scenario.
+          Detection timing and pre-onset flags for this scenario. The ground-truth onset comes
+          from the simulator.
         </p>
       </div>
 
-      {/* Comparison Table */}
       <div className="overflow-x-auto">
         <table className="w-full text-left border-collapse text-xs sm:text-sm">
           <thead>
@@ -71,53 +73,55 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
             </tr>
           </thead>
           <tbody className="divide-y divide-line tabular-nums font-medium text-ink">
-            {stats.map((s) => (
-              <tr key={s.sysId} className={s.sysId === 'vigil' ? 'bg-instrument-soft/20 font-bold' : ''}>
-                <td className="py-3 pr-4 flex items-center gap-2">
-                  <span className={`w-2.5 h-2.5 rounded-full ${SYSTEM_COLORS[s.sysId].dot}`} aria-hidden="true" />
-                  <span>{s.label}</span>
+            {stats.map((system) => (
+              <tr key={system.systemId}>
+                <td className="py-3 pr-4">
+                  <span className="inline-flex items-center gap-2">
+                    <span
+                      className={`w-2.5 h-2.5 rounded-full ${SYSTEM_COLORS[system.systemId]}`}
+                      aria-hidden="true"
+                    />
+                    {system.label}
+                  </span>
                 </td>
-                <td className="py-3 px-4 text-center">{s.firstFlagDay}</td>
-                <td className="py-3 px-4 text-center">{s.daysAfterOnset}</td>
-                <td className="py-3 pl-4 text-center">{s.flagsBeforeOnset}</td>
+                <td className="py-3 px-4 text-center">{system.firstFlagDay}</td>
+                <td className="py-3 px-4 text-center">{system.daysAfterOnset}</td>
+                <td className="py-3 pl-4 text-center">{system.flagsBeforeOnset}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      {/* Shared Timeline visualization */}
       <div className="flex flex-col gap-2 pt-2 border-t border-line">
-        <div className="flex justify-between items-center text-xs font-semibold text-ink-soft">
-          <span>Flag timeline across mission days (1 to 180)</span>
-          {onsetDay && (
-            <span className="text-status-urgent font-bold">
-              Known onset: Day {onsetDay}
-            </span>
+        <div className="flex justify-between items-center text-xs font-semibold text-ink-soft gap-2 flex-wrap">
+          <span>Flag timeline across mission days 1 to {dataset.missionDays}</span>
+          {onsetDay !== null && (
+            <span className="text-status-urgent font-bold">Known onset: day {onsetDay}</span>
           )}
         </div>
 
         <div className="relative bg-ceramic rounded-sheet p-3 flex flex-col gap-3">
-          {onsetDay && (
+          {onsetDay !== null && (
             <div
               className="absolute top-0 bottom-0 w-0.5 bg-status-urgent z-10 pointer-events-none"
-              style={{ left: `${(onsetDay / 180) * 100}%` }}
-              title={`Ground truth onset: Day ${onsetDay}`}
+              style={{ left: `${positionPercent(onsetDay, dataset.missionDays)}%` }}
+              title={`Ground-truth onset: day ${onsetDay}`}
             />
           )}
 
-          {stats.map((s) => (
-            <div key={s.sysId} className="flex items-center gap-3">
+          {stats.map((system) => (
+            <div key={system.systemId} className="flex items-center gap-3">
               <span className="w-28 text-xs font-bold text-ink truncate flex-shrink-0">
-                {s.label}
+                {system.label}
               </span>
               <div className="relative flex-1 h-3 bg-panel rounded border border-line">
-                {s.flaggedDays.map((d) => (
+                {system.flaggedDays.map((day) => (
                   <span
-                    key={d}
-                    className={`absolute top-0.5 bottom-0.5 w-1 rounded-sm ${SYSTEM_COLORS[s.sysId].dot}`}
-                    style={{ left: `${(d / 180) * 100}%` }}
-                    title={`${s.label} flagged on Day ${d}`}
+                    key={day}
+                    className={`absolute top-0.5 bottom-0.5 w-1 rounded-sm ${SYSTEM_COLORS[system.systemId]}`}
+                    style={{ left: `${positionPercent(day, dataset.missionDays)}%` }}
+                    title={`${system.label} flagged on day ${day}`}
                   />
                 ))}
               </div>
@@ -128,4 +132,3 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
     </div>
   );
 }
-

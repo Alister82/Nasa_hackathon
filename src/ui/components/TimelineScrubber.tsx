@@ -59,7 +59,7 @@ export function TimelineScrubber({
       {/* Top Header: Day Display + Buttons */}
       <div className="flex items-center justify-between gap-2 mb-3">
         <div className="flex flex-col">
-          <span className="text-xs uppercase tracking-wider text-ink-soft font-bold">Mission Timeline</span>
+          <span className="text-xs text-ink-soft font-bold">Mission timeline</span>
           <span className="text-lg font-bold text-ink tabular-nums">
             Day {day} of {maxDay}
           </span>

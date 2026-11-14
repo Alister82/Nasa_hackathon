@@ -1,98 +1,78 @@
-import React, { useState } from 'react';
-import { HashRouter, NavLink } from 'react-router-dom';
-import {
-  DEFAULT_CREW,
-  DEFAULT_MISSION_SETTING,
-  DEFAULT_VIEW_DAY,
-} from '@/contracts/constants';
-import type { MissionSettingId } from '@/contracts/types';
+import React, { useEffect } from 'react';
+import { HashRouter, NavLink, useNavigate, useLocation } from 'react-router-dom';
 import { TopBar } from '@/ui/components/TopBar';
 import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
 import { BottomNav } from '@/ui/components/BottomNav';
 import { AppRoutes } from './routes';
+import { AppStateProvider, useAppState } from './AppState';
 
-export function App() {
-  const [selectedCrewId, setSelectedCrewId] = useState<string>(
-    DEFAULT_CREW[0]?.crewId ?? 'crew-1',
-  );
-  const [missionSetting, setMissionSetting] = useState<MissionSettingId>(
-    DEFAULT_MISSION_SETTING,
-  );
-  const [viewDay, setViewDay] = useState<number>(DEFAULT_VIEW_DAY);
+const navLinkClass = ({ isActive }: { isActive: boolean }) =>
+  `px-3 py-2 text-sm font-medium border-b-2 min-h-[44px] inline-flex items-center ${
+    isActive
+      ? 'border-instrument text-instrument font-bold'
+      : 'border-transparent text-ink-soft hover:text-ink hover:border-line'
+  }`;
+
+function AppShell() {
+  const navigate = useNavigate();
+  const location = useLocation();
+  const {
+    crewId,
+    setCrewId,
+    missionSetting,
+    resetDemoData,
+  } = useAppState();
+
+  useEffect(() => {
+    const heading = document.querySelector<HTMLElement>('main h1');
+    if (heading) {
+      heading.setAttribute('tabindex', '-1');
+      heading.focus();
+    }
+  }, [location.pathname]);
 
   const handleResetData = () => {
-    // Will be wired to storage.clearAll()
-    localStorage.clear();
-    window.location.reload();
+    void resetDemoData().then(() => navigate('/'));
   };
 
-  const desktopNavLinkClass = ({ isActive }: { isActive: boolean }) =>
-    `px-3 py-2 text-sm font-medium border-b-2 min-h-[44px] inline-flex items-center ${
-      isActive
-        ? 'border-instrument text-instrument font-bold'
-        : 'border-transparent text-ink-soft hover:text-ink hover:border-line'
-    }`;
-
   return (
-    <HashRouter>
-      <div className="min-h-screen bg-ceramic text-ink flex flex-col font-sans">
-        {/* Top bar (56 px) */}
-        <TopBar
-          selectedCrewId={selectedCrewId}
-          onCrewChange={setSelectedCrewId}
-          missionSetting={missionSetting}
-        />
+    <div className="min-h-screen bg-ceramic text-ink flex flex-col font-sans">
+      <TopBar
+        selectedCrewId={crewId}
+        onCrewChange={setCrewId}
+        missionSetting={missionSetting}
+      />
+      <DisclaimerBanner />
 
-        {/* Disclaimer banner (32 px) */}
-        <DisclaimerBanner />
+      <nav
+        aria-label="Main sections"
+        className="hidden lg:flex items-center gap-2 px-6 bg-panel border-b border-line overflow-x-auto select-none"
+      >
+        <NavLink to="/" end className={navLinkClass}>Today</NavLink>
+        <NavLink to="/log" className={navLinkClass}>Log</NavLink>
+        <NavLink to="/checkin" className={navLinkClass}>Check-in</NavLink>
+        <NavLink to="/lab" className={navLinkClass}>Scenario Lab</NavLink>
+        <NavLink to="/proof" className={navLinkClass}>Proof</NavLink>
+        <NavLink to="/journal" className={navLinkClass}>Journal</NavLink>
+        <NavLink to="/mission" className={navLinkClass}>Mission</NavLink>
+        <NavLink to="/about" className={navLinkClass}>About</NavLink>
+      </nav>
 
-        {/* Desktop secondary navigation bar on lg screens */}
-        <nav
-          aria-label="Desktop Sub Navigation"
-          className="hidden lg:flex items-center gap-2 px-6 bg-panel border-b border-line overflow-x-auto select-none"
-        >
-          <NavLink to="/" end className={desktopNavLinkClass}>
-            Today
-          </NavLink>
-          <NavLink to="/log" className={desktopNavLinkClass}>
-            Log
-          </NavLink>
-          <NavLink to="/checkin" className={desktopNavLinkClass}>
-            Check-in
-          </NavLink>
-          <NavLink to="/lab" className={desktopNavLinkClass}>
-            Scenario Lab
-          </NavLink>
-          <NavLink to="/proof" className={desktopNavLinkClass}>
-            Proof
-          </NavLink>
-          <NavLink to="/journal" className={desktopNavLinkClass}>
-            Journal
-          </NavLink>
-          <NavLink to="/mission" className={desktopNavLinkClass}>
-            Mission
-          </NavLink>
-          <NavLink to="/about" className={desktopNavLinkClass}>
-            About
-          </NavLink>
-        </nav>
+      <main className="flex-1 pb-20 lg:pb-8">
+        <AppRoutes />
+      </main>
 
-        {/* Main content area */}
-        <main className="flex-1 pb-20 lg:pb-8">
-          <AppRoutes
-            missionSetting={missionSetting}
-            onSettingChange={setMissionSetting}
-            selectedCrewId={selectedCrewId}
-            onCrewChange={setSelectedCrewId}
-            viewDay={viewDay}
-            onDayChange={setViewDay}
-          />
-        </main>
-
-        {/* Mobile bottom navigation (hidden on lg) */}
-        <BottomNav onResetData={handleResetData} />
-      </div>
-    </HashRouter>
+      <BottomNav onResetData={handleResetData} />
+    </div>
   );
 }
 
+export function App() {
+  return (
+    <AppStateProvider>
+      <HashRouter>
+        <AppShell />
+      </HashRouter>
+    </AppStateProvider>
+  );
+}

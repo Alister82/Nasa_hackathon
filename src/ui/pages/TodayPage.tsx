@@ -1,141 +1,157 @@
-import React, { useState, useEffect } from 'react';
+import React, { useEffect, useMemo } from 'react';
 import { useNavigate, Link } from 'react-router-dom';
-import type { DomainId, MissionContext, AnalysisResult } from '@/contracts/types';
-import { DOMAIN_ORDER } from '@/contracts/indicators';
-import { DEFAULT_VIEW_DAY } from '@/contracts/constants';
+import type { DomainId, FindingKind, IndicatorId } from '@/contracts/types';
+import { DOMAIN_ORDER, INDICATORS } from '@/contracts/indicators';
+import { DEFAULT_VIEW_DAY, MISSION_DAYS } from '@/contracts/constants';
 import { BodyMap } from '@/ui/components/BodyMap';
 import { DomainRow } from '@/ui/components/DomainRow';
 import { TimelineScrubber, type ScrubberMarker } from '@/ui/components/TimelineScrubber';
 import { AlertCardView } from '@/ui/components/AlertCardView';
-import { getDataset, getAnalysis, getCards } from '@/app/services';
-import { generateScenario } from '@/engine';
-import { getDemoStoryConfig } from '@/app/demo';
+import { useAppState } from '@/app/AppState';
 import { SOURCES } from '@/guidance';
 
 interface TodayPageProps {
   initialDay?: number;
 }
 
-export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
+function indicatorText(
+  analysis: NonNullable<ReturnType<typeof useAppState>['analysis']>,
+  id: IndicatorId,
+): string {
+  const meta = INDICATORS.find((candidate) => candidate.id === id);
+  const indicator = analysis.indicators[id];
+  if (!meta || !indicator) return '';
+  if (indicator.lastValue === null) return `${meta.label}: no reading`;
+  const value = indicator.lastValue.toFixed(meta.decimals);
+  const unit = meta.unit.startsWith('score') ? '' : ` ${meta.unit}`;
+  const baseline = analysis.baselines[id];
+  const baselineText =
+    baseline !== undefined
+      ? ` (pre-flight ${baseline.median.toFixed(meta.decimals)}${unit})`
+      : '';
+  return `${meta.label} ${value}${unit}${baselineText}`;
+}
+
+function findingLabel(kind: FindingKind): string {
+  return kind.replace(/_/g, ' ').replace(/^./, (letter) => letter.toUpperCase());
+}
+
+export function TodayPage({ initialDay }: TodayPageProps) {
   const navigate = useNavigate();
-  const [viewDay, setViewDay] = useState<number>(initialDay);
-  const [selectedDomain, setSelectedDomain] = useState<DomainId | undefined>();
-  const [expectedOpen, setExpectedOpen] = useState(false);
-
-  const missionCtx: MissionContext = {
-    setting: 'deep_space',
-    supplies: {
-      bp_cuff: true,
-      thermometer: true,
-      glucometer: true,
-      wrist_hr_monitor: true,
-      exercise_equipment: true,
-      sleep_mask: true,
-    },
-  };
-
-  const [analysis, setAnalysis] = useState<AnalysisResult>(() => {
-    const demo = getDemoStoryConfig();
-    const ds = generateScenario({
-      crewId: demo.crewId,
-      crewName: 'Crew 1',
-      scenarioId: demo.scenarioId,
-      seed: demo.seed,
-      missionSetting: demo.missionSetting,
-    });
-    return getAnalysis(ds, initialDay);
-  });
+  const {
+    analysis,
+    cards,
+    viewDay,
+    setViewDay,
+    playDemoStory,
+    loading,
+    loadFailed,
+    crewName,
+  } = useAppState();
 
   useEffect(() => {
-    let active = true;
-    getDataset('crew-1').then((ds) => {
-      if (active) {
-        setAnalysis(getAnalysis(ds, viewDay));
+    if (initialDay !== undefined) setViewDay(initialDay);
+    // Initial test/demo day only; later changes come from the shared scrubber.
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
+  const markers = useMemo<ScrubberMarker[]>(() => {
+    if (!analysis) return [];
+    const rank: Record<ScrubberMarker['status'], number> = { watch: 1, review: 2, urgent: 3 };
+    const byDay = new Map<number, ScrubberMarker>();
+    for (const finding of analysis.findings) {
+      const status: ScrubberMarker['status'] = finding.urgent
+        ? 'urgent'
+        : finding.kind === 'isolated_spike' || finding.kind === 'data_quality_issue'
+          ? 'watch'
+          : 'review';
+      const existing = byDay.get(finding.firstFlaggedDay);
+      if (!existing || rank[status] > rank[existing.status]) {
+        byDay.set(finding.firstFlaggedDay, {
+          day: finding.firstFlaggedDay,
+          status,
+          label: findingLabel(finding.kind),
+        });
       }
-    });
-    return () => {
-      active = false;
-    };
-  }, [viewDay]);
+    }
+    return [...byDay.values()].sort((a, b) => a.day - b.day);
+  }, [analysis]);
 
-  const cards = getCards(analysis, missionCtx);
-  const attentionCards = cards.filter((c) => c.severity !== 'info');
-  const infoCards = cards.filter((c) => c.severity === 'info');
+  if (loadFailed) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-12 text-center">
+        <h1 className="text-2xl font-bold text-ink mb-2">Today</h1>
+        <p className="text-ink-soft">
+          Could not load simulated crew data. Reload the page to try again.
+        </p>
+      </div>
+    );
+  }
 
-  const markers: ScrubberMarker[] = analysis.findings.map((f) => ({
-    day: f.firstFlaggedDay,
-    status: f.urgent ? 'urgent' : f.kind === 'isolated_spike' || f.kind === 'data_quality_issue' ? 'watch' : 'review',
-    label: f.kind.replace('_', ' '),
-  }));
-
-  const hrVal = analysis.indicators.heart_rate?.lastValue ?? 64;
-  const bpSysVal = analysis.indicators.bp_sys?.lastValue ?? 116;
-  const sleepVal = analysis.indicators.sleep_hours?.lastValue ?? 6.8;
-  const moodVal = analysis.indicators.mood?.lastValue ?? 3.8;
-  const stressVal = analysis.indicators.stress?.lastValue ?? 2.2;
-  const tempVal = analysis.indicators.body_temp?.lastValue ?? 36.6;
-  const glucoseVal = analysis.indicators.glucose?.lastValue ?? 90;
-  const radVal = analysis.indicators.radiation_dose?.lastValue ?? 1.8;
-  const exVal = analysis.indicators.exercise_minutes?.lastValue ?? 120;
+  if (!analysis) {
+    return (
+      <div className="max-w-xl mx-auto px-4 py-12 text-center" role="status">
+        <h1 className="text-2xl font-bold text-ink mb-2">Today</h1>
+        <p className="text-ink-soft">
+          {loading ? 'Loading simulated crew data...' : 'No crew data is available.'}
+        </p>
+      </div>
+    );
+  }
 
   const summaries: Record<DomainId, string> = {
-    cardiovascular: `Heart rate ${hrVal} bpm, systolic BP ${bpSysVal} mmHg`,
-    sleep_recovery: `Sleep ${sleepVal} hrs/day`,
-    physical_performance: `Exercise adherence ${exVal} min`,
-    behavioral: `Mood score ${moodVal}, stress score ${stressVal}`,
-    metabolic_general: `Temperature ${tempVal} °C, glucose ${glucoseVal} mg/dL`,
-    radiation: `Dose ${radVal} mSv/day`,
+    cardiovascular: `${indicatorText(analysis, 'heart_rate')}; ${indicatorText(analysis, 'bp_sys')}`,
+    sleep_recovery: indicatorText(analysis, 'sleep_hours'),
+    physical_performance: indicatorText(analysis, 'exercise_minutes'),
+    behavioral: `${indicatorText(analysis, 'mood')}; ${indicatorText(analysis, 'stress')}`,
+    metabolic_general: `${indicatorText(analysis, 'body_temp')}; ${indicatorText(analysis, 'glucose')}`,
+    radiation: indicatorText(analysis, 'radiation_dose'),
   };
 
-  const handleOpenDomain = (domainId: DomainId) => {
-    navigate(`/domain/${domainId}`);
-  };
-
-  const handlePlayDemo = () => {
-    const demo = getDemoStoryConfig();
-    setViewDay(demo.viewDay);
-    setSelectedDomain('cardiovascular');
-  };
+  const attentionCards = cards.filter((card) => card.severity !== 'info');
+  const infoCards = cards.filter((card) => card.severity === 'info');
+  const openDomain = (domainId: DomainId) => navigate(`/domain/${domainId}`);
 
   return (
     <div className="max-w-6xl mx-auto px-4 py-4 sm:py-6">
+      <div className="mb-4 flex flex-wrap items-baseline justify-between gap-2">
+        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Today</h1>
+        <p className="text-sm text-ink-soft">
+          {crewName}, day {viewDay} of {MISSION_DAYS}
+        </p>
+      </div>
+
       <div className="flex flex-col lg:grid lg:grid-cols-[360px_1fr] gap-6 items-start">
-        {/* Left Column (or Top on Mobile) */}
         <section
-          aria-label="Astronaut Status and Mission Day"
+          aria-label="Astronaut status and mission day"
           className="w-full flex flex-col gap-4 items-center"
         >
-          {/* Timeline Scrubber */}
           <div className="w-full order-1 lg:order-2">
             <TimelineScrubber
               day={viewDay}
-              maxDay={180}
+              maxDay={MISSION_DAYS}
               markers={markers}
               onChange={setViewDay}
               onToday={() => setViewDay(DEFAULT_VIEW_DAY)}
-              onPlayDemo={handlePlayDemo}
+              onPlayDemo={playDemoStory}
             />
           </div>
 
-          {/* Body Map */}
-          <div className="w-full bg-panel p-4 rounded-sheet border border-line shadow-sm flex flex-col items-center order-2 lg:order-1">
-            <h2 className="sr-only">Interactive Body Map</h2>
+          <div className="w-full bg-panel p-4 rounded-sheet border border-line flex flex-col items-center order-2 lg:order-1">
+            <h2 className="sr-only">Body map</h2>
             <BodyMap
               domains={analysis.domains}
               summaries={summaries}
-              selected={selectedDomain}
-              onSelect={setSelectedDomain}
+              onSelect={openDomain}
             />
           </div>
         </section>
 
-        {/* Right Column: Domains + Cards + Quick Actions */}
-        <section aria-label="Health Domains and Attention Items" className="w-full flex flex-col gap-6">
-          {/* Domain List (6 rows in DOMAIN_ORDER) */}
-          <div className="bg-panel rounded-sheet border border-line shadow-sm overflow-hidden">
-            <div className="px-4 py-3 bg-panel border-b border-line flex items-center justify-between">
-              <h2 className="font-bold text-base text-ink">Body Systems & Domains</h2>
-              <span className="text-xs text-ink-soft">Click to view charts</span>
+        <section aria-label="Health domains and attention items" className="w-full flex flex-col gap-6">
+          <div className="bg-panel rounded-sheet border border-line overflow-hidden">
+            <div className="px-4 py-3 border-b border-line flex items-center justify-between">
+              <h2 className="font-bold text-base text-ink">Body systems and domains</h2>
+              <span className="text-xs text-ink-soft">Select a row for charts</span>
             </div>
             <ul className="divide-y divide-line">
               {DOMAIN_ORDER.map((domainId) => (
@@ -144,26 +160,25 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
                   domain={domainId}
                   analysis={analysis.domains[domainId]}
                   summary={summaries[domainId]}
-                  onOpen={handleOpenDomain}
+                  onOpen={openDomain}
                 />
               ))}
             </ul>
           </div>
 
-          {/* What needs attention */}
           <div className="flex flex-col gap-3">
-            <div className="flex items-center justify-between">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
               <h2 className="font-bold text-lg text-ink">What needs attention</h2>
               <Link
                 to="/log"
                 className="text-xs sm:text-sm font-semibold text-instrument hover:underline"
               >
-                + Log today's measurements
+                Log today&apos;s measurements
               </Link>
             </div>
 
             {attentionCards.length === 0 ? (
-              <div className="bg-panel border border-line rounded-sheet p-6 text-center shadow-sm">
+              <div className="bg-panel border border-line rounded-sheet p-6 text-center">
                 <p className="text-ink font-medium mb-3">
                   Nothing needs attention on day {viewDay}. Keep logging your measurements.
                 </p>
@@ -171,7 +186,7 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
                   to="/log"
                   className="inline-flex items-center justify-center px-4 py-2 bg-instrument text-panel font-bold text-sm rounded-input min-h-[44px]"
                 >
-                  Log today's measurements
+                  Log today&apos;s measurements
                 </Link>
               </div>
             ) : (
@@ -180,33 +195,24 @@ export function TodayPage({ initialDay = DEFAULT_VIEW_DAY }: TodayPageProps) {
                   key={card.id}
                   card={card}
                   sources={SOURCES}
-                  onLog={() => navigate('/journal')}
+                  onLog={(selected) => navigate('/journal', { state: { card: selected } })}
                 />
               ))
             )}
 
-            {/* Expected changes (info cards collapsed) */}
             {infoCards.length > 0 && (
-              <div className="mt-2 border border-line rounded-sheet bg-panel overflow-hidden">
-                <button
-                  type="button"
-                  onClick={() => setExpectedOpen(!expectedOpen)}
-                  className="w-full px-4 py-3 flex items-center justify-between font-bold text-sm text-ink-soft hover:text-ink min-h-[44px]"
-                  aria-expanded={expectedOpen}
-                >
-                  <span>Expected changes ({infoCards.length})</span>
-                  <span className="text-xs">{expectedOpen ? 'Hide' : 'Show'}</span>
-                </button>
-                {expectedOpen && (
-                  <div className="p-4 pt-0 border-t border-line divide-y divide-line">
-                    {infoCards.map((card) => (
-                      <div key={card.id} className="pt-3">
-                        <AlertCardView card={card} sources={SOURCES} />
-                      </div>
-                    ))}
-                  </div>
-                )}
-              </div>
+              <details className="mt-2 border border-line rounded-sheet bg-panel overflow-hidden">
+                <summary className="px-4 py-3 font-bold text-sm text-ink-soft cursor-pointer min-h-[44px] flex items-center">
+                  Expected changes ({infoCards.length})
+                </summary>
+                <div className="p-4 pt-0 border-t border-line divide-y divide-line">
+                  {infoCards.map((card) => (
+                    <div key={card.id} className="pt-3">
+                      <AlertCardView card={card} sources={SOURCES} />
+                    </div>
+                  ))}
+                </div>
+              </details>
             )}
           </div>
         </section>

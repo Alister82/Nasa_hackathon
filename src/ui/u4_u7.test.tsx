@@ -184,7 +184,7 @@ describe('U7: TodayPage Assembly', () => {
     expect(screen.getByRole('group', { name: 'Body map' })).toBeInTheDocument();
 
     // Domains
-    expect(screen.getByText('Body Systems & Domains')).toBeInTheDocument();
+    expect(screen.getByText('Body systems and domains')).toBeInTheDocument();
     expect(screen.getByText('Heart and blood pressure')).toBeInTheDocument();
 
     // Cards

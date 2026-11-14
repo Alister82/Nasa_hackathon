@@ -80,7 +80,7 @@ export function LabPage() {
         <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
           {/* Scenario Select */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="scenario-select" className="text-xs font-bold text-ink-soft uppercase tracking-wider">
+            <label htmlFor="scenario-select" className="text-xs font-bold text-ink-soft">
               Scenario
             </label>
             <select
@@ -99,7 +99,7 @@ export function LabPage() {
 
           {/* Seed Input */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="seed-input" className="text-xs font-bold text-ink-soft uppercase tracking-wider">
+            <label htmlFor="seed-input" className="text-xs font-bold text-ink-soft">
               Seed
             </label>
             <input
@@ -113,8 +113,8 @@ export function LabPage() {
 
           {/* Setting Select */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="setting-select" className="text-xs font-bold text-ink-soft uppercase tracking-wider">
-              Mission Setting
+            <label htmlFor="setting-select" className="text-xs font-bold text-ink-soft">
+              Mission setting
             </label>
             <select
               id="setting-select"

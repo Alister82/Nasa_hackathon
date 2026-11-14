@@ -3,11 +3,11 @@ import {
   ResponsiveContainer,
   ComposedChart,
   Line,
-  Area,
   XAxis,
   YAxis,
   Tooltip,
   ReferenceLine,
+  ReferenceArea,
 } from 'recharts';
 import type {
   IndicatorAnalysis,
@@ -24,6 +24,11 @@ export interface IndicatorChartProps {
   height?: number;
 }
 
+function withUnit(value: number, meta: IndicatorMeta): string {
+  const number = value.toFixed(meta.decimals);
+  return meta.unit.startsWith('score') ? number : `${number} ${meta.unit}`;
+}
+
 export function IndicatorChart({
   analysis,
   baseline,
@@ -31,62 +36,54 @@ export function IndicatorChart({
   range,
   height = 240,
 }: IndicatorChartProps) {
-  const points = analysis.points;
-  const latestPoint = points[points.length - 1];
-  const latestValue = analysis.lastValue ?? latestPoint?.value;
+  const latestPoint = analysis.points[analysis.points.length - 1];
+  const latestValue = analysis.lastValue;
 
-  // Chart data: includes value, expected, and baseline band (baseline ± 1 sigma)
-  const chartData = points.map((p) => {
-    const baseVal = baseline?.median ?? p.expected;
-    const sigma = baseline?.sigma ?? 0;
-    return {
-      day: p.day,
-      value: p.value,
-      expected: p.expected,
-      baselineBandMin: sigma > 0 ? Number((baseVal - sigma).toFixed(meta.decimals)) : null,
-      baselineBandMax: sigma > 0 ? Number((baseVal + sigma).toFixed(meta.decimals)) : null,
-    };
-  });
+  const chartData = analysis.points.map((point) => ({
+    day: point.day,
+    value: point.value,
+    expected: point.expected,
+  }));
 
-  const displayVal =
-    latestValue !== null && latestValue !== undefined
-      ? `${latestValue} ${meta.unit}`
-      : 'No reading';
+  const displayValue =
+    latestValue === null ? 'No reading' : withUnit(latestValue, meta);
 
   return (
-    <div className="bg-panel border border-line rounded-sheet p-4 shadow-sm w-full">
-      {/* Indicator Header: Title + Big Reading + Reference Range */}
+    <div className="bg-panel border border-line rounded-sheet p-4 w-full">
       <div className="flex items-start justify-between gap-4 mb-3 flex-wrap">
         <div>
           <h3 className="font-bold text-base sm:text-lg text-ink">{meta.label}</h3>
-          <div className="flex items-center gap-2 text-xs text-ink-soft mt-0.5">
+          <div className="flex items-center gap-2 text-xs text-ink-soft mt-0.5 flex-wrap">
             <span>Reference: {range.displayText}</span>
-            <span className="px-1.5 py-0.2 bg-ceramic text-[10px] rounded border border-line">
+            <span className="px-1.5 py-0.5 bg-ceramic text-[10px] rounded border border-line">
               Illustrative reference
             </span>
           </div>
         </div>
         <div className="text-right flex-shrink-0">
           <span className="text-2xl sm:text-3xl font-bold text-ink tabular-nums block">
-            {displayVal}
+            {displayValue}
           </span>
-          <span className="text-xs text-ink-soft font-medium">Day {latestPoint?.day ?? 120}</span>
+          <span className="text-xs text-ink-soft font-medium">
+            {latestPoint ? `Day ${latestPoint.day}` : ''}
+          </span>
         </div>
       </div>
 
-      {/* Chart Canvas */}
-      <div style={{ width: '100%', height }} className="relative select-none">
+      <div
+        style={{ width: '100%', height }}
+        className="relative select-none"
+        role="img"
+        aria-label={`${meta.label} chart: observed values, expected trajectory, and baseline band`}
+      >
         <ResponsiveContainer width="100%" height="100%">
-          <ComposedChart
-            data={chartData}
-            margin={{ top: 10, right: 10, left: -20, bottom: 0 }}
-          >
+          <ComposedChart data={chartData} margin={{ top: 10, right: 10, left: -20, bottom: 0 }}>
             <XAxis
               dataKey="day"
               tickLine={false}
               stroke="var(--ink-soft)"
               fontSize={11}
-              tickFormatter={(v) => `D${v}`}
+              tickFormatter={(value) => `D${value}`}
             />
             <YAxis
               tickLine={false}
@@ -96,39 +93,36 @@ export function IndicatorChart({
             />
             <Tooltip
               content={({ active, payload }) => {
-                if (!active || !payload || !payload.length) return null;
-                const data = payload[0]?.payload;
+                if (!active || !payload || payload.length === 0) return null;
+                const data = payload[0]?.payload as
+                  | { day: number; value: number | null; expected: number }
+                  | undefined;
                 if (!data) return null;
                 return (
-                  <div className="bg-panel border border-line p-2 rounded shadow-card text-xs">
+                  <div className="bg-panel border border-line p-2 rounded text-xs">
                     <p className="font-bold text-ink">Day {data.day}</p>
                     <p className="text-ink">
-                      Value: {data.value !== null ? `${data.value} ${meta.unit}` : 'Missing (null)'}
+                      Value: {data.value === null ? 'Missing' : withUnit(data.value, meta)}
                     </p>
-                    <p className="text-instrument">Expected: {data.expected} {meta.unit}</p>
-                    {data.baselineBandMin !== null && (
-                      <p className="text-ink-soft">
-                        Baseline band: {data.baselineBandMin} – {data.baselineBandMax} {meta.unit}
-                      </p>
-                    )}
+                    <p className="text-instrument">
+                      Expected: {withUnit(data.expected, meta)}
+                    </p>
                   </div>
                 );
               }}
             />
 
-            {/* Baseline Band Area (Area between min and max) */}
             {baseline && baseline.sigma > 0 && (
-              <Area
-                type="monotone"
-                dataKey="baselineBandMax"
-                stroke="none"
+              <ReferenceArea
+                y1={baseline.median - baseline.sigma}
+                y2={baseline.median + baseline.sigma}
                 fill="var(--line)"
                 fillOpacity={0.4}
-                isAnimationActive={false}
+                stroke="none"
+                ifOverflow="extendDomain"
               />
             )}
 
-            {/* Expected Trajectory Line (dashed instrument blue) */}
             <Line
               type="monotone"
               dataKey="expected"
@@ -139,7 +133,6 @@ export function IndicatorChart({
               isAnimationActive={false}
             />
 
-            {/* Observed Value Line (solid ink, connectNulls=false to handle nulls as gaps per prompt) */}
             <Line
               type="monotone"
               dataKey="value"
@@ -150,8 +143,7 @@ export function IndicatorChart({
               isAnimationActive={false}
             />
 
-            {/* Change-start marker if onsetDay present */}
-            {analysis.onsetDay && (
+            {analysis.onsetDay !== null && (
               <ReferenceLine
                 x={analysis.onsetDay}
                 stroke={
@@ -161,7 +153,7 @@ export function IndicatorChart({
                 }
                 strokeDasharray="3 3"
                 label={{
-                  value: `Onset D${analysis.onsetDay}`,
+                  value: `Change starts D${analysis.onsetDay}`,
                   position: 'insideTopLeft',
                   fill: 'var(--ink-soft)',
                   fontSize: 10,
@@ -174,4 +166,3 @@ export function IndicatorChart({
     </div>
   );
 }
-

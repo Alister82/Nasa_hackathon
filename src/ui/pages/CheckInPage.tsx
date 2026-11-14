@@ -1,132 +1,85 @@
-import React, { useState } from 'react';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import type { CheckInInput, CheckInResult } from '@/contracts/types';
+import type { CheckInInput, CheckInRecord, CheckInResult } from '@/contracts/types';
 import { CheckInForm } from '@/ui/components/CheckInForm';
-import {
-  ResponsiveContainer,
-  LineChart,
-  Line,
-  XAxis,
-  YAxis,
-  Tooltip,
-} from 'recharts';
+import { CheckInTrend, type CheckInTrendPoint } from '@/ui/charts/CheckInTrend';
+import { useAppState } from '@/app/AppState';
+import { loadCheckIns } from '@/storage';
 
 export function CheckInPage() {
   const navigate = useNavigate();
-  const [day] = useState(120);
+  const { crewId, viewDay, analysis, submitCheckIn } = useAppState();
+  const [checkIns, setCheckIns] = useState<CheckInRecord[]>([]);
 
-  // 30-day trend data (days 91 to 120) for mood and sleep
-  const trendData = Array.from({ length: 30 }, (_, i) => {
-    const d = 91 + i;
-    const progress = Math.min(1, (d - 70) / 40);
-    return {
-      day: d,
-      mood: Number((3.8 - 0.9 * progress).toFixed(1)),
-      sleep: Number((6.8 - 1.2 * progress).toFixed(1)),
-    };
-  });
+  const reload = useCallback(async () => {
+    setCheckIns(await loadCheckIns(crewId));
+  }, [crewId]);
 
-  const handleCheckInSubmit = async (input: CheckInInput): Promise<CheckInResult> => {
-    if (input.urgentHelpRequested) {
-      return {
-        level: 'urgent',
-        message: 'Contact your crew medical officer and ground now. You do not have to handle this alone.',
-        suggestions: [],
-        escalation: {
-          level: 'urgent_now',
-          text: 'Contact your crew medical officer and ground now. You do not have to handle this alone.',
-          expectedReplyMinutes: null,
-        },
-      };
+  useEffect(() => {
+    void reload();
+  }, [reload]);
+
+  const trendData = useMemo<CheckInTrendPoint[]>(() => {
+    const start = Math.max(1, viewDay - 29);
+    const byDay = new Map(checkIns.map((record) => [record.day, record]));
+    const sleepPoints = new Map(
+      (analysis?.indicators.sleep_hours.points ?? []).map((point) => [point.day, point.value]),
+    );
+    const data: CheckInTrendPoint[] = [];
+    for (let day = start; day <= viewDay; day += 1) {
+      const record = byDay.get(day);
+      const sleep = sleepPoints.get(day);
+      data.push({
+        day,
+        mood: record?.mood,
+        stress: record?.stress,
+        energy: record?.energy,
+        sleep: typeof sleep === 'number' ? sleep : undefined,
+      });
     }
+    return data;
+  }, [analysis, checkIns, viewDay]);
 
-    if (input.mood <= 2 && input.stress >= 4) {
-      return {
-        level: 'support',
-        message:
-          'It looks like today is hard. Here are some steps that may help, and the flight surgeon or behavioral health support can talk it through with you.',
-        suggestions: [
-          { id: 'a1', text: 'Try slow breathing: in for 4 seconds, out for 6, for 2 minutes.', supplyAvailable: true },
-          { id: 'a2', text: 'Keep a regular daily routine, including meals, exercise, and sleep.', supplyAvailable: true },
-          { id: 'a3', text: 'Talk with a crew member or send a message to someone you trust.', supplyAvailable: true },
-          { id: 'a4', text: 'Tell the flight surgeon or behavioral health support if this continues.', supplyAvailable: true },
-        ],
-        escalation: null,
-      };
-    }
-
-    if (input.mood <= 2 || input.stress >= 4 || input.energy <= 2) {
-      return {
-        level: 'support',
-        message: 'Thank you for checking in. Here are a few steps that may help.',
-        suggestions: [
-          { id: 'a1', text: 'Try slow breathing: in for 4 seconds, out for 6, for 2 minutes.', supplyAvailable: true },
-          { id: 'a2', text: 'Keep a regular daily routine, including meals, exercise, and sleep.', supplyAvailable: true },
-        ],
-        escalation: null,
-      };
-    }
-
-    return {
-      level: 'none',
-      message: 'Thanks for checking in.',
-      suggestions: [],
-      escalation: null,
-    };
+  const handleSubmit = async (input: CheckInInput): Promise<CheckInResult> => {
+    const result = await submitCheckIn(input);
+    await reload();
+    return result;
   };
+
+  const hasCheckIns = checkIns.length > 0;
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-8">
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-ink">Wellbeing check-in</h1>
         <p className="text-xs sm:text-sm text-ink-soft">
-          Confidential self-assessment for Mission Day {day}
+          A short self-check for mission day {viewDay}. Notes stay on this device.
         </p>
       </div>
 
       <CheckInForm
-        crewId="crew-1"
-        day={day}
-        onSubmit={handleCheckInSubmit}
+        crewId={crewId}
+        day={viewDay}
+        onSubmit={handleSubmit}
         onNeedHelpNow={() => navigate('/urgent')}
       />
 
-      {/* 30-day Trend Charts: Mood and Sleep stacked */}
-      <section aria-label="30-day Wellbeing and Sleep Trend" className="bg-panel border border-line rounded-sheet p-5 shadow-sm">
+      <section
+        aria-label="30-day wellbeing and sleep trend"
+        className="bg-panel border border-line rounded-sheet p-5"
+      >
         <h2 className="text-base font-bold text-ink mb-1">30-day trends</h2>
         <p className="text-xs text-ink-soft mb-4">
-          Mood ratings tracked alongside sleep duration over the past 30 mission days.
+          Saved check-ins are shown next to sleep hours for the same days. Days without a
+          check-in stay blank.
         </p>
-
-        {/* Mood chart */}
-        <div className="mb-4">
-          <span className="text-xs font-bold text-ink">Mood (1 to 5)</span>
-          <div className="h-28 w-full mt-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                <XAxis dataKey="day" tick={false} stroke="var(--ink-soft)" />
-                <YAxis domain={[1, 5]} ticks={[1, 3, 5]} stroke="var(--ink-soft)" fontSize={10} />
-                <Tooltip />
-                <Line type="monotone" dataKey="mood" stroke="var(--instrument)" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
-
-        {/* Sleep chart */}
-        <div>
-          <span className="text-xs font-bold text-ink">Sleep (hours)</span>
-          <div className="h-28 w-full mt-1">
-            <ResponsiveContainer width="100%" height="100%">
-              <LineChart data={trendData} margin={{ top: 5, right: 10, left: -25, bottom: 0 }}>
-                <XAxis dataKey="day" stroke="var(--ink-soft)" fontSize={10} tickFormatter={(v) => `D${v}`} />
-                <YAxis domain={[4, 8]} ticks={[4, 6, 8]} stroke="var(--ink-soft)" fontSize={10} />
-                <Tooltip />
-                <Line type="monotone" dataKey="sleep" stroke="var(--ink)" strokeWidth={2} dot={false} />
-              </LineChart>
-            </ResponsiveContainer>
-          </div>
-        </div>
+        {hasCheckIns ? (
+          <CheckInTrend data={trendData} />
+        ) : (
+          <p className="text-sm text-ink-soft">
+            No check-ins saved yet. Save one to start the trend.
+          </p>
+        )}
       </section>
     </div>
   );

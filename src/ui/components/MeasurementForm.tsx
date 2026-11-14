@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IndicatorId, MissionSettingId, ValueClass } from '@/contracts/types';
 import { INDICATORS } from '@/contracts/indicators';
+import { classifyValue, MEASUREMENT_HELP } from '@/guidance';
 import { StatusChip, type StatusType } from './StatusChip';
-import { mockMeasurementHelp } from '@/mocks/mockGuidance';
 import { AlertTriangleIcon } from './Icons';
 
 export interface MeasurementFormProps {
@@ -12,7 +12,6 @@ export interface MeasurementFormProps {
   onSave: (values: Partial<Record<IndicatorId, number>>) => Promise<void>;
 }
 
-// Indicators for manual measurement entry
 const LOGGABLE_INDICATORS: IndicatorId[] = [
   'heart_rate',
   'bp_sys',
@@ -23,43 +22,7 @@ const LOGGABLE_INDICATORS: IndicatorId[] = [
   'exercise_minutes',
 ];
 
-export function classifyValueLocal(id: IndicatorId, val: number): ValueClass {
-  switch (id) {
-    case 'heart_rate':
-      if (val >= 60 && val <= 100) return 'normal';
-      if ((val >= 50 && val <= 59) || (val >= 101 && val <= 110)) return 'borderline';
-      return 'out_of_range';
-    case 'bp_sys':
-      if (val >= 180) return 'urgent';
-      if (val >= 90 && val < 120) return 'normal';
-      if ((val >= 120 && val <= 139) || (val >= 80 && val <= 89)) return 'borderline';
-      return 'out_of_range';
-    case 'bp_dia':
-      if (val >= 120) return 'urgent';
-      if (val >= 60 && val < 80) return 'normal';
-      if ((val >= 80 && val <= 89) || (val >= 50 && val <= 59)) return 'borderline';
-      return 'out_of_range';
-    case 'body_temp':
-      if (val >= 36.1 && val <= 37.2) return 'normal';
-      if ((val >= 37.3 && val <= 37.9) || (val >= 35.5 && val <= 36.0)) return 'borderline';
-      return 'out_of_range';
-    case 'glucose':
-      if (val < 54) return 'urgent';
-      if (val >= 70 && val <= 99) return 'normal';
-      if (val >= 100 && val <= 125) return 'borderline';
-      return 'out_of_range';
-    case 'sleep_hours':
-      if (val >= 7) return 'normal';
-      if (val >= 6.0 && val < 7) return 'borderline';
-      return 'out_of_range';
-    case 'exercise_minutes':
-      if (val >= 96) return 'normal';
-      if (val >= 60 && val <= 95) return 'borderline';
-      return 'out_of_range';
-    default:
-      return 'normal';
-  }
-}
+const EMPTY_EXISTING: Partial<Record<IndicatorId, number>> = {};
 
 const VALUE_CLASS_TO_STATUS: Record<ValueClass, { status: StatusType; label: string }> = {
   normal: { status: 'ok', label: 'In range' },
@@ -68,65 +31,88 @@ const VALUE_CLASS_TO_STATUS: Record<ValueClass, { status: StatusType; label: str
   urgent: { status: 'urgent', label: 'Urgent' },
 };
 
-export function MeasurementForm({ day, setting: _setting, existing = {}, onSave }: MeasurementFormProps) {
-  const [values, setValues] = useState<Partial<Record<IndicatorId, string>>>(() => {
-    const init: Partial<Record<IndicatorId, string>> = {};
-    for (const id of LOGGABLE_INDICATORS) {
-      if (existing[id] !== undefined && existing[id] !== null) {
-        init[id] = String(existing[id]);
-      }
-    }
-    return init;
-  });
+function initialValues(
+  existing: Partial<Record<IndicatorId, number>>,
+): Partial<Record<IndicatorId, string>> {
+  const values: Partial<Record<IndicatorId, string>> = {};
+  for (const id of LOGGABLE_INDICATORS) {
+    const value = existing[id];
+    if (value !== undefined) values[id] = String(value);
+  }
+  return values;
+}
 
+export function MeasurementForm({
+  day,
+  setting: _setting,
+  existing = EMPTY_EXISTING,
+  onSave,
+}: MeasurementFormProps) {
+  const [values, setValues] = useState<Partial<Record<IndicatorId, string>>>(() =>
+    initialValues(existing),
+  );
   const [blurred, setBlurred] = useState<Partial<Record<IndicatorId, boolean>>>({});
   const [expandedHelp, setExpandedHelp] = useState<Partial<Record<IndicatorId, boolean>>>({});
   const [savedSuccess, setSavedSuccess] = useState<string | null>(null);
+  const [showErrors, setShowErrors] = useState(false);
   const [isSaving, setIsSaving] = useState(false);
+  const statusRef = useRef<HTMLSpanElement>(null);
+
+  useEffect(() => {
+    setValues(initialValues(existing));
+    setBlurred({});
+    setShowErrors(false);
+  }, [day, existing]);
+
+  useEffect(() => {
+    if (savedSuccess) statusRef.current?.focus();
+  }, [savedSuccess]);
+
+  const rows = useMemo(
+    () =>
+      LOGGABLE_INDICATORS.map((id) => {
+        const meta = INDICATORS.find((candidate) => candidate.id === id);
+        if (!meta) return null;
+        const raw = values[id] ?? '';
+        const trimmed = raw.trim();
+        const number = Number(trimmed);
+        const hasValue = trimmed !== '' && Number.isFinite(number);
+        const isPlausible =
+          hasValue && number >= meta.plausibleMin && number <= meta.plausibleMax;
+        const isOutOfRange =
+          hasValue && (number < meta.plausibleMin || number > meta.plausibleMax);
+        return { id, meta, raw, hasValue, isPlausible, isOutOfRange };
+      }).filter((row): row is NonNullable<typeof row> => row !== null),
+    [values],
+  );
+
+  const hasInvalid = rows.some((row) => row.isOutOfRange);
+  const hasAnyValue = rows.some((row) => row.hasValue);
+  const hasUrgentReading = rows.some(
+    (row) => row.isPlausible && classifyValue(row.id, Number(row.raw)) === 'urgent',
+  );
+  const dueIndicators = rows
+    .filter((row) => !row.hasValue)
+    .map((row) => row.meta.label);
 
   const handleChange = (id: IndicatorId, text: string) => {
-    setValues((prev) => ({ ...prev, [id]: text }));
+    setValues((previous) => ({ ...previous, [id]: text }));
     setSavedSuccess(null);
   };
 
-  const handleBlur = (id: IndicatorId) => {
-    setBlurred((prev) => ({ ...prev, [id]: true }));
-  };
-
-  const toggleHelp = (id: IndicatorId) => {
-    setExpandedHelp((prev) => ({ ...prev, [id]: !prev[id] }));
-  };
-
-  // Check if any reading is urgent
-  let hasUrgentReading = false;
-  for (const id of LOGGABLE_INDICATORS) {
-    const raw = values[id];
-    if (raw && !isNaN(Number(raw))) {
-      const vClass = classifyValueLocal(id, Number(raw));
-      if (vClass === 'urgent') {
-        hasUrgentReading = true;
-        break;
-      }
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault();
+    if (hasInvalid || !hasAnyValue) {
+      setShowErrors(true);
+      return;
     }
-  }
 
-  // Measurements due today (unlogged indicators)
-  const dueIndicators = LOGGABLE_INDICATORS.filter(
-    (id) => values[id] === undefined || values[id]?.trim() === '',
-  ).map((id) => INDICATORS.find((i) => i.id === id)?.label ?? id);
-
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setIsSaving(true);
     const parsed: Partial<Record<IndicatorId, number>> = {};
-
-    for (const id of LOGGABLE_INDICATORS) {
-      const raw = values[id];
-      if (raw && raw.trim() !== '' && !isNaN(Number(raw))) {
-        parsed[id] = Number(raw);
-      }
+    for (const row of rows) {
+      if (row.hasValue) parsed[row.id] = Number(row.raw);
     }
 
+    setIsSaving(true);
     try {
       await onSave(parsed);
       setSavedSuccess(`Saved for day ${day}`);
@@ -137,57 +123,49 @@ export function MeasurementForm({ day, setting: _setting, existing = {}, onSave 
 
   return (
     <form onSubmit={handleSubmit} className="flex flex-col gap-6 w-full" aria-label="Log measurements form">
-      {/* Due Today Prompt Strip */}
       <div className="bg-instrument-soft/60 border border-instrument text-ink px-4 py-2.5 rounded-chip text-sm font-medium">
         {dueIndicators.length > 0 ? (
           <span>
             <strong>Measurements due today:</strong> {dueIndicators.join(', ')}
           </span>
         ) : (
-          <span>All daily measurements have been logged for Day {day}.</span>
+          <span>All daily measurements have been logged for day {day}.</span>
         )}
       </div>
 
-      {/* Urgent Callout if any value is in urgent range (exact copy from DESIGN.md section 7) */}
       {hasUrgentReading && (
         <div
           role="alert"
-          className="bg-status-urgent-soft border-2 border-status-urgent text-ink p-4 rounded-sheet flex items-start gap-3 shadow-sm"
+          className="bg-status-urgent-soft border-2 border-status-urgent text-ink p-4 rounded-sheet flex items-start gap-3"
         >
           <AlertTriangleIcon className="w-5 h-5 text-status-urgent flex-shrink-0 mt-0.5" />
           <div className="text-sm font-medium leading-relaxed">
-            <strong className="block text-status-urgent font-bold mb-1">Urgent Attention Required</strong>
-            One reading is in the urgent range. Repeat it once, and if it is confirmed, follow your emergency medical procedures and contact the crew medical officer now.
+            <strong className="block text-status-urgent font-bold mb-1">
+              Urgent attention
+            </strong>
+            One reading is in the urgent range. Repeat it once, and if it is confirmed, follow
+            your emergency medical procedures and contact the crew medical officer now.
           </div>
         </div>
       )}
 
-      {/* Form Fields */}
-      <div className="bg-panel border border-line rounded-sheet p-4 sm:p-6 shadow-sm divide-y divide-line">
-        {LOGGABLE_INDICATORS.map((id) => {
-          const meta = INDICATORS.find((i) => i.id === id);
-          if (!meta) return null;
-
-          const raw = values[id] ?? '';
-          const num = Number(raw);
-          const hasValue = raw.trim() !== '' && !isNaN(num);
-          const isPlausible = hasValue && num >= meta.plausibleMin && num <= meta.plausibleMax;
-          const isOutOfRange = hasValue && (num < meta.plausibleMin || num > meta.plausibleMax);
-
-          let chipInfo: { status: StatusType; label: string } | null = null;
-          if (hasValue && isPlausible && blurred[id]) {
-            const vClass = classifyValueLocal(id, num);
-            chipInfo = VALUE_CLASS_TO_STATUS[vClass];
-          }
-
-          const help = mockMeasurementHelp[id];
-          const isHelpOpen = !!expandedHelp[id];
+      <div className="bg-panel border border-line rounded-sheet p-4 sm:p-6 divide-y divide-line">
+        {rows.map((row) => {
+          const { id, meta, raw, isPlausible, isOutOfRange } = row;
+          const chipInfo =
+            isPlausible && blurred[id]
+              ? VALUE_CLASS_TO_STATUS[classifyValue(id, Number(raw))]
+              : null;
+          const help = MEASUREMENT_HELP[id];
+          const isHelpOpen = Boolean(expandedHelp[id]);
+          const showError = isOutOfRange && (showErrors || blurred[id]);
 
           return (
             <div key={id} className="py-4 first:pt-0 last:pb-0 flex flex-col gap-2">
               <div className="flex items-center justify-between gap-4 flex-wrap">
                 <label htmlFor={`input-${id}`} className="font-bold text-sm sm:text-base text-ink">
-                  {meta.label} <span className="text-xs text-ink-soft font-normal">({meta.unit})</span>
+                  {meta.label}{' '}
+                  <span className="text-xs text-ink-soft font-normal">({meta.unit})</span>
                 </label>
                 {chipInfo && <StatusChip status={chipInfo.status} label={chipInfo.label} />}
               </div>
@@ -200,30 +178,34 @@ export function MeasurementForm({ day, setting: _setting, existing = {}, onSave 
                   min={meta.plausibleMin}
                   max={meta.plausibleMax}
                   value={raw}
-                  onChange={(e) => handleChange(id, e.target.value)}
-                  onBlur={() => handleBlur(id)}
-                  placeholder={`${meta.plausibleMin} – ${meta.plausibleMax}`}
-                  className={`w-full sm:w-48 bg-ceramic border rounded-input px-3 py-2 text-ink text-base tabular-nums focus:outline-none focus:border-instrument min-h-[44px] ${
-                    isOutOfRange ? 'border-status-urgent bg-status-urgent-soft/40' : 'border-line'
+                  onChange={(event) => handleChange(id, event.target.value)}
+                  onBlur={() => setBlurred((previous) => ({ ...previous, [id]: true }))}
+                  placeholder={`${meta.plausibleMin} to ${meta.plausibleMax}`}
+                  aria-invalid={showError}
+                  aria-describedby={showError ? `error-${id}` : undefined}
+                  className={`w-full sm:w-48 bg-ceramic border rounded-input px-3 py-2 text-ink text-base tabular-nums focus:border-instrument min-h-[44px] ${
+                    showError ? 'border-status-urgent' : 'border-line'
                   }`}
                 />
                 <span className="text-sm font-medium text-ink-soft">{meta.unit}</span>
               </div>
 
-              {/* Validation error */}
-              {isOutOfRange && (
-                <p className="text-xs text-status-urgent font-medium">
-                  Please enter a valid reading between {meta.plausibleMin} and {meta.plausibleMax} {meta.unit}.
+              {showError && (
+                <p id={`error-${id}`} className="text-xs text-status-urgent font-medium">
+                  Enter a reading between {meta.plausibleMin} and {meta.plausibleMax}{' '}
+                  {meta.unit}.
                 </p>
               )}
 
-              {/* Expandable how to measure */}
               {help && (
                 <div className="text-xs">
                   <button
                     type="button"
-                    onClick={() => toggleHelp(id)}
-                    className="text-instrument font-medium hover:underline inline-flex items-center"
+                    onClick={() =>
+                      setExpandedHelp((previous) => ({ ...previous, [id]: !previous[id] }))
+                    }
+                    className="text-instrument font-medium hover:underline inline-flex items-center min-h-[44px]"
+                    aria-expanded={isHelpOpen}
                   >
                     {isHelpOpen ? 'Hide instructions' : 'How to measure'}
                   </button>
@@ -239,23 +221,34 @@ export function MeasurementForm({ day, setting: _setting, existing = {}, onSave 
         })}
       </div>
 
-      {/* Save Button & Status message */}
-      <div className="flex items-center gap-4">
+      {showErrors && (hasInvalid || !hasAnyValue) && (
+        <p role="alert" className="text-sm text-status-urgent font-medium">
+          {hasInvalid
+            ? 'Fix the readings outside the valid range before saving.'
+            : 'Enter at least one measurement before saving.'}
+        </p>
+      )}
+
+      <div className="flex items-center gap-4 flex-wrap">
         <button
           type="submit"
-          disabled={isSaving}
-          className="px-6 py-3 bg-instrument text-panel font-bold text-sm sm:text-base rounded-input hover:opacity-90 transition-opacity min-h-[44px] min-w-[44px]"
+          disabled={isSaving || hasInvalid || !hasAnyValue}
+          className="px-6 py-3 bg-instrument text-panel font-bold text-sm sm:text-base rounded-input min-h-[44px] min-w-[44px] disabled:opacity-50"
         >
           {isSaving ? 'Saving...' : 'Save measurements'}
         </button>
 
         {savedSuccess && (
-          <span role="status" className="text-sm font-bold text-status-ok">
-            ✓ {savedSuccess}
+          <span
+            ref={statusRef}
+            tabIndex={-1}
+            role="status"
+            className="text-sm font-bold text-status-ok"
+          >
+            {savedSuccess}
           </span>
         )}
       </div>
     </form>
   );
 }
-

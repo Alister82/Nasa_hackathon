@@ -2,12 +2,22 @@ import React from 'react';
 import { SOURCES } from '@/guidance';
 import { APP_NAME, DISCLAIMER_BANNER } from '@/contracts/constants';
 
+type Coverage =
+  | 'Covered'
+  | 'Covered (adherence only)'
+  | 'Covered (self-check only)'
+  | 'Covered (dose tracking only)'
+  | 'Partly'
+  | 'Not covered';
+
 interface RiskCoverageItem {
   risk: string;
-  coverage: 'Covered' | 'Partly' | 'Not covered';
+  coverage: Coverage;
   how: string;
 }
 
+// NASA HRP risk names are quoted verbatim only on this About screen,
+// per RULES.md section 10. All other prose stays in plain decision-support language.
 const RISK_COVERAGE: RiskCoverageItem[] = [
   {
     risk: 'Risk of Cardiovascular Adaptations',
@@ -21,39 +31,47 @@ const RISK_COVERAGE: RiskCoverageItem[] = [
   },
   {
     risk: 'Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness',
-    coverage: 'Covered',
-    how: 'Exercise minutes as a countermeasure-adherence indicator; tracking adherence against scheduled sessions',
+    coverage: 'Covered (adherence only)',
+    how: 'Exercise minutes as a countermeasure-adherence indicator; the Risks page says all astronauts exercise to counteract losses in bone density, muscle strength, and heart and blood vessel performance',
   },
   {
     risk: 'Risk of Spaceflight-Induced Bone Changes',
     coverage: 'Partly',
-    how: 'Exercise adherence as a proxy only; bone density is not directly measured in v1',
+    how: 'Exercise adherence as a proxy only; bone density is not measured',
   },
   {
     risk: 'Risk of Behavioral Changes and Psychiatric Disorders',
-    coverage: 'Covered',
-    how: 'Mood, stress, energy self-checkin; strictly self-check, no automated diagnosis or psychiatric assessment',
+    coverage: 'Covered (self-check only)',
+    how: 'Mood, stress, and energy check-in; no assessment or screening',
   },
   {
     risk: 'Risk of Radiation-Induced Cancers',
-    coverage: 'Covered',
-    how: 'Daily and cumulative dose tracking against expected mission setting rate; no clinical outcome predictions',
+    coverage: 'Covered (dose tracking only)',
+    how: 'Daily and cumulative dose against the expected rate for the mission setting; no health outcome claims',
   },
   {
     risk: 'Risk of Altered Immune System Responses',
     coverage: 'Partly',
-    how: 'Core body temperature monitoring only',
+    how: 'Body temperature only',
   },
   {
     risk: 'Risk of Inadequate Food and Nutrition',
     coverage: 'Partly',
-    how: 'Fasting blood glucose monitoring only; no nutrition logging in v1',
+    how: 'Blood glucose only; no nutrition tracking in v1',
   },
   {
-    risk: 'Other Spaceflight Risks (Sensorimotor, Decompression, Hypoxia, SANS, etc.)',
+    risk: 'Not covered in v1',
     coverage: 'Not covered',
-    how: 'Out of scope in v1: Altered Sensorimotor and Vestibular Function, Decompression Sickness, Host-Microorganism Interactions, Hypoxia, Injury from Spacewalks, SANS, Inadequate Teamwork, Inadequate Systems Support, Dynamic Loads',
+    how: 'Altered Sensorimotor and Vestibular Function; Decompression Sickness; Host-Microorganism Interactions; Hypoxia; Injury and Compromised Performance from Spacewalks; Spaceflight Associated Neuro-ocular Syndrome (SANS); Inadequate Teamwork; Inadequate Systems Operations Support; Injury from Dynamic Loads',
   },
+];
+
+const NOT_DONE = [
+  'It is not a medical device and does not replace the flight surgeon or emergency procedures.',
+  'It does not name a cause for a change or state what is happening in the body.',
+  'It does not prescribe treatment, medication, or doses.',
+  'It does not assign a single overall health score.',
+  'It does not use an AI model or a chatbot; guidance comes from a fixed library.',
 ];
 
 export function AboutPage() {
@@ -61,77 +79,64 @@ export function AboutPage() {
 
   return (
     <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-8">
-      {/* Title */}
       <div>
         <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-1">
           About {APP_NAME}
         </h1>
         <p className="text-sm text-ink-soft">
-          Offline-first astronaut health monitoring and clinical decision support for deep space exploration.
+          An offline-first health monitoring prototype for astronauts on long missions. Every
+          crew reading is simulated.
         </p>
       </div>
 
-      {/* Persistent Disclaimer Callout */}
       <div className="bg-instrument-soft border border-instrument p-4 rounded-sheet text-ink text-sm font-medium">
-        <strong>Important Medical & Data Notice:</strong> {DISCLAIMER_BANNER} All crew data, trajectories, baselines, and reference thresholds are illustrative and simulated for demonstration purposes. Vigil is an autonomous self-assessment decision-support prototype and does not replace the flight surgeon or onboard emergency medical protocols.
+        {DISCLAIMER_BANNER} Reference ranges, adaptation offsets, scenarios, and radiation
+        rates are illustrative and have not been verified for clinical use.
       </div>
 
-      {/* What Vigil Is vs. What It Is Not */}
       <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-panel border border-line rounded-sheet p-5 shadow-sm">
-          <h2 className="font-bold text-base text-status-ok mb-2">What Vigil is</h2>
+        <div className="bg-panel border border-line rounded-sheet p-5">
+          <h2 className="font-bold text-base text-ink mb-2">What the app does</h2>
           <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-ink leading-relaxed">
-            <li>An offline-first decision support tool for long-duration space missions.</li>
-            <li>A baseline-relative change detection engine based on CUSUM statistics.</li>
-            <li>A procedure-sheet generator linking observations to verified public health guidance.</li>
-            <li>A latency-aware escalation coordinator adapting to mission communication delays.</li>
+            <li>Records health indicators and wellbeing check-ins on the device.</li>
+            <li>Compares each reading with the astronaut&apos;s own pre-flight baseline and the expected early adaptation to spaceflight.</li>
+            <li>Shows changes on a body map, on charts, and in evidence-linked alert cards.</li>
+            <li>Uses a fixed guidance library and mission-aware escalation advice.</li>
+            <li>Works without a network after the first load.</li>
           </ul>
         </div>
 
-        <div className="bg-panel border border-line rounded-sheet p-5 shadow-sm">
-          <h2 className="font-bold text-base text-status-urgent mb-2">What Vigil is not</h2>
+        <div className="bg-panel border border-line rounded-sheet p-5">
+          <h2 className="font-bold text-base text-ink mb-2">What the app does not do</h2>
           <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-ink leading-relaxed">
-            <li>Not a diagnostic device and does not predict diseases or clinical outcomes.</li>
-            <li>Not an autonomous medical practitioner or automated therapist.</li>
-            <li>Does not prescribe medications, clinical diagnoses, or off-nominal treatments.</li>
-            <li>Does not transmit sensitive crew check-ins or personal notes across external networks.</li>
+            {NOT_DONE.map((item) => (
+              <li key={item}>{item}</li>
+            ))}
           </ul>
         </div>
       </div>
 
-      {/* NASA Risk Coverage Map (ARCHITECTURE.md 7.7) */}
-      <section aria-label="NASA Risk Coverage Map" className="bg-panel border border-line rounded-sheet p-5 shadow-sm flex flex-col gap-3">
-        <h2 className="font-bold text-lg text-ink">NASA Human Research Program (HRP) Risk Coverage</h2>
+      <section aria-label="NASA risk coverage map" className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-3">
+        <h2 className="font-bold text-lg text-ink">NASA Human Research Program risk coverage</h2>
         <p className="text-xs sm:text-sm text-ink-soft">
-          Mapping of official NASA Human Spaceflight risks (quoted verbatim from NASA HRP) to Vigil v1 capabilities.
+          NASA risk names are quoted verbatim from the organizer&apos;s Risks of Human
+          Spaceflight page. This table shows what v1 covers and what it does not.
         </p>
 
         <div className="overflow-x-auto mt-2">
           <table className="w-full text-left border-collapse text-xs sm:text-sm">
             <thead>
               <tr className="border-b border-line text-ink-soft font-bold">
-                <th className="py-2.5 pr-4">NASA HRP Risk</th>
-                <th className="py-2.5 px-4 text-center">Status in v1</th>
-                <th className="py-2.5 pl-4">How it is addressed</th>
+                <th className="py-2.5 pr-4">NASA HRP risk</th>
+                <th className="py-2.5 px-4 text-center">Coverage in v1</th>
+                <th className="py-2.5 pl-4">How</th>
               </tr>
             </thead>
             <tbody className="divide-y divide-line font-medium text-ink">
-              {RISK_COVERAGE.map((item, idx) => (
-                <tr key={idx}>
+              {RISK_COVERAGE.map((item) => (
+                <tr key={item.risk}>
                   <td className="py-3 pr-4 font-bold">{item.risk}</td>
-                  <td className="py-3 px-4 text-center">
-                    <span
-                      className={`inline-block px-2 py-0.5 rounded-chip text-xs font-bold border ${
-                        item.coverage === 'Covered'
-                          ? 'bg-status-ok-soft text-status-ok border-status-ok'
-                          : item.coverage === 'Partly'
-                          ? 'bg-status-watch-soft text-status-watch border-status-watch'
-                          : 'bg-ceramic text-ink-soft border-line'
-                      }`}
-                    >
-                      {item.coverage}
-                    </span>
-                  </td>
+                  <td className="py-3 px-4 text-center whitespace-nowrap">{item.coverage}</td>
                   <td className="py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed">
                     {item.how}
                   </td>
@@ -142,20 +147,26 @@ export function AboutPage() {
         </div>
       </section>
 
-      {/* Public Sources List */}
-      <section aria-label="Sources and References" className="bg-panel border border-line rounded-sheet p-5 shadow-sm flex flex-col gap-3">
-        <h2 className="font-bold text-lg text-ink">Sources & Literature</h2>
+      <section aria-label="Sources" className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-3">
+        <h2 className="font-bold text-lg text-ink">Sources</h2>
         <p className="text-xs sm:text-sm text-ink-soft">
-          Sourced public health guidelines and official agency resources utilized for thresholds, hazards, and guidance.
+          The five organizer pages are linked with verified URLs. The four external clinical
+          references stay marked pending until a human verifies them.
+        </p>
+        <p className="text-xs sm:text-sm text-ink-soft">
+          Longer Moon and Mars missions bring more time in weightlessness, more radiation
+          exposure, longer isolation, increased delays in communication with Earth, and less
+          ability to rely on Earth for emergency medical assistance. That is why escalation
+          advice changes with the mission setting and the app works offline.
         </p>
 
         <ul className="divide-y divide-line mt-2">
-          {sourcesList.map((src) => (
-            <li key={src.id} className="py-2.5 flex items-start justify-between gap-3 text-xs sm:text-sm">
-              <span className="font-medium text-ink">{src.title}</span>
-              {src.url ? (
+          {sourcesList.map((source) => (
+            <li key={source.id} className="py-2.5 flex items-start justify-between gap-3 text-xs sm:text-sm">
+              <span className="font-medium text-ink">{source.title}</span>
+              {source.url !== null ? (
                 <a
-                  href={src.url}
+                  href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-instrument font-semibold underline hover:opacity-80 flex-shrink-0"
@@ -163,11 +174,18 @@ export function AboutPage() {
                   Source link
                 </a>
               ) : (
-                <span className="text-ink-soft italic flex-shrink-0">(source link pending)</span>
+                <span className="text-ink-soft italic flex-shrink-0">
+                  (source link pending)
+                </span>
               )}
             </li>
           ))}
         </ul>
+
+        <p className="text-xs text-ink-soft">
+          NASA does not endorse non-U.S. Government entities. Follow each website&apos;s data
+          use terms.
+        </p>
       </section>
     </div>
   );

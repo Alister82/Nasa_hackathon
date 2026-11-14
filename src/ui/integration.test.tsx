@@ -6,7 +6,7 @@ import { MeasurementForm } from '@/ui/components/MeasurementForm';
 import { CheckInForm } from '@/ui/components/CheckInForm';
 import { MissionPicker } from '@/ui/components/MissionPicker';
 import { SupplyChecklist } from '@/ui/components/SupplyChecklist';
-import type { MissionContext } from '@/contracts/types';
+import type { MissionContext, MissionSettingId, SupplyId } from '@/contracts/types';
 
 describe('U12 Integration: Real engine and guidance pipeline', () => {
   it('USE_MOCKS is set to false for real integration', () => {
@@ -143,10 +143,10 @@ describe('U10: CheckInForm & CheckInPage', () => {
 
 describe('U11: MissionPicker & SupplyChecklist', () => {
   it('changes mission setting', () => {
-    let currentSetting = 'deep_space';
+    let currentSetting: MissionSettingId = 'deep_space';
     const { rerender } = render(
       <MissionPicker
-        value={currentSetting as any}
+        value={currentSetting}
         onChange={(m) => {
           currentSetting = m;
         }}
@@ -157,17 +157,17 @@ describe('U11: MissionPicker & SupplyChecklist', () => {
     fireEvent.click(stationRadio);
     expect(currentSetting).toBe('station');
 
-    rerender(<MissionPicker value={currentSetting as any} onChange={() => {}} />);
+    rerender(<MissionPicker value={currentSetting} onChange={() => {}} />);
     expect(stationRadio).toBeChecked();
   });
 
   it('toggles supply items', () => {
-    let supplies = { bp_cuff: true, thermometer: true, glucometer: true, wrist_hr_monitor: true, exercise_equipment: true, sleep_mask: true };
+    let supplies: Record<SupplyId, boolean> = { bp_cuff: true, thermometer: true, glucometer: true, wrist_hr_monitor: true, exercise_equipment: true, sleep_mask: true };
     render(
       <SupplyChecklist
         supplies={supplies}
         onChange={(s) => {
-          supplies = s as any;
+          supplies = s;
         }}
       />,
     );

@@ -1,23 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
-import type { MissionSettingId } from '@/contracts/types';
+import { useAppState } from '@/app/AppState';
 
-interface UrgentPageProps {
-  missionSetting?: MissionSettingId;
-}
+export function UrgentPage() {
+  const { missionSetting } = useAppState();
 
-export function UrgentPage({ missionSetting = 'deep_space' }: UrgentPageProps) {
   return (
-    <div className="p-6 max-w-xl mx-auto my-8 bg-panel border-2 border-status-urgent rounded-sheet text-center shadow-card">
+    <div className="p-6 max-w-xl mx-auto my-8 bg-panel border-2 border-status-urgent rounded-sheet text-center">
       <h1 className="text-2xl sm:text-3xl font-bold text-status-urgent mb-4">
         Get help now
       </h1>
       <p className="text-ink text-base sm:text-lg mb-4 leading-relaxed">
-        Contact your crew medical officer and ground now. You do not have to handle this alone. Follow your emergency procedures.
+        Contact your crew medical officer and ground now. You do not have to handle this
+        alone. Follow your emergency procedures.
       </p>
       {missionSetting === 'deep_space' && (
         <p className="text-status-urgent font-medium text-sm sm:text-base mb-6">
-          A reply from ground may take a while. Do not wait for a reply before starting emergency procedures.
+          A reply from ground may take a while. Do not wait for a reply before starting
+          emergency procedures.
         </p>
       )}
       <div className="pt-2">
@@ -31,4 +31,3 @@ export function UrgentPage({ missionSetting = 'deep_space' }: UrgentPageProps) {
     </div>
   );
 }
-

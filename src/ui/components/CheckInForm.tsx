@@ -190,7 +190,7 @@ export function CheckInForm({ crewId, day, onSubmit, onNeedHelpNow }: CheckInFor
 
           {result.suggestions && result.suggestions.length > 0 && (
             <div className="mt-3 pt-3 border-t border-current/20">
-              <span className="text-xs font-bold uppercase tracking-wider block mb-2">
+              <span className="text-xs font-bold block mb-2">
                 Suggestions that may help:
               </span>
               <ul className="list-disc pl-5 space-y-1.5 text-sm">
