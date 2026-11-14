@@ -1,0 +1,178 @@
+{
+  "schemaVersion": 1,
+  "contractVersion": 1,
+  "evaluationSeeds": {
+    "start": 1,
+    "end": 100
+  },
+  "tuningSeeds": {
+    "start": 1000,
+    "end": 1099
+  },
+  "missionDays": 180,
+  "missionSetting": "deep_space",
+  "scenarios": [
+    {
+      "scenarioId": "normal_adaptation",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 124,
+          "falseAlarmsPer100Days": 0.6888888888888889
+        },
+        "threshold": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 391,
+          "falseAlarmsPer100Days": 2.172222222222222
+        },
+        "zscore": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 1191,
+          "falseAlarmsPer100Days": 6.616666666666666
+        }
+      }
+    },
+    {
+      "scenarioId": "slow_drift",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 16,
+          "falseEpisodes": 47,
+          "falseAlarmsPer100Days": 0.6811594202898551
+        },
+        "threshold": {
+          "eventCount": 100,
+          "detectedCount": 99,
+          "medianDelayDays": 19,
+          "falseEpisodes": 164,
+          "falseAlarmsPer100Days": 2.3768115942028984
+        },
+        "zscore": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 5.5,
+          "falseEpisodes": 450,
+          "falseAlarmsPer100Days": 6.521739130434782
+        }
+      }
+    },
+    {
+      "scenarioId": "sensor_fault",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 127,
+          "falseAlarmsPer100Days": 0.7055555555555556
+        },
+        "threshold": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 465,
+          "falseAlarmsPer100Days": 2.5833333333333335
+        },
+        "zscore": {
+          "eventCount": 0,
+          "detectedCount": 0,
+          "medianDelayDays": null,
+          "falseEpisodes": 1245,
+          "falseAlarmsPer100Days": 6.916666666666667
+        }
+      }
+    },
+    {
+      "scenarioId": "blackout_drift",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 20,
+          "falseEpisodes": 69,
+          "falseAlarmsPer100Days": 0.7340425531914894
+        },
+        "threshold": {
+          "eventCount": 100,
+          "detectedCount": 97,
+          "medianDelayDays": 25,
+          "falseEpisodes": 215,
+          "falseAlarmsPer100Days": 2.2872340425531914
+        },
+        "zscore": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 12,
+          "falseEpisodes": 615,
+          "falseAlarmsPer100Days": 6.542553191489362
+        }
+      }
+    },
+    {
+      "scenarioId": "solar_event",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 0,
+          "falseEpisodes": 116,
+          "falseAlarmsPer100Days": 0.7160493827160493
+        },
+        "threshold": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 0,
+          "falseEpisodes": 358,
+          "falseAlarmsPer100Days": 2.2098765432098766
+        },
+        "zscore": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 0,
+          "falseEpisodes": 1080,
+          "falseAlarmsPer100Days": 6.666666666666667
+        }
+      }
+    },
+    {
+      "scenarioId": "acute_fever",
+      "seedCount": 100,
+      "systems": {
+        "vigil": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 4,
+          "falseEpisodes": 135,
+          "falseAlarmsPer100Days": 0.8385093167701864
+        },
+        "threshold": {
+          "eventCount": 100,
+          "detectedCount": 99,
+          "medianDelayDays": 1,
+          "falseEpisodes": 363,
+          "falseAlarmsPer100Days": 2.2546583850931676
+        },
+        "zscore": {
+          "eventCount": 100,
+          "detectedCount": 100,
+          "medianDelayDays": 1,
+          "falseEpisodes": 1069,
+          "falseAlarmsPer100Days": 6.6397515527950315
+        }
+      }
+    }
+  ]
+}
