@@ -37,17 +37,18 @@ describe('G1: sources', () => {
     );
   });
 
-  it('non-organizer sources have url: null and status: unverified', () => {
-    const nonOrganizer = [
+  it('clinical guideline sources have verified status and official URLs', () => {
+    const clinicalSources = [
       'src_aha_acc_bp',
       'src_ada_glucose',
       'src_aasm_sleep',
       'src_general_clinical',
     ];
-    for (const id of nonOrganizer) {
+    for (const id of clinicalSources) {
       expect(SOURCES[id]).toBeDefined();
-      expect(SOURCES[id]!.url).toBeNull();
-      expect(SOURCES[id]!.status).toBe('unverified');
+      expect(SOURCES[id]!.url).not.toBeNull();
+      expect(SOURCES[id]!.status).toBe('verified');
+      expect(SOURCES[id]!.url).toMatch(/^https:\/\//);
     }
   });
 

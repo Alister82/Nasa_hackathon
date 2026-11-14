@@ -12,6 +12,7 @@ import type {
   IndicatorStatus,
   IndicatorPoint,
   IndicatorMeta,
+  SupportingSignal,
 } from '@/contracts/types';
 import { INDICATORS, getIndicator } from '@/contracts/indicators';
 import { LIBRARY, type LibraryAction, type LibraryEntry } from './library';
@@ -395,6 +396,42 @@ function buildMissingInfo(finding: Finding, analysis: AnalysisResult, questions:
   return missingInfo;
 }
 
+function detectProcedures(actions: ActionItem[]): { hasRestTimer: boolean; hasBreathingPacer: boolean } {
+  const hasRestTimer = actions.some((a) =>
+    /sit.*5 minutes|5-minute.*rest|rest.*5 minutes|sit quietly/i.test(a.text),
+  );
+  const hasBreathingPacer = actions.some((a) =>
+    /breathing|4 seconds|4s\/6s|slow breathing/i.test(a.text),
+  );
+  return { hasRestTimer, hasBreathingPacer };
+}
+
+function buildSupportingSignals(
+  indicatorIds: IndicatorId[],
+  analysis: AnalysisResult,
+): SupportingSignal[] {
+  return indicatorIds.map((id) => {
+    const meta = getIndicator(id);
+    const ind = analysis.indicators[id];
+    const base = analysis.baselines[id];
+    const points = observedPoints(ind.points);
+    const latest = points[points.length - 1];
+    const currentValue = latest?.value ?? ind.lastValue ?? undefined;
+    const severity: SeverityLevel = ind.status === 'flagged' ? 'review' : 'watch';
+    const summary = `${meta.label} has shifted from baseline (${base?.median ?? '—'} → ${currentValue !== undefined ? valueText(currentValue, meta) : '—'})`;
+    return {
+      indicatorId: id,
+      name: meta.label,
+      severity,
+      summary,
+      currentValue,
+      unit: meta.unit,
+      baselineMean: base?.median,
+      baselineStd: base?.sigma,
+    };
+  });
+}
+
 function buildCardFromFinding(
   finding: Finding,
   analysis: AnalysisResult,
@@ -427,6 +464,7 @@ function buildCardFromFinding(
         );
 
   const evidence = finding.indicators.map((id) => buildEvidenceItem(id, analysis));
+  const { hasRestTimer, hasBreathingPacer } = detectProcedures(actions);
 
   return {
     id: `${finding.kind}:${finding.indicators.join('+')}:${finding.firstFlaggedDay}`,
@@ -447,6 +485,8 @@ function buildCardFromFinding(
     recommendedActions: actions,
     escalation: buildEscalation(severity, ctx),
     sourceIds: collectSourceIds(entries, finding.indicators),
+    hasRestTimer,
+    hasBreathingPacer,
   };
 }
 
@@ -470,6 +510,9 @@ function buildEarlySignalCard(
       ? `${meta.label} is worth attention. Keep logging.`
       : `${meta.label} is worth attention: ${valueText(latest.value, meta)} on day ${latest.day}, beyond your usual range.`;
 
+  const actions = entry ? resolveActions(entry.actions.slice(0, 5), ctx) : [];
+  const { hasRestTimer, hasBreathingPacer } = detectProcedures(actions);
+
   return {
     id: `early_signal:${indicatorId}:${indicator.onsetDay ?? viewDay}`,
     kind: 'early_signal',
@@ -486,27 +529,55 @@ function buildEarlySignalCard(
       missingInfo: questions,
     },
     nextMeasurements: entry ? [...entry.nextMeasurements] : [],
-    recommendedActions: entry ? resolveActions(entry.actions.slice(0, 5), ctx) : [],
+    recommendedActions: actions,
     escalation: buildEscalation('watch', ctx),
     sourceIds: collectSourceIds(entry ? [entry] : [], [indicatorId]),
+    hasRestTimer,
+    hasBreathingPacer,
   };
 }
 
 /**
  * Build alert cards from an analysis result and the mission context.
  * Sorted by severity (urgent, review, watch, info), then day descending, then id.
+ * Multi-signal patterns consolidate co-occurring single-indicator findings into supportingSignals.
  */
 export function buildAlertCards(analysis: AnalysisResult, ctx: MissionContext): AlertCard[] {
   if (!analysis.baselineReady) return [];
 
   const viewDay = analysis.upToDay;
-  const cards = analysis.findings.map((finding) =>
-    buildCardFromFinding(finding, analysis, ctx, viewDay),
+
+  // Identify pattern clusters to avoid duplicate cards for indicators already grouped
+  const patternFindings = analysis.findings.filter((f) => f.kind === 'multi_signal_pattern');
+  const clusterIndicatorIds = new Set<IndicatorId>(
+    patternFindings.flatMap((f) => f.indicators),
   );
 
-  const covered = new Set<IndicatorId>(
-    analysis.findings.flatMap((finding) => finding.indicators),
-  );
+  const cards: AlertCard[] = [];
+
+  for (const finding of analysis.findings) {
+    // If it's a single-indicator persistent_change finding whose indicator is already part of a multi_signal_pattern cluster,
+    // fold it into the pattern card rather than creating a separate alert card wall.
+    if (
+      finding.kind === 'persistent_change' &&
+      finding.indicators.length === 1 &&
+      clusterIndicatorIds.has(finding.indicators[0]!)
+    ) {
+      continue;
+    }
+
+    const card = buildCardFromFinding(finding, analysis, ctx, viewDay);
+    if (finding.kind === 'multi_signal_pattern') {
+      card.supportingSignals = buildSupportingSignals(finding.indicators, analysis);
+      card.clusterKey = finding.id;
+    }
+    cards.push(card);
+  }
+
+  const covered = new Set<IndicatorId>([
+    ...analysis.findings.flatMap((finding) => finding.indicators),
+    ...clusterIndicatorIds,
+  ]);
   for (const meta of INDICATORS) {
     const indicator: IndicatorStatus = analysis.indicators[meta.id].status;
     if (indicator === 'watch' && !covered.has(meta.id)) {

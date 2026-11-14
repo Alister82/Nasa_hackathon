@@ -110,9 +110,9 @@ describe('U15: Journal and About Screens', () => {
     expect(screen.getByText('Risk of Cardiovascular Adaptations')).toBeInTheDocument();
     expect(screen.getByText('Risk of Radiation-Induced Cancers')).toBeInTheDocument();
 
-    // Check for source links and pending status
-    expect(screen.getAllByText('Source link').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('(source link pending)').length).toBeGreaterThan(0);
+    // Check that all sources have verified links and no pending links remain
+    expect(screen.getAllByText('Source link').length).toBe(9);
+    expect(screen.queryByText('(source link pending)')).toBeNull();
   });
 });
 

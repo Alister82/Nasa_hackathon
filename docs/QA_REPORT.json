@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-14T17:05:38.171Z",
+  "startedAt": "2026-11-14T17:23:42.212Z",
   "checks": [
     {
       "name": "initial demo state is Crew 1, day 120",
@@ -525,6 +525,6 @@
       "day120Titles": []
     }
   ],
-  "finishedAt": "2026-11-14T17:06:01.438Z",
+  "finishedAt": "2026-11-14T17:24:05.316Z",
   "passed": true
 }

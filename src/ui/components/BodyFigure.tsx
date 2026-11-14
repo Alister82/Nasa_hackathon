@@ -250,16 +250,16 @@ export function BodyFigure({
 
           {/* Interactive Domain Hotspots */}
           {/* 1. Head: Mood & stress */}
-          {renderHotspot('behavioral', 100, 46, 14, 'Head: Mood and stress')}
+          {renderHotspot('behavioral', 100, 46, 14, 'Mood and stress')}
 
           {/* 2. Chest: Heart & blood pressure */}
-          {renderHotspot('cardiovascular', 100, 126, 15, 'Chest: Heart and blood pressure')}
+          {renderHotspot('cardiovascular', 100, 126, 15, 'Heart and blood pressure')}
 
           {/* 3. Abdomen: Temperature & blood sugar */}
-          {renderHotspot('metabolic_general', 100, 172, 14, 'Abdomen: Temperature and blood sugar')}
+          {renderHotspot('metabolic_general', 100, 172, 14, 'Temperature and blood sugar')}
 
           {/* 4. Extremities: Exercise & strength */}
-          {renderHotspot('physical_performance', 100, 275, 14, 'Limbs: Exercise and strength')}
+          {renderHotspot('physical_performance', 100, 275, 14, 'Exercise and strength')}
 
           {/* 5. Sleep & Recovery Badge (Top right) */}
           {renderHotspot('sleep_recovery', 162, 50, 14, 'Sleep and recovery')}

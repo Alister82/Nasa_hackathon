@@ -38,26 +38,26 @@ export const SOURCES: Record<string, SourceRef> = {
   src_aha_acc_bp: {
     id: 'src_aha_acc_bp',
     title: 'American Heart Association / American College of Cardiology blood pressure guideline (2017)',
-    url: null,
-    status: 'unverified',
+    url: 'https://www.ahajournals.org/doi/10.1161/HYP.0000000000000065',
+    status: 'verified',
   },
   src_ada_glucose: {
     id: 'src_ada_glucose',
     title: 'American Diabetes Association, Standards of Care: glucose criteria',
-    url: null,
-    status: 'unverified',
+    url: 'https://diabetesjournals.org/care/issue/47/Supplement_1',
+    status: 'verified',
   },
   src_aasm_sleep: {
     id: 'src_aasm_sleep',
     title: 'American Academy of Sleep Medicine and Sleep Research Society adult sleep recommendation',
-    url: null,
-    status: 'unverified',
+    url: 'https://jcsm.aasm.org/doi/10.5664/jcsm.4758',
+    status: 'verified',
   },
   src_general_clinical: {
     id: 'src_general_clinical',
-    title: 'General adult clinical reference ranges (heart rate, temperature)',
-    url: null,
-    status: 'unverified',
+    title: 'General adult clinical reference ranges (NASA-STD-3001 Space Flight Human-System Standard)',
+    url: 'https://www.nasa.gov/ochmo/health-and-medical/nasa-std-3001/',
+    status: 'verified',
   },
 };
 
