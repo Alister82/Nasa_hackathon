@@ -1,0 +1,57 @@
+:root {
+  --ceramic: #E8EDF1;
+  --panel: #F6F8FA;
+  --ink: #0F1A2B;
+  --ink-soft: #46566B;
+  --line: #C4CFDA;
+  --instrument: #1D56B8;
+  --instrument-soft: #D9E5F7;
+
+  /* Status strong colors */
+  --status-ok: #1F6F52;
+  --status-info: #2B5D8A;
+  --status-watch: #8A5A00;
+  --status-review: #B4380B;
+  --status-urgent: #A61B1B;
+
+  /* Status soft colors */
+  --status-ok-soft: #D5EFE4;
+  --status-info-soft: #DCE9F5;
+  --status-watch-soft: #FCE9C0;
+  --status-review-soft: #FADBC9;
+  --status-urgent-soft: #F7D0D0;
+
+  /* Focus and shadows */
+  --focus-ring: 2px solid var(--instrument);
+  --focus-offset: 2px;
+  --card-shadow: 0 1px 2px rgba(15, 26, 43, 0.08);
+}
+
+body {
+  background-color: var(--ceramic);
+  color: var(--ink);
+  font-family: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  margin: 0;
+  padding: 0;
+  -webkit-font-smoothing: antialiased;
+}
+
+.tabular-nums {
+  font-variant-numeric: tabular-nums;
+}
+
+/* Global focus ring */
+:focus-visible {
+  outline: var(--instrument) solid 2px;
+  outline-offset: 2px;
+}
+
+/* Reduced motion guards */
+@media (prefers-reduced-motion: reduce) {
+  *, ::before, ::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
