@@ -31,24 +31,58 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ### P1 Engine (`feat/engine`)
 
-- Current task: E11 (integration support; no requests from P2 or P3 yet)
-- Done: Checkpoint 0 (E0.1–E0.6). E1 `rng.ts`. E2 simulator. E3 six scenarios with ground truth. E4 degradation and merge/truncate. E5 detector with baseline, CUSUM, persistence, spike, data quality, radiation rule, adaptation note, domains, findings, no-future-leak test. E6 three systems plus shared radiation rule. E7 metrics. E8 tuning on seeds 1000–1099 and frozen constants. E9 harness and `public/data/results.json`. E10 performance: `analyze(180)` 6.1 ms on slow_drift seed 42, test bound 500 ms. Checkpoint 2 merged to `main`, tag `checkpoint-2`.
+- Current task: E11 complete (integration support). E12 isolation forest is an unstarted optional stretch item.
+- Done: Checkpoint 0 (E0.1–E0.6). E1 `rng.ts`. E2 simulator. E3 six scenarios with ground truth. E4 degradation and merge/truncate. E5 detector with baseline, CUSUM, persistence, spike, data quality, radiation rule, adaptation note, domains, findings, no-future-leak test. E6 three systems plus shared radiation rule. E7 metrics. E8 tuning on seeds 1000–1099 and frozen constants. E9 harness and `public/data/results.json`. E10 performance: `analyze(180)` 6.1 ms on slow_drift seed 42, test bound 500 ms. E11 integration support: fixed mission-aware dataset generation and stale analysis caching from the app facade, and widened `PATTERN_ONSET_GAP` from 14 to 15 after the tuning-seed check in section 7. Checkpoint 2 merged to `main`, tag `checkpoint-2`.
 - Blocked by: (none)
-- Notes: tuning chose `CUSUM_K` 1.25, `H_FLAG` 8, `PERSIST_Z` 1.0, `PERSIST_MIN_DAYS` 5, with `H_WATCH` 3 unchanged (0.66 false per 100 days on tuning normal, 100 percent slow_drift detection, median delay 17 days); see section 7. Scaffold stylesheet is `src/ui/styles/app.css` (Tailwind entry); P3 owns `src/ui/styles` from checkpoint 0 on. Installed majors within ARCHITECTURE 2: typescript 5.9.3, vite 5.4.21, vitest 2.1.9.
+- Notes: tuning chose `CUSUM_K` 1.25, `H_FLAG` 8, `PERSIST_Z` 1.0, `PERSIST_MIN_DAYS` 5, with `H_WATCH` 3 unchanged (0.66 false per 100 days on tuning normal, 100 percent slow_drift detection, median delay 17 days); see section 7. The pattern gap 14→15 check left tuning results identical and the evaluation harness output unchanged; the wider gap is what puts the demo's heart-rate, blood-pressure, and stress changes into one `multi_signal_pattern` at day 120. Scaffold stylesheet is `src/ui/styles/app.css` (Tailwind entry); P3 owns `src/ui/styles` from checkpoint 0 on. Installed majors within ARCHITECTURE 2: typescript 5.9.3, vite 5.4.21, vitest 2.1.9.
 
 ### P2 Guidance and platform (`feat/guidance`)
 
-- Current task: (not started)
-- Done: (none)
+- Current task: G1–G10 complete on the integrated `feat/ui` line. G11 deploy needs a human account step; G12 gamification is an unstarted stretch item.
+- Done: G1 sources, mission settings, supplies. G2 reference ranges and `classifyValue` with boundary tests. G3 measurement help for all 11 indicators. G4 Appendix A library. G5 alert cards, severity, escalation matrix, supply fallback, and early signals. G6 wellbeing rules. G7 IndexedDB storage with fake-indexeddb tests. G8 PWA config, icons, and Netlify build headers. G9 `docs/SOURCES_TODO.md`. G10 real-analysis card integration.
 - Blocked by: (none)
-- Notes:
+- Notes: the `feat/guidance` branch carried a parallel implementation; the final guidance and storage code is the version integrated and tested on `feat/ui`, which includes the PWA work. PWA uses `vite-plugin-pwa` with `autoUpdate`, precaches `data/results.json`, and emits `sw.js` + `manifest.webmanifest` in `dist`. Preview smoke check returned 200 for `/`, the manifest, the service worker, `data/results.json`, and the icon. The four external clinical URLs remain pending human verification by design.
 
 ### P3 Interface (`feat/ui`)
 
-- Current task: (not started)
-- Done: (none)
+- Current task: U1–U17 complete and feature-frozen. U18 gamification is an unstarted stretch item.
+- Done:
+  - U1: Tokens (`tokens.css`), Tailwind config colors, Atkinson Hyperlegible font, visible focus rings, reduced motion, `StatusChip`, inline SVG icons, `DisclaimerBanner`, `OfflineBadge`.
+  - U2: Mocks per CONTRACTS section 5 (`mockDataset.ts`, `mockAnalysis.ts`, `mockCards.ts`) and `services.ts` facade.
+  - U3: App shell (`HashRouter`), `TopBar` (crew picker, mission pill, persistent "Urgent help" button), `BottomNav`, `ErrorBoundary`.
+  - U4: `BodyMap` with exact 9 SVG shapes, keyboard navigation, selection outline, legend, and `DomainRow`.
+  - U5: `TimelineScrubber` (180 days, markers for flagged days, keyboard navigation, demo runner) and `demo.ts`.
+  - U6: `AlertCardView` procedure-sheet layout (numbered Do now, evidence "Show days" toggle, supply fallback alternative, sources).
+  - U7: `TodayPage` assembly (2-column desktop, single-column mobile).
+  - U8: `IndicatorChart` (Recharts, nulls as gaps, dashed expected line, baseline band) and `DomainDetailPage`.
+  - U9: `LogPage` with `MeasurementForm`, plausible range check, `classifyValue` chips, and urgent callouts.
+  - U10: `CheckInPage` with `CheckInForm` (3 sliders, note max 500 chars), urgent help trigger, 30-day trend chart, and `/urgent` screen with exact copy.
+  - U11: `MissionPage` with `MissionPicker` and `SupplyChecklist`.
+  - U12: Integration: `USE_MOCKS = false`, wired to real `engine`, `guidance`, and `storage` modules; memoized analysis; end-to-end demo story verified.
+  - U13: `LabPage` with `SystemsComparison` table and shared timeline, injection shortcuts.
+  - U14: `ProofPage` with `ProofChart`, numerical metrics table reading `./data/results.json`, graceful empty state.
+  - U15: `JournalPage` (IndexedDB newest first) and `AboutPage` (NASA risk coverage map from ARCHITECTURE 7.7, sources list).
+  - U16: Polish and accessibility audit (44px touch targets, Atkinson Hyperlegible font, visible focus rings, reduced motion, no color-only signals).
+  - U17: UI test suites (`u1_u2.test.tsx`, `u3.test.tsx`, `u4_u7.test.tsx`, `integration.test.tsx`, `u13_u17.test.tsx`, plus `AppState.test.tsx` and the guidance card integration test) — all 24 test files, 294 tests passing, 0 failures; typecheck and build pass cleanly.
+  - Integration fixes after review: shared `AppState` provider with IndexedDB-persisted crew, mission setting, supplies, and viewed day; Reset clears IndexedDB (previously `localStorage`); mission changes regenerate the dataset so radiation expectations follow the setting; analysis caches invalidate after a saved measurement; Log, Check-in, Domain detail, Journal, and Today use the real crew/day/setting and real guidance instead of mocks or duplicated rules.
 - Blocked by: (none)
+- Component tree:
+  - App (Shell with TopBar, DisclaimerBanner, Navigation, ErrorBoundary)
+    - TopBar (AppName, CrewPicker, MissionPill, OfflineBadge, UrgentHelpButton)
+    - DisclaimerBanner (DISCLAIMER_BANNER text)
+    - Routes:
+      - / (Today): TimelineScrubber, BodyMap, DomainRow list, WhatNeedsAttention (AlertCardView list), EmptyState
+      - /domain/:domainId: DomainHeader, StatusChip, IndicatorChart list, MeasurementHelp expander, DomainAlertCards, CheckInTrend (for behavioral)
+      - /log: MeasurementForm, StatusChip (via classifyValue), PromptStrip, UrgentCallout
+      - /checkin: CheckInForm (3 sliders + note), UrgentHelpButton, CheckInResultCard, 30-day TrendChart
+      - /urgent: UrgentHelpScreen (exact copy, deep_space conditional line)
+      - /lab: ScenarioLabControls, SystemsComparison timeline/table, AlertCards for viewed day
+      - /proof: ProofChart (Recharts), ScenarioSummaryTable, Methodology note
+      - /mission: MissionPicker, SupplyChecklist
+      - /journal: LogEntryList (newest first), AddJournalForm
+      - /about: ProjectOverview, NASA Risk Coverage Map (ARCHITECTURE 7.7), SourcesList
 - Notes:
+  - All screens implemented against DESIGN.md layout and copy requirements. The demo story now produces a `multi_signal_pattern` review card at day 120; the alert card construction and persistence paths have integration tests. Manual browser offline reload and visual review at 390 px and 1024x768 remain human checks; the built PWA assets and preview routes were verified.
 
 ## 4. Open questions (add `[role] YYYY-MM-DD HH:MM question`; humans answer inline and mark RESOLVED)
 
@@ -69,7 +103,8 @@ Purpose: this file is the working memory that survives between agent sessions. R
 | Tuning seeds | 1000–1099 |
 | Candidate `H_WATCH` values tried | 3, 4 |
 | Candidate `H_FLAG` values tried | 6, 8, 10, 12 |
-| Final `H_WATCH`, `H_FLAG`, other changes | `H_WATCH` 3, `H_FLAG` 8, `CUSUM_K` 1.25 (from 0.5), `PERSIST_Z` 1.0 (from 0.75), `PERSIST_MIN_DAYS` 5 (from 4) |
+| Final `H_WATCH`, `H_FLAG`, other changes | `H_WATCH` 3, `H_FLAG` 8, `CUSUM_K` 1.25 (from 0.5), `PERSIST_Z` 1.0 (from 0.75), `PERSIST_MIN_DAYS` 5 (from 4), `PATTERN_ONSET_GAP` 15 (from 14) |
+| Post-freeze pattern-gap check | Seeds 1000–1099 only: gaps 14, 15, 16, 18, and 21 all gave 0.66 false per 100 days, 100/100 slow_drift detected, median delay 17 days. Chose 15; evaluation rerun once and `public/data/results.json` was unchanged. |
 | Vigil false alarms per 100 days on tuning `normal_adaptation` | 0.66 |
 | Vigil detection rate on tuning `slow_drift` | 100 percent (100/100 seeds), median delay 17 days |
 | Commit hash of `engine: freeze detector config` | `d2fbb30` |
@@ -79,7 +114,7 @@ Note: with the start constants (`CUSUM_K` 0.5, `H_FLAG` 6, `PERSIST_Z` 0.75, `PE
 
 Process note: an intermediate evaluation run was made with a mis-frozen config (`CUSUM_K` 0.5) and discarded; the constants above were selected only from tuning-seed grids, and the committed evaluation run is the one after this freeze.
 
-Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms per 100 days 0.69 normal, 0.68 slow_drift, 0.71 sensor_fault, 0.73 blackout_drift, 0.72 solar_event, 0.84 acute_fever. Detection 100/100 for slow_drift (median 16 days), blackout_drift (20), solar_event (0), acute_fever (4). Fixed thresholds: 2.17–2.58 false, 97–100 detected. Rolling z-score: 6.52–6.92 false, 100 detected, slow_drift median 5.5 days. Honest reading: Vigil has the fewest false alarms; the z-score detects slow_drift earlier at a much higher false-alarm cost.
+Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms per 100 days 0.69 normal, 0.68 slow_drift, 0.71 sensor_fault, 0.73 blackout_drift, 0.72 solar_event, 0.84 acute_fever. Detection 100/100 for slow_drift (median 16 days), blackout_drift (20), solar_event (0), acute_fever (4). Fixed thresholds: 2.17–2.58 false, 97–100 detected. Rolling z-score: 6.52–6.92 false, 100 detected, slow_drift median 5.5 days. Honest reading: Vigil has the fewest false alarms; the z-score detects slow_drift earlier at a much higher false-alarm cost. The post-freeze pattern-gap change was checked on tuning seeds only, then the evaluation was rerun once; every number above stayed identical.
 
 ## 8. Dependency log (any deviation from `ARCHITECTURE.md` section 2)
 
@@ -88,6 +123,8 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 ## 9. Known failures and risks (exact error text, steps, owner)
 
 - [P1] Resolved tension, 2026-11-14: TASKS E5 expects a +1.5 sigma step to flag within about 12 days, but the ARCHITECTURE 6.9 tuning goal needs `CUSUM_K` 1.25 to reach 1.0 or fewer false alarms per 100 days on normal crews; at that slack a +1.5 sigma step takes about 32 days. Per the priority order in RULES 13, ARCHITECTURE wins: the frozen config follows 6.9, and the detector unit test exercises that mechanic with the ARCHITECTURE 6.6 start constants. The frozen config's own detection delay is reported from the harness, not hidden.
+- [P2/P3] Manual checks still open for a human: service-worker offline reload in a real browser after an online load, keyboard-only walkthrough on the tablet layout, and visual review at 390 px and 1024x768. Automated typecheck, tests, build, harness, and a local preview asset check all pass.
+- [P2] G11 deployment is not done: it needs the team's Netlify or Vercel account. `netlify.toml` is ready (build `npm run build`, publish `dist`). G12 and U18 gamification and E12 isolation forest were not built because they are stretch items.
 
 ## 10. Human to-do list (agents do not do these)
 
@@ -105,3 +142,5 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 2026-11-14 10:20 [P1] Checkpoint 0 merged: scaffold, contracts, stubs, gate green; next E1 rng, E2 simulator, E3 scenarios.
 2026-11-14 10:45 [P1] E1–E9: engine, systems, metrics, tuned and frozen constants, harness written; next checkpoint 2 merge and E10 performance.
 2026-11-14 10:55 [P1] Checkpoint 2 merged (tag `checkpoint-2`): frozen detector config `CUSUM_K` 1.25 / `H_FLAG` 8 / `PERSIST_Z` 1.0 / `PERSIST_MIN_DAYS` 5, evaluation results on seeds 1–100 committed; E10 measured 6.1 ms. Next: E11 support, no open requests.
+2026-11-14 12:20 [P3] Completed U1–U17: tokens, shell, body map, scrubber, alert cards, domain detail, log, checkin, urgent, lab, proof, mission, journal, about, real integration (USE_MOCKS=false), accessibility, and all tests passing (22 files, 289 tests, 100% green); build clean.
+2026-11-14 13:20 [P1/P2/P3] Completed integration audit and fixes: persisted AppState and IndexedDB reset, mission-aware datasets and cache invalidation, real guidance in log/check-in/domain/journal, PWA and deploy config, card evidence and pattern merge fixes, pattern gap 14→15 with tuning-seed check. Gate: typecheck 0, 24 files / 294 tests pass, build 0 with service worker, harness 0 and results unchanged, preview assets 200. Next: merge `feat/ui` to `main`, tag checkpoint, push; human deploy/offline/visual checks remain.
