@@ -31,9 +31,9 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ### P1 Engine (`feat/engine`)
 
-- Current task: E11 (integration support; no requests from P2 or P3 yet)
-- Done: Checkpoint 0 (E0.1–E0.6). E1 `rng.ts`. E2 simulator. E3 six scenarios with ground truth. E4 degradation and merge/truncate. E5 detector with baseline, CUSUM, persistence, spike, data quality, radiation rule, adaptation note, domains, findings, no-future-leak test. E6 three systems plus shared radiation rule. E7 metrics. E8 tuning on seeds 1000–1099 and frozen constants. E9 harness and `public/data/results.json`. E10 performance: `analyze(180)` 6.1 ms on slow_drift seed 42, test bound 500 ms. Checkpoint 2 merged to `main`, tag `checkpoint-2`.
-- Blocked by: (none)
+- Current task: E11 (integration support; waiting for P2/G10 or P3/U12 merge or MEMORY.md request)
+- Done: Checkpoint 0 (E0.1–E0.6). E1 `rng.ts`. E2 simulator. E3 six scenarios with ground truth. E4 degradation and merge/truncate. E5 detector with baseline, CUSUM, persistence, spike, data quality, radiation rule, adaptation note, domains, findings, no-future-leak test. E6 three systems plus shared radiation rule. E7 metrics. E8 tuning on seeds 1000–1099 and frozen constants (H_WATCH × H_FLAG grid in `scripts/tune.ts`). E9 harness and `public/data/results.json`. E10 performance: `analyze(180)` 6.1 ms on slow_drift seed 42, test bound 500 ms. Checkpoint 2 merged to `main`, tag `checkpoint-2`. E8 fix: restored `H_WATCH` leg to `scripts/tune.ts` so full H_WATCH × H_FLAG × PERSIST_Z × PERSIST_MIN_DAYS grid is printed reproducibly (H_WATCH [3,4] × H_FLAG [6,8,10,12]).
+- Blocked by: (none; E12 isolation forest on hold until P2/G10 and P3/U12 P0/P1 tasks complete)
 - Notes: tuning chose `CUSUM_K` 1.25, `H_FLAG` 8, `PERSIST_Z` 1.0, `PERSIST_MIN_DAYS` 5, with `H_WATCH` 3 unchanged (0.66 false per 100 days on tuning normal, 100 percent slow_drift detection, median delay 17 days); see section 7. Scaffold stylesheet is `src/ui/styles/app.css` (Tailwind entry); P3 owns `src/ui/styles` from checkpoint 0 on. Installed majors within ARCHITECTURE 2: typescript 5.9.3, vite 5.4.21, vitest 2.1.9. Checkpoint 1 was not tagged separately: E1–E9 were finished in one continuous session, so the engine landed on `main` in the checkpoint 2 merge (tag `checkpoint-2`).
 
 ### P2 Guidance and platform (`feat/guidance`)
@@ -105,3 +105,4 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 2026-11-14 10:20 [P1] Checkpoint 0 merged: scaffold, contracts, stubs, gate green; next E1 rng, E2 simulator, E3 scenarios.
 2026-11-14 10:45 [P1] E1–E9: engine, systems, metrics, tuned and frozen constants, harness written; next checkpoint 2 merge and E10 performance.
 2026-11-14 10:55 [P1] Checkpoint 2 merged (tag `checkpoint-2`): frozen detector config `CUSUM_K` 1.25 / `H_FLAG` 8 / `PERSIST_Z` 1.0 / `PERSIST_MIN_DAYS` 5, evaluation results on seeds 1–100 committed; E10 measured 6.1 ms. Next: E11 support, no open requests.
+2026-11-14 14:23 [P1] E8 fix: restored H_WATCH leg to scripts/tune.ts; grid is now H_WATCH [3,4] × H_FLAG [6,8,10,12] × PERSIST_Z × PERSIST_MIN_DAYS. typecheck 0, 294/294 tests pass. MEMORY.md updated. Pushing to feat/engine and main. E11 support mode: waiting on P2/G10 or P3/U12. E12 on hold.
