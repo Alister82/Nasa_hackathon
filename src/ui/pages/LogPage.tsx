@@ -3,6 +3,7 @@ import type { IndicatorId } from '@/contracts/types';
 import { MeasurementForm } from '@/ui/components/MeasurementForm';
 import { useAppState } from '@/app/AppState';
 import { loadEntries } from '@/storage';
+import { PageHeader, SectionCard } from '@/ui/components/PremiumComponents';
 
 export function LogPage() {
   const { crewId, missionSetting, viewDay, saveMeasurements } = useAppState();
@@ -24,31 +25,39 @@ export function LogPage() {
     setEntriesVersion((version) => version + 1);
   };
 
-  // Keep the form mounted when saved entries reload so its success status can be
-  // read and focused. The existing-values effect updates the fields in place.
   const formKey = String(viewDay);
+  const settingLabel =
+    missionSetting === 'deep_space'
+      ? 'Deep Space'
+      : missionSetting === 'lunar_base'
+        ? 'Lunar Base'
+        : 'Space Station';
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6">
-      <div className="mb-4">
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Log measurements</h1>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          Manual health indicators for mission day {viewDay}. Values are saved on this device
-          and replace the simulated reading for that day.
-        </p>
-        <p className="text-xs text-ink-soft mt-1">
-          Escape setting in use: {missionSetting === 'deep_space' ? 'deep space' : missionSetting.replace('_', ' ')}.
-          Change the viewed day with the timeline on Today.
-        </p>
-      </div>
-
-      <MeasurementForm
-        key={formKey}
-        day={viewDay}
-        setting={missionSetting}
-        existing={existing}
-        onSave={handleSave}
+    <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <PageHeader
+        title="Health Monitor"
+        subtitle={`Day ${viewDay} · ${settingLabel} · Manual readings override simulated data for that day`}
       />
+
+      <SectionCard>
+        <div className="mb-5">
+          <h2 className="text-base font-bold text-text-primary mb-1">
+            Log measurements for Day {viewDay}
+          </h2>
+          <p className="text-xs text-text-secondary">
+            Values are saved on this device and replace the simulated reading for that day.
+            Change the viewed day with the timeline on the Dashboard.
+          </p>
+        </div>
+        <MeasurementForm
+          key={formKey}
+          day={viewDay}
+          setting={missionSetting}
+          existing={existing}
+          onSave={handleSave}
+        />
+      </SectionCard>
     </div>
   );
 }

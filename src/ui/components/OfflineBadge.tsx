@@ -22,16 +22,16 @@ export function OfflineBadge(_props: OfflineBadgeProps) {
 
   return (
     <span
-      className={`inline-flex items-center gap-1.5 px-2.5 py-0.5 rounded-pill text-xs font-medium border ${
+      className={`inline-flex items-center gap-1.5 px-2.5 py-1 rounded-full text-xs font-semibold ring-1 ring-inset ${
         isOnline
-          ? 'bg-panel text-ink-soft border-line'
-          : 'bg-status-watch-soft text-status-watch border-status-watch'
+          ? 'bg-status-ok/10 text-status-ok ring-status-ok/20'
+          : 'bg-status-watch/10 text-status-watch ring-status-watch/20'
       }`}
       aria-live="polite"
     >
       <span
         className={`w-2 h-2 rounded-full ${
-          isOnline ? 'bg-status-ok' : 'bg-status-watch'
+          isOnline ? 'bg-status-ok' : 'bg-status-watch animate-pulse'
         }`}
         aria-hidden="true"
       />
@@ -39,4 +39,3 @@ export function OfflineBadge(_props: OfflineBadgeProps) {
     </span>
   );
 }
-

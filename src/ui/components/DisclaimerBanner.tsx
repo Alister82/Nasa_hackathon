@@ -7,10 +7,9 @@ export function DisclaimerBanner(_props: DisclaimerBannerProps) {
   return (
     <div
       role="note"
-      className="bg-instrument-soft text-ink text-xs sm:text-sm text-center py-1.5 px-4 border-b border-line"
+      className="bg-accent/5 text-text-primary text-xs sm:text-sm text-center py-2 px-4 border-b border-border font-medium"
     >
       {DISCLAIMER_BANNER}
     </div>
   );
 }
-

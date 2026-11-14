@@ -1,28 +1,13 @@
 import React, { useEffect } from 'react';
-import { HashRouter, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { TopBar } from '@/ui/components/TopBar';
-import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
-import { BottomNav } from '@/ui/components/BottomNav';
+import { HashRouter, useLocation } from 'react-router-dom';
 import { AppRoutes } from './routes';
-import { AppStateProvider, useAppState } from './AppState';
+import { AppStateProvider } from './AppState';
+import { PremiumSidebar, PremiumTopBar, PremiumBottomNav } from '@/ui/components/PremiumShell';
+import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
+import { ErrorBoundary } from '@/ui/components/ErrorBoundary';
 
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `px-3 py-2 text-sm font-medium border-b-2 min-h-[44px] inline-flex items-center ${
-    isActive
-      ? 'border-instrument text-instrument font-bold'
-      : 'border-transparent text-ink-soft hover:text-ink hover:border-line'
-  }`;
-
-function AppShell() {
-  const navigate = useNavigate();
+function FocusManager() {
   const location = useLocation();
-  const {
-    crewId,
-    setCrewId,
-    missionSetting,
-    resetDemoData,
-  } = useAppState();
-
   useEffect(() => {
     const heading = document.querySelector<HTMLElement>('main h1');
     if (heading) {
@@ -30,39 +15,47 @@ function AppShell() {
       heading.focus();
     }
   }, [location.pathname]);
+  return null;
+}
 
-  const handleResetData = () => {
-    void resetDemoData().then(() => navigate('/'));
-  };
-
+function AppShell() {
   return (
-    <div className="min-h-screen bg-ceramic text-ink flex flex-col font-sans">
-      <TopBar
-        selectedCrewId={crewId}
-        onCrewChange={setCrewId}
-        missionSetting={missionSetting}
-      />
-      <DisclaimerBanner />
+    <div className="min-h-screen bg-bg-app text-ink font-sans">
+      {/* Sidebar (desktop) */}
+      <PremiumSidebar />
 
-      <nav
-        aria-label="Main sections"
-        className="hidden lg:flex items-center gap-2 px-6 bg-panel border-b border-line overflow-x-auto select-none"
+      {/* Top bar */}
+      <PremiumTopBar />
+
+      {/* Disclaimer */}
+      <div className="fixed top-topbar left-0 lg:left-sidebar right-0 z-10">
+        <DisclaimerBanner />
+      </div>
+
+      {/* Main content area */}
+      <main
+        className="
+          pt-topbar lg:pl-sidebar
+          flex flex-col min-h-screen
+          pb-16 lg:pb-0
+        "
+        id="main-content"
+        aria-label="Main content"
       >
-        <NavLink to="/" end className={navLinkClass}>Today</NavLink>
-        <NavLink to="/log" className={navLinkClass}>Log</NavLink>
-        <NavLink to="/checkin" className={navLinkClass}>Check-in</NavLink>
-        <NavLink to="/lab" className={navLinkClass}>Scenario Lab</NavLink>
-        <NavLink to="/proof" className={navLinkClass}>Proof</NavLink>
-        <NavLink to="/journal" className={navLinkClass}>Journal</NavLink>
-        <NavLink to="/mission" className={navLinkClass}>Mission</NavLink>
-        <NavLink to="/about" className={navLinkClass}>About</NavLink>
-      </nav>
+        {/* Reserve space for disclaimer banner (~36px) */}
+        <div className="h-9 flex-shrink-0" aria-hidden="true" />
 
-      <main className="flex-1 pb-20 lg:pb-8">
-        <AppRoutes />
+        <div className="flex-1">
+          <ErrorBoundary>
+            <AppRoutes />
+          </ErrorBoundary>
+        </div>
       </main>
 
-      <BottomNav onResetData={handleResetData} />
+      {/* Bottom nav (mobile) */}
+      <PremiumBottomNav />
+
+      <FocusManager />
     </div>
   );
 }

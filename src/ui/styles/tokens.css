@@ -1,54 +1,194 @@
+/* ─────────────────────────────────────────────────
+   VIGIL — Premium Aerospace Health Monitor
+   Design Token System v2 (feat/premium-ui)
+   ───────────────────────────────────────────────── */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&family=Manrope:wght@400;500;600;700;800&display=swap');
+
 :root {
-  --ceramic: #E8EDF1;
-  --panel: #F6F8FA;
-  --ink: #0F1A2B;
-  --ink-soft: #46566B;
-  --line: #C4CFDA;
-  --instrument: #1D56B8;
-  --instrument-soft: #D9E5F7;
+  /* ── Color: Base surfaces ── */
+  --bg-app:          #EDF4FF;
+  --bg-surface:      #FFFFFF;
+  --bg-surface-2:    #F5F8FD;
+  --bg-surface-3:    #EEF3FA;
+  --bg-sidebar:      rgba(255, 255, 255, 0.72);
+  --bg-glass:        rgba(255, 255, 255, 0.60);
+  --bg-glass-hover:  rgba(255, 255, 255, 0.80);
 
-  /* Status strong colors */
-  --status-ok: #1F6F52;
-  --status-info: #2B5D8A;
-  --status-watch: #8A5A00;
-  --status-review: #B4380B;
-  --status-urgent: #A61B1B;
+  /* ── Color: Text ── */
+  --text-primary:    #102544;
+  --text-secondary:  #66758C;
+  --text-muted:      #96A5B8;
+  --text-inverse:    #FFFFFF;
 
-  /* Status soft colors */
-  --status-ok-soft: #D5EFE4;
-  --status-info-soft: #DCE9F5;
-  --status-watch-soft: #FCE9C0;
-  --status-review-soft: #FADBC9;
-  --status-urgent-soft: #F7D0D0;
+  /* ── Color: Accent / Brand ── */
+  --accent-primary:  #2869D8;
+  --accent-hover:    #1E55C0;
+  --accent-soft:     #E0ECFF;
+  --accent-soft-2:   #C8DCFF;
 
-  /* Focus and shadows */
-  --focus-ring: 2px solid var(--instrument);
-  --focus-offset: 2px;
-  --card-shadow: 0 1px 2px rgba(15, 26, 43, 0.08);
+  /* ── Color: Status ── */
+  --status-ok:       #159B87;
+  --status-ok-bg:    #E6F7F4;
+  --status-watch:    #E6A23C;
+  --status-watch-bg: #FEF3DC;
+  --status-review:   #D94B52;
+  --status-review-bg:#FDECED;
+  --status-urgent:   #B91C1C;
+  --status-urgent-bg:#FFE4E4;
+  --status-info:     #3B82F6;
+  --status-info-bg:  #EFF6FF;
+
+  /* ── Color: Borders ── */
+  --border-default:  #DCE6F2;
+  --border-strong:   #BDD0E8;
+  --border-subtle:   #EEF3FA;
+
+  /* ── Color: Chart accents ── */
+  --chart-blue:      #2869D8;
+  --chart-teal:      #159B87;
+  --chart-violet:    #7C3AED;
+  --chart-amber:     #E6A23C;
+  --chart-coral:     #D94B52;
+  --chart-sky:       #0EA5E9;
+
+  /* ── Backward compat — old token aliases ── */
+  --ceramic:               var(--bg-app);
+  --panel:                 var(--bg-surface);
+  --ink:                   var(--text-primary);
+  --ink-soft:              var(--text-secondary);
+  --line:                  var(--border-default);
+  --instrument:            var(--accent-primary);
+  --instrument-soft:       var(--accent-soft);
+  --status-ok-soft:        var(--status-ok-bg);
+  --status-info-soft:      var(--status-info-bg);
+  --status-watch-soft:     var(--status-watch-bg);
+  --status-review-soft:    var(--status-review-bg);
+  --status-urgent-soft:    var(--status-urgent-bg);
+
+  /* ── Typography ── */
+  --font-body:    'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  --font-heading: 'Manrope', 'Inter', system-ui, -apple-system, sans-serif;
+  --font-mono:    'SF Mono', 'Fira Code', monospace;
+
+  /* ── Spacing scale ── */
+  --space-1: 0.25rem;
+  --space-2: 0.5rem;
+  --space-3: 0.75rem;
+  --space-4: 1rem;
+  --space-5: 1.25rem;
+  --space-6: 1.5rem;
+  --space-8: 2rem;
+  --space-10: 2.5rem;
+  --space-12: 3rem;
+
+  /* ── Radii ── */
+  --radius-xs:   4px;
+  --radius-sm:   6px;
+  --radius-md:   10px;
+  --radius-lg:   14px;
+  --radius-xl:   20px;
+  --radius-pill: 9999px;
+
+  /* ── Shadows ── */
+  --shadow-xs:   0 1px 2px rgba(16, 37, 68, 0.06);
+  --shadow-sm:   0 1px 4px rgba(16, 37, 68, 0.08), 0 1px 2px rgba(16, 37, 68, 0.04);
+  --shadow-md:   0 4px 12px rgba(16, 37, 68, 0.10), 0 1px 4px rgba(16, 37, 68, 0.06);
+  --shadow-lg:   0 8px 24px rgba(16, 37, 68, 0.12), 0 2px 8px rgba(16, 37, 68, 0.06);
+  --shadow-glass: 0 2px 16px rgba(40, 105, 216, 0.08), 0 1px 4px rgba(16, 37, 68, 0.06);
+
+  /* ── Focus ── */
+  --focus-ring:    2px solid var(--accent-primary);
+  --focus-offset:  2px;
+
+  /* ── Sidebar dimensions ── */
+  --sidebar-width:        240px;
+  --sidebar-width-mobile: 100%;
+  --topbar-height:        56px;
+}
+
+/* ─── Base reset / global ─── */
+*,
+*::before,
+*::after {
+  box-sizing: border-box;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  background-color: var(--ceramic);
-  color: var(--ink);
-  font-family: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  background-color: var(--bg-app);
+  color: var(--text-primary);
+  font-family: var(--font-body);
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  line-height: 1.5;
 }
 
+h1, h2, h3, h4, h5, h6 {
+  font-family: var(--font-heading);
+  font-weight: 700;
+  letter-spacing: -0.015em;
+  color: var(--text-primary);
+  margin: 0;
+}
+
+/* ─── Focus ring ─── */
+:focus-visible {
+  outline: var(--focus-ring);
+  outline-offset: var(--focus-offset);
+  border-radius: var(--radius-sm);
+}
+
+/* ─── Tabular numbers for readings ─── */
 .tabular-nums {
+  font-variant-numeric: tabular-nums;
+  font-feature-settings: "tnum";
+}
+
+/* ─── Glass surface utility ─── */
+.glass {
+  background: var(--bg-glass);
+  backdrop-filter: blur(16px) saturate(160%);
+  -webkit-backdrop-filter: blur(16px) saturate(160%);
+  border: 1px solid var(--border-default);
+  box-shadow: var(--shadow-glass);
+}
+
+/* ─── Sidebar navigation item active state ─── */
+.nav-item-active {
+  background: var(--accent-soft);
+  color: var(--accent-primary);
+}
+
+/* ─── Metric card value display ─── */
+.metric-value {
+  font-family: var(--font-heading);
+  font-weight: 800;
+  letter-spacing: -0.025em;
+  line-height: 1;
   font-variant-numeric: tabular-nums;
 }
 
-/* Global focus ring */
-:focus-visible {
-  outline: var(--instrument) solid 2px;
-  outline-offset: 2px;
-}
+/* ─── Status badge ─── */
+.status-ok    { color: var(--status-ok);     background: var(--status-ok-bg); }
+.status-watch { color: var(--status-watch);  background: var(--status-watch-bg); }
+.status-review{ color: var(--status-review); background: var(--status-review-bg); }
+.status-urgent{ color: var(--status-urgent); background: var(--status-urgent-bg); }
+.status-info  { color: var(--status-info);   background: var(--status-info-bg); }
 
-/* Reduced motion guards */
+/* ─── Smooth chart container ─── */
+.recharts-wrapper { transition: none !important; }
+
+/* ─── Reduced motion ─── */
 @media (prefers-reduced-motion: reduce) {
-  *, ::before, ::after {
+  *,
+  ::before,
+  ::after {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
@@ -56,3 +196,8 @@ body {
   }
 }
 
+/* ─── Custom scrollbar (webkit) ─── */
+::-webkit-scrollbar { width: 6px; height: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: var(--border-default); border-radius: 3px; }
+::-webkit-scrollbar-thumb:hover { background: var(--border-strong); }

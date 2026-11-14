@@ -5,6 +5,7 @@ import { CheckInForm } from '@/ui/components/CheckInForm';
 import { CheckInTrend, type CheckInTrendPoint } from '@/ui/charts/CheckInTrend';
 import { useAppState } from '@/app/AppState';
 import { loadCheckIns } from '@/storage';
+import { PageHeader, SectionCard } from '@/ui/components/PremiumComponents';
 
 export function CheckInPage() {
   const navigate = useNavigate();
@@ -49,38 +50,35 @@ export function CheckInPage() {
   const hasCheckIns = checkIns.length > 0;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Wellbeing check-in</h1>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          A short self-check for mission day {viewDay}. Notes stay on this device.
-        </p>
-      </div>
-
-      <CheckInForm
-        crewId={crewId}
-        day={viewDay}
-        onSubmit={handleSubmit}
-        onNeedHelpNow={() => navigate('/urgent')}
+    <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
+      <PageHeader
+        title="Wellbeing Check-in"
+        subtitle={`A short self-check for mission day ${viewDay}. Notes stay on this device.`}
       />
 
-      <section
-        aria-label="30-day wellbeing and sleep trend"
-        className="bg-panel border border-line rounded-sheet p-5"
-      >
-        <h2 className="text-base font-bold text-ink mb-1">30-day trends</h2>
-        <p className="text-xs text-ink-soft mb-4">
+      <SectionCard>
+        <CheckInForm
+          crewId={crewId}
+          day={viewDay}
+          onSubmit={handleSubmit}
+          onNeedHelpNow={() => navigate('/urgent')}
+        />
+      </SectionCard>
+
+      <SectionCard>
+        <h2 className="text-base font-bold text-text-primary mb-1">30-day wellbeing trends</h2>
+        <p className="text-xs text-text-secondary mb-4">
           Saved check-ins are shown next to sleep hours for the same days. Days without a
           check-in stay blank.
         </p>
         {hasCheckIns ? (
           <CheckInTrend data={trendData} />
         ) : (
-          <p className="text-sm text-ink-soft">
+          <p className="text-sm text-text-secondary py-4 text-center">
             No check-ins saved yet. Save one to start the trend.
           </p>
         )}
-      </section>
+      </SectionCard>
     </div>
   );
 }

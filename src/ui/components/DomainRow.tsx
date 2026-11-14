@@ -37,25 +37,39 @@ export function DomainRow({ domain, analysis, summary, onOpen }: DomainRowProps)
       }}
       tabIndex={0}
       role="button"
-      className="flex items-center justify-between p-3.5 bg-panel hover:bg-ceramic/60 border-b border-line cursor-pointer transition-colors relative overflow-hidden min-h-[44px]"
+      className="flex items-center justify-between p-3.5 bg-bg-surface hover:bg-bg-surface-2 border-b border-border cursor-pointer transition-colors relative overflow-hidden min-h-[44px]"
       aria-label={`${DOMAIN_LABELS[domain]}, ${statusType}. ${summary}`}
     >
-      {/* Left 6px status bar in strong color */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${barColor}`} aria-hidden="true" />
+      {/* Left status bar */}
+      <div className={`absolute left-0 top-0 bottom-0 w-1 ${barColor}`} aria-hidden="true" />
 
       {/* Content */}
       <div className="pl-3 flex flex-col flex-1 min-w-0 pr-3">
-        <span className="font-bold text-sm sm:text-base text-ink truncate">
+        <span className="font-semibold text-sm sm:text-base text-text-primary truncate">
           {DOMAIN_LABELS[domain]}
         </span>
-        <span className="text-xs sm:text-sm text-ink-soft truncate">
+        <span className="text-xs sm:text-sm text-text-secondary truncate">
           {summary || 'Measurements within typical adaptation range.'}
         </span>
       </div>
 
       {/* Status Chip */}
-      <div className="flex-shrink-0">
+      <div className="flex-shrink-0 flex items-center gap-2">
         <StatusChip status={statusType} />
+        <svg
+          width="14"
+          height="14"
+          viewBox="0 0 24 24"
+          fill="none"
+          stroke="currentColor"
+          strokeWidth="2.5"
+          strokeLinecap="round"
+          strokeLinejoin="round"
+          className="text-text-secondary"
+          aria-hidden="true"
+        >
+          <polyline points="9 18 15 12 9 6" />
+        </svg>
       </div>
     </li>
   );

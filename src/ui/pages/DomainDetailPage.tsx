@@ -9,6 +9,7 @@ import { AlertCardView } from '@/ui/components/AlertCardView';
 import { SOURCES, REFERENCE_RANGES, MEASUREMENT_HELP } from '@/guidance';
 import { useAppState } from '@/app/AppState';
 import { loadCheckIns } from '@/storage';
+import { SectionCard } from '@/ui/components/PremiumComponents';
 
 function toStatusType(status: 'ok' | 'watch' | 'flagged'): StatusType {
   return status === 'flagged' ? 'review' : status;
@@ -65,8 +66,8 @@ export function DomainDetailPage() {
   if (!analysis) {
     return (
       <div className="max-w-xl mx-auto px-4 py-12 text-center" role="status">
-        <h1 className="text-2xl font-bold text-ink mb-2">{DOMAIN_LABELS[domainMeta]}</h1>
-        <p className="text-ink-soft">Loading simulated crew data...</p>
+        <h1 className="text-2xl font-bold text-text-primary mb-2">{DOMAIN_LABELS[domainMeta]}</h1>
+        <p className="text-text-secondary">Loading simulated crew data...</p>
       </div>
     );
   }
@@ -84,50 +85,58 @@ export function DomainDetailPage() {
   };
 
   return (
-    <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6">
-      <div className="mb-4">
+    <div className="max-w-4xl mx-auto px-4 py-4 sm:py-6 flex flex-col gap-6">
+      {/* Breadcrumb */}
+      <div>
         <Link
           to="/"
-          className="text-instrument text-sm font-semibold hover:underline inline-flex items-center min-h-[44px]"
+          className="inline-flex items-center gap-1.5 text-accent text-sm font-semibold hover:underline min-h-[44px]"
         >
-          Back to Today
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+            <polyline points="15 18 9 12 15 6" />
+          </svg>
+          Dashboard
         </Link>
       </div>
 
-      <div className="bg-panel border border-line rounded-sheet p-5 mb-6">
-        <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
-          <h1 className="text-2xl sm:text-3xl font-bold text-ink">
-            {DOMAIN_LABELS[domainMeta]} ({domainMeta === 'cardiovascular' ? 'Cardiovascular' : domainMeta.replace('_', ' ')})
+      {/* Domain Header */}
+      <SectionCard>
+        <div className="flex items-center justify-between gap-3 flex-wrap mb-3">
+          <h1 className="text-2xl sm:text-3xl font-bold text-text-primary">
+            {DOMAIN_LABELS[domainMeta]}
           </h1>
           <StatusChip status={statusType} />
         </div>
-        <p className="text-sm sm:text-base text-ink-soft leading-relaxed">
-          {whyItMattersCombined}
-        </p>
+        {whyItMattersCombined && (
+          <p className="text-sm sm:text-base text-text-secondary leading-relaxed">
+            {whyItMattersCombined}
+          </p>
+        )}
 
         {domainMeta === 'behavioral' && (
-          <div className="mt-4 pt-4 border-t border-line">
-            <h2 className="font-bold text-base text-ink mb-2">Check-in trend</h2>
+          <div className="mt-4 pt-4 border-t border-border">
+            <h2 className="font-bold text-base text-text-primary mb-2">Check-in trend</h2>
             {checkIns.length > 0 ? (
               <CheckInTrend data={trendData} />
             ) : (
-              <p className="text-sm text-ink-soft">
+              <p className="text-sm text-text-secondary">
                 No check-ins saved yet. The trend appears after the first check-in.
               </p>
             )}
             <button
               type="button"
               onClick={() => navigate('/checkin')}
-              className="mt-4 px-3 py-1.5 bg-instrument text-panel font-bold text-xs sm:text-sm rounded-input min-h-[44px]"
+              className="mt-4 px-3 py-1.5 bg-accent text-white font-bold text-xs sm:text-sm rounded-xl hover:opacity-90 transition-opacity min-h-[44px]"
             >
               Open check-in
             </button>
           </div>
         )}
-      </div>
+      </SectionCard>
 
-      <section aria-label="Indicator charts" className="flex flex-col gap-6 mb-8">
-        <h2 className="text-lg font-bold text-ink">Indicator trajectories</h2>
+      {/* Indicator Charts */}
+      <section aria-label="Indicator charts" className="flex flex-col gap-5">
+        <h2 className="text-lg font-bold text-text-primary">Indicator trajectories</h2>
 
         {indicatorsInDomain.map((meta) => {
           const indicator = analysis.indicators[meta.id];
@@ -137,7 +146,7 @@ export function DomainDetailPage() {
           if (!indicator || !range) return null;
 
           return (
-            <div key={meta.id} className="flex flex-col gap-2">
+            <SectionCard key={meta.id}>
               <IndicatorChart
                 analysis={indicator}
                 baseline={analysis.baselines[meta.id]}
@@ -146,19 +155,22 @@ export function DomainDetailPage() {
                 height={240}
               />
               {help && (
-                <div className="px-1 text-xs sm:text-sm">
+                <div className="mt-3 text-xs sm:text-sm">
                   <button
                     type="button"
                     onClick={() => toggleHowTo(meta.id)}
-                    className="text-instrument font-semibold hover:underline inline-flex items-center min-h-[44px]"
+                    className="text-accent font-semibold hover:underline inline-flex items-center gap-1 min-h-[44px]"
                     aria-expanded={isHowToOpen}
                   >
                     {isHowToOpen ? 'Hide measurement guidance' : 'How to measure'}
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round" aria-hidden="true">
+                      {isHowToOpen ? <polyline points="18 15 12 9 6 15" /> : <polyline points="6 9 12 15 18 9" />}
+                    </svg>
                   </button>
                   {isHowToOpen && (
-                    <div className="bg-panel border border-line p-3 rounded-sheet mt-1 text-ink leading-relaxed">
+                    <div className="bg-bg-app border border-border p-3 rounded-xl mt-2 text-text-primary leading-relaxed">
                       <p className="mb-2 font-medium">{help.howToMeasure}</p>
-                      <p className="text-xs text-ink-soft">
+                      <p className="text-xs text-text-secondary">
                         <strong>Associated spaceflight hazards:</strong>{' '}
                         {help.hazards.join(', ')}
                       </p>
@@ -166,24 +178,22 @@ export function DomainDetailPage() {
                   )}
                 </div>
               )}
-            </div>
+            </SectionCard>
           );
         })}
       </section>
 
       {domainCards.length > 0 && (
-        <section aria-label="Domain findings" className="mt-8">
-          <h2 className="text-lg font-bold text-ink mb-4">Findings and guidance</h2>
-          <div className="flex flex-col gap-4">
-            {domainCards.map((card) => (
-              <AlertCardView
-                key={card.id}
-                card={card}
-                sources={SOURCES}
-                onLog={(selected) => navigate('/journal', { state: { card: selected } })}
-              />
-            ))}
-          </div>
+        <section aria-label="Domain findings" className="flex flex-col gap-4">
+          <h2 className="text-lg font-bold text-text-primary">Findings and guidance</h2>
+          {domainCards.map((card) => (
+            <AlertCardView
+              key={card.id}
+              card={card}
+              sources={SOURCES}
+              onLog={(selected) => navigate('/journal', { state: { card: selected } })}
+            />
+          ))}
         </section>
       )}
     </div>

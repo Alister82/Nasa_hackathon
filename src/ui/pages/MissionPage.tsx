@@ -3,6 +3,7 @@ import { useNavigate } from 'react-router-dom';
 import { MissionPicker } from '@/ui/components/MissionPicker';
 import { SupplyChecklist } from '@/ui/components/SupplyChecklist';
 import { useAppState } from '@/app/AppState';
+import { PageHeader, SectionCard, OutlineButton } from '@/ui/components/PremiumComponents';
 
 export function MissionPage() {
   const navigate = useNavigate();
@@ -26,29 +27,34 @@ export function MissionPage() {
 
   return (
     <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-6">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Mission setting</h1>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          The setting changes escalation text, expected reply time, and the expected radiation
-          rate. Changes are saved on this device.
-        </p>
-      </div>
+      <PageHeader
+        title="Mission Settings"
+        subtitle="The setting changes escalation text, expected reply time, and the expected radiation rate. Changes are saved on this device."
+      />
 
-      <MissionPicker value={missionSetting} onChange={setMissionSetting} />
-      <SupplyChecklist supplies={supplies} onChange={setSupplies} />
+      <SectionCard>
+        <h2 className="text-base font-bold text-text-primary mb-4">Operational Settings</h2>
+        <MissionPicker value={missionSetting} onChange={setMissionSetting} />
+      </SectionCard>
 
-      <div className="border-t border-line pt-4">
-        <button
-          type="button"
-          onClick={handleReset}
-          className="px-4 py-2 border border-line rounded-input text-sm font-bold text-status-urgent hover:bg-status-urgent-soft min-h-[44px]"
-        >
-          Reset demo data
-        </button>
-        <p className="text-xs text-ink-soft mt-2">
-          Clears measurements, check-ins, and the journal on this device.
-        </p>
-      </div>
+      <SectionCard>
+        <h2 className="text-base font-bold text-text-primary mb-4">Medical Supplies Onboard</h2>
+        <SupplyChecklist supplies={supplies} onChange={setSupplies} />
+      </SectionCard>
+
+      <SectionCard>
+        <div className="flex flex-col gap-3">
+          <h2 className="text-base font-bold text-text-primary">Reset Demo Data</h2>
+          <p className="text-xs text-text-secondary">
+            Clears measurements, check-ins, and the journal on this device.
+          </p>
+          <div>
+            <OutlineButton onClick={handleReset} danger>
+              Reset demo data
+            </OutlineButton>
+          </div>
+        </div>
+      </SectionCard>
     </div>
   );
 }
