@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-14T09:16:48.191Z",
+  "startedAt": "2026-11-14T17:05:38.171Z",
   "checks": [
     {
       "name": "initial demo state is Crew 1, day 120",
@@ -129,9 +129,9 @@
       "name": "390px layout has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -139,9 +139,9 @@
       "name": "390px #/log has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -149,9 +149,9 @@
       "name": "390px #/checkin has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -159,9 +159,9 @@
       "name": "390px #/urgent has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -169,9 +169,9 @@
       "name": "390px #/lab has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -179,9 +179,9 @@
       "name": "390px #/proof has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": [
           {
             "tag": "table",
@@ -189,8 +189,8 @@
             "className": "w-full text-left border-collapse text-xs sm:text-sm",
             "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "thead",
@@ -198,8 +198,8 @@
             "className": "",
             "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "tr",
@@ -207,17 +207,17 @@
             "className": "border-b border-line text-ink-soft font-bold",
             "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "th",
             "id": "",
             "className": "py-2 pl-4 text-center",
             "text": "False alarms / 100 days",
-            "left": 372,
-            "right": 428,
-            "width": 56
+            "left": 386,
+            "right": 443,
+            "width": 57
           },
           {
             "tag": "tbody",
@@ -225,8 +225,8 @@
             "className": "divide-y divide-line tabular-nums font-medium text-ink",
             "text": "Vigil\t0 / 0\tNot detected\t124\t0.69\n\nFixed thresholds\t0 / 0\tNot detected\t391\t2.17\n",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "tr",
@@ -234,17 +234,17 @@
             "className": "",
             "text": "Vigil\t0 / 0\tNot detected\t124\t0.69",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-2.5 pl-4 text-center",
             "text": "0.69",
-            "left": 372,
-            "right": 428,
-            "width": 56
+            "left": 386,
+            "right": 443,
+            "width": 57
           },
           {
             "tag": "tr",
@@ -252,17 +252,17 @@
             "className": "",
             "text": "Fixed thresholds\t0 / 0\tNot detected\t391\t2.17",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-2.5 pl-4 text-center",
             "text": "2.17",
-            "left": 372,
-            "right": 428,
-            "width": 56
+            "left": 386,
+            "right": 443,
+            "width": 57
           },
           {
             "tag": "tr",
@@ -270,17 +270,17 @@
             "className": "",
             "text": "Rolling z-score\t0 / 0\tNot detected\t1191\t6.62",
             "left": 37,
-            "right": 428,
-            "width": 391
+            "right": 443,
+            "width": 406
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-2.5 pl-4 text-center",
             "text": "6.62",
-            "left": 372,
-            "right": 428,
-            "width": 56
+            "left": 386,
+            "right": 443,
+            "width": 57
           },
           {
             "tag": "table",
@@ -288,8 +288,8 @@
             "className": "w-full text-left border-collapse text-xs sm:text-sm",
             "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
             "left": 37,
-            "right": 423,
-            "width": 386
+            "right": 436,
+            "width": 399
           }
         ]
       }
@@ -298,9 +298,9 @@
       "name": "390px #/mission has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -308,9 +308,9 @@
       "name": "390px #/journal has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": []
       }
     },
@@ -318,9 +318,9 @@
       "name": "390px #/about has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": [
           {
             "tag": "table",
@@ -328,8 +328,8 @@
             "className": "w-full text-left border-collapse text-xs sm:text-sm",
             "text": "NASA HRP risk\tCoverage in v1\tHow\nRisk of Cardiovascular Adaptations\tCovered\tHear",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "thead",
@@ -337,8 +337,8 @@
             "className": "",
             "text": "NASA HRP risk\tCoverage in v1\tHow",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "tr",
@@ -346,17 +346,17 @@
             "className": "border-b border-line text-ink-soft font-bold",
             "text": "NASA HRP risk\tCoverage in v1\tHow",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "th",
             "id": "",
             "className": "py-2.5 pl-4",
             "text": "How",
-            "left": 335,
-            "right": 442,
-            "width": 107
+            "left": 356,
+            "right": 472,
+            "width": 117
           },
           {
             "tag": "tbody",
@@ -364,8 +364,8 @@
             "className": "divide-y divide-line font-medium text-ink",
             "text": "Risk of Cardiovascular Adaptations\tCovered\tHeart rate and blood pressure, domain",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "tr",
@@ -373,17 +373,17 @@
             "className": "",
             "text": "Risk of Cardiovascular Adaptations\tCovered\tHeart rate and blood pressure, domain",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
             "text": "Heart rate and blood pressure, domain cardiovascular",
-            "left": 335,
-            "right": 442,
-            "width": 107
+            "left": 356,
+            "right": 472,
+            "width": 117
           },
           {
             "tag": "tr",
@@ -391,17 +391,17 @@
             "className": "",
             "text": "Risk of Inadequate Sleep and Irregular Schedules\tCovered\tSleep hours, domain sle",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
             "text": "Sleep hours, domain sleep_recovery",
-            "left": 335,
-            "right": 442,
-            "width": 107
+            "left": 356,
+            "right": 472,
+            "width": 117
           },
           {
             "tag": "tr",
@@ -409,17 +409,17 @@
             "className": "",
             "text": "Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness\tCovered (adherence",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           },
           {
             "tag": "td",
             "id": "",
             "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
             "text": "Exercise minutes as a countermeasure-adherence indicator; the Risks page says al",
-            "left": 335,
-            "right": 442,
-            "width": 107
+            "left": 356,
+            "right": 472,
+            "width": 117
           },
           {
             "tag": "tr",
@@ -427,8 +427,8 @@
             "className": "",
             "text": "Risk of Spaceflight-Induced Bone Changes\tPartly\tExercise adherence as a proxy on",
             "left": 37,
-            "right": 442,
-            "width": 405
+            "right": 472,
+            "width": 435
           }
         ]
       }
@@ -437,9 +437,9 @@
       "name": "390px #/domain/cardiovascular has no horizontal scroll",
       "passed": true,
       "detail": {
-        "innerWidth": 390,
-        "scrollWidth": 390,
-        "bodyWidth": 390,
+        "innerWidth": 397,
+        "scrollWidth": 397,
+        "bodyWidth": 397,
         "offenders": [
           {
             "tag": "g",
@@ -447,8 +447,8 @@
             "className": "",
             "text": "",
             "left": 306,
-            "right": 398,
-            "width": 92
+            "right": 403,
+            "width": 98
           },
           {
             "tag": "text",
@@ -456,8 +456,8 @@
             "className": "",
             "text": "",
             "left": 311,
-            "right": 398,
-            "width": 87
+            "right": 403,
+            "width": 93
           },
           {
             "tag": "tspan",
@@ -465,8 +465,8 @@
             "className": "",
             "text": "",
             "left": 311,
-            "right": 398,
-            "width": 87
+            "right": 403,
+            "width": 93
           }
         ]
       }
@@ -525,6 +525,6 @@
       "day120Titles": []
     }
   ],
-  "finishedAt": "2026-11-14T09:17:10.750Z",
+  "finishedAt": "2026-11-14T17:06:01.438Z",
   "passed": true
 }

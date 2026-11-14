@@ -1,21 +1,17 @@
-import React, { useEffect } from 'react';
-import { HashRouter, NavLink, useNavigate, useLocation } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { HashRouter, useNavigate, useLocation } from 'react-router-dom';
 import { TopBar } from '@/ui/components/TopBar';
+import { Sidebar } from '@/ui/components/Sidebar';
 import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
 import { BottomNav } from '@/ui/components/BottomNav';
+import { CommandPalette } from '@/ui/components/CommandPalette';
 import { AppRoutes } from './routes';
 import { AppStateProvider, useAppState } from './AppState';
-
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `px-3 py-2 text-sm font-medium border-b-2 min-h-[44px] inline-flex items-center ${
-    isActive
-      ? 'border-instrument text-instrument font-bold'
-      : 'border-transparent text-ink-soft hover:text-ink hover:border-line'
-  }`;
 
 function AppShell() {
   const navigate = useNavigate();
   const location = useLocation();
+  const [commandPaletteOpen, setCommandPaletteOpen] = useState(false);
   const {
     crewId,
     setCrewId,
@@ -31,38 +27,58 @@ function AppShell() {
     }
   }, [location.pathname]);
 
+  // Global Ctrl+K / Cmd+K listener
+  useEffect(() => {
+    const handleKeyDown = (e: KeyboardEvent) => {
+      if ((e.ctrlKey || e.metaKey) && e.key.toLowerCase() === 'k') {
+        e.preventDefault();
+        setCommandPaletteOpen((prev) => !prev);
+      }
+    };
+    window.addEventListener('keydown', handleKeyDown);
+    return () => window.removeEventListener('keydown', handleKeyDown);
+  }, []);
+
   const handleResetData = () => {
     void resetDemoData().then(() => navigate('/'));
   };
 
   return (
-    <div className="min-h-screen bg-ceramic text-ink flex flex-col font-sans">
-      <TopBar
-        selectedCrewId={crewId}
-        onCrewChange={setCrewId}
-        missionSetting={missionSetting}
+    <div className="min-h-screen text-ink flex flex-row font-sans relative selection:bg-instrument selection:text-white">
+      {/* Fixed Ambient Glow Background Layer (Zero cost, no repaints) */}
+      <div className="ambient-glow-layer" aria-hidden="true">
+        <div className="ambient-blob-1" />
+        <div className="ambient-blob-2" />
+      </div>
+
+      {/* Modern Left Sidebar (hidden on mobile, collapsed rail on tablet, 264px on desktop) */}
+      <Sidebar />
+
+      {/* Main Content Area */}
+      <div className="flex-1 flex flex-col min-w-0 z-10">
+        <TopBar
+          selectedCrewId={crewId}
+          onCrewChange={setCrewId}
+          missionSetting={missionSetting}
+          onOpenCommandPalette={() => setCommandPaletteOpen(true)}
+        />
+        <DisclaimerBanner />
+
+        <main className="flex-1 pb-24 md:pb-10">
+          <AppRoutes />
+        </main>
+
+        {/* Mobile Bottom Navigation (< 768px) */}
+        <div className="md:hidden">
+          <BottomNav onResetData={handleResetData} />
+        </div>
+      </div>
+
+      {/* Global Command Search Palette */}
+      <CommandPalette
+        isOpen={commandPaletteOpen}
+        onClose={() => setCommandPaletteOpen(false)}
       />
-      <DisclaimerBanner />
-
-      <nav
-        aria-label="Main sections"
-        className="hidden lg:flex items-center gap-2 px-6 bg-panel border-b border-line overflow-x-auto select-none"
-      >
-        <NavLink to="/" end className={navLinkClass}>Today</NavLink>
-        <NavLink to="/log" className={navLinkClass}>Log</NavLink>
-        <NavLink to="/checkin" className={navLinkClass}>Check-in</NavLink>
-        <NavLink to="/lab" className={navLinkClass}>Scenario Lab</NavLink>
-        <NavLink to="/proof" className={navLinkClass}>Proof</NavLink>
-        <NavLink to="/journal" className={navLinkClass}>Journal</NavLink>
-        <NavLink to="/mission" className={navLinkClass}>Mission</NavLink>
-        <NavLink to="/about" className={navLinkClass}>About</NavLink>
-      </nav>
-
-      <main className="flex-1 pb-20 lg:pb-8">
-        <AppRoutes />
-      </main>
-
-      <BottomNav onResetData={handleResetData} />
     </div>
   );
 }

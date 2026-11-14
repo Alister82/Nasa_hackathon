@@ -35,6 +35,8 @@ import {
 import { generateScenario } from '@/engine';
 import { getAnalysis, getCards, getDataset, notifyEntriesChanged } from './services';
 
+export type ThemeMode = 'light' | 'night' | 'auto';
+
 export interface AppStateValue {
   crewId: string;
   crewName: string;
@@ -47,10 +49,14 @@ export interface AppStateValue {
   missionContext: MissionContext;
   loading: boolean;
   loadFailed: boolean;
+  theme: ThemeMode;
+  largeControls: boolean;
   setCrewId: (crewId: string) => void;
   setMissionSetting: (setting: MissionSettingId) => void;
   setSupplies: (supplies: Record<SupplyId, boolean>) => void;
   setViewDay: (day: number) => void;
+  setTheme: (theme: ThemeMode) => void;
+  setLargeControls: (enabled: boolean) => void;
   saveMeasurements: (values: Partial<Record<IndicatorId, number>>) => Promise<void>;
   submitCheckIn: (input: CheckInInput) => Promise<CheckInResult>;
   playDemoStory: () => void;
@@ -99,10 +105,14 @@ const fallbackState: AppStateValue = {
   missionContext: fallbackContext,
   loading: false,
   loadFailed: false,
+  theme: 'auto',
+  largeControls: false,
   setCrewId: () => {},
   setMissionSetting: () => {},
   setSupplies: () => {},
   setViewDay: () => {},
+  setTheme: () => {},
+  setLargeControls: () => {},
   saveMeasurements: async () => {},
   submitCheckIn: async (input) => evaluateCheckIn(input),
   playDemoStory: () => {},
@@ -123,6 +133,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
   const [supplies, setSuppliesState] =
     useState<Record<SupplyId, boolean>>(DEFAULT_SUPPLIES);
   const [viewDay, setViewDayState] = useState<number>(DEFAULT_VIEW_DAY);
+  const [theme, setThemeState] = useState<ThemeMode>('auto');
+  const [largeControls, setLargeControlsState] = useState<boolean>(false);
   const [dataset, setDataset] = useState<CrewDataset | null>(null);
   const [loading, setLoading] = useState<boolean>(true);
   const [loadFailed, setLoadFailed] = useState<boolean>(false);
@@ -138,7 +150,9 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       getSetting<MissionSettingId>('missionSetting', DEFAULT_MISSION_SETTING),
       getSetting<Record<SupplyId, boolean>>('supplies', DEFAULT_SUPPLIES),
       getSetting<number>('viewDay', DEFAULT_VIEW_DAY),
-    ]).then(([storedCrew, storedSetting, storedSupplies, storedDay]) => {
+      getSetting<ThemeMode>('theme', 'auto'),
+      getSetting<boolean>('largeControls', false),
+    ]).then(([storedCrew, storedSetting, storedSupplies, storedDay, storedTheme, storedLargeControls]) => {
       if (!active) return;
       setCrewIdState(
         DEFAULT_CREW.some((crew) => crew.crewId === storedCrew)
@@ -150,6 +164,8 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       );
       setSuppliesState(isSupplies(storedSupplies) ? storedSupplies : DEFAULT_SUPPLIES);
       setViewDayState(clampDay(storedDay));
+      setThemeState(storedTheme === 'light' || storedTheme === 'night' ? storedTheme : 'auto');
+      setLargeControlsState(Boolean(storedLargeControls));
       setSettingsLoaded(true);
       setSettingsVersion((version) => version + 1);
     });
@@ -157,6 +173,43 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       active = false;
     };
   }, []);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    const apply = (dark: boolean) => {
+      if (dark) {
+        root.classList.add('dark');
+        root.setAttribute('data-theme', 'dark');
+      } else {
+        root.classList.remove('dark');
+        root.removeAttribute('data-theme');
+      }
+    };
+
+    if (theme === 'auto') {
+      if (typeof window !== 'undefined' && window.matchMedia) {
+        const media = window.matchMedia('(prefers-color-scheme: dark)');
+        apply(media.matches);
+        const handler = (e: MediaQueryListEvent) => apply(e.matches);
+        media.addEventListener('change', handler);
+        return () => media.removeEventListener('change', handler);
+      }
+      apply(false);
+    } else {
+      apply(theme === 'night');
+    }
+  }, [theme]);
+
+  useEffect(() => {
+    if (typeof document === 'undefined') return;
+    const root = document.documentElement;
+    if (largeControls) {
+      root.classList.add('large-controls');
+    } else {
+      root.classList.remove('large-controls');
+    }
+  }, [largeControls]);
 
   useEffect(() => {
     if (!settingsLoaded) return;
@@ -262,12 +315,24 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
     })();
   }, []);
 
+  const setTheme = useCallback((next: ThemeMode) => {
+    setThemeState(next);
+    void setSetting('theme', next);
+  }, []);
+
+  const setLargeControls = useCallback((enabled: boolean) => {
+    setLargeControlsState(enabled);
+    void setSetting('largeControls', enabled);
+  }, []);
+
   const resetDemoData = useCallback(async () => {
     await clearAll();
     setCrewIdState(fallbackCrew.crewId);
     setMissionSettingState(DEFAULT_MISSION_SETTING);
     setSuppliesState(DEFAULT_SUPPLIES);
     setViewDayState(DEFAULT_VIEW_DAY);
+    setThemeState('auto');
+    setLargeControlsState(false);
     notifyEntriesChanged();
     setEntriesVersion((version) => version + 1);
     setSettingsVersion((version) => version + 1);
@@ -290,10 +355,14 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       missionContext,
       loading,
       loadFailed,
+      theme,
+      largeControls,
       setCrewId,
       setMissionSetting,
       setSupplies,
       setViewDay,
+      setTheme,
+      setLargeControls,
       saveMeasurements,
       submitCheckIn,
       playDemoStory,
@@ -311,10 +380,14 @@ export function AppStateProvider({ children }: { children: React.ReactNode }) {
       missionContext,
       loading,
       loadFailed,
+      theme,
+      largeControls,
       setCrewId,
       setMissionSetting,
       setSupplies,
       setViewDay,
+      setTheme,
+      setLargeControls,
       saveMeasurements,
       submitCheckIn,
       playDemoStory,

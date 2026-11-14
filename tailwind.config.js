@@ -1,18 +1,29 @@
 /** @type {import('tailwindcss').Config} */
 export default {
   content: ['./index.html', './src/**/*.{ts,tsx}'],
+  darkMode: ['class', '[data-theme="dark"]'],
   theme: {
     extend: {
       colors: {
         ceramic: 'var(--ceramic)',
-        panel: 'var(--panel)',
+        panel: {
+          DEFAULT: 'var(--panel)',
+          solid: 'var(--panel-solid)',
+          strong: 'var(--panel-strong)',
+        },
         ink: {
           DEFAULT: 'var(--ink)',
           soft: 'var(--ink-soft)',
+          muted: 'var(--ink-muted)',
         },
         line: 'var(--line)',
+        glass: {
+          border: 'var(--glass-border)',
+          ring: 'var(--glass-ring)',
+        },
         instrument: {
           DEFAULT: 'var(--instrument)',
+          hover: 'var(--instrument-hover)',
           soft: 'var(--instrument-soft)',
         },
         status: {
@@ -39,16 +50,20 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Atkinson Hyperlegible"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
+        sans: ['"Inter Variable"', '"Inter"', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
       },
       borderRadius: {
-        chip: '6px',
-        input: '6px',
-        sheet: '12px',
+        chip: '8px',
+        input: '10px',
+        sheet: '16px',
+        card: '20px',
+        panel: '24px',
         pill: '9999px',
       },
       boxShadow: {
-        card: '0 1px 2px rgba(15, 26, 43, 0.08)',
+        card: 'var(--card-shadow)',
+        glass: '0 8px 32px 0 rgba(40, 70, 140, 0.08), 0 1px 3px 0 rgba(40, 70, 140, 0.04)',
+        glow: '0 0 20px rgba(47, 107, 255, 0.25)',
       },
     },
   },
