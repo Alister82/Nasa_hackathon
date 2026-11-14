@@ -38,10 +38,10 @@ Purpose: this file is the working memory that survives between agent sessions. R
 
 ### P2 Guidance and platform (`feat/guidance`)
 
-- Current task: (not started)
-- Done: (none)
+- Current task: G11 (Ready for deployment with human account holder)
+- Done: G1 (sources.ts, missionSettings.ts, supplies.ts), G2 (referenceRanges.ts with classifyValue and boundary tests), G3 (measurementHelp.ts for all 11 indicators), G4 (library.ts verbatim Appendix A), G7 (IndexedDB storage vigil-db v1: entries, checkins, log, settings), G5 (buildAlertCards with escalation matrix, supply fallback, and pattern merging), G6 (wellbeing.ts check-in rules and support actions), G8 (vite-plugin-pwa autoUpdate, precache, manifest, SVG icons, netlify.toml), G9 (docs/SOURCES_TODO.md), G10 (integration tests with engine analyze for demo story, normal adaptation, sensor fault).
 - Blocked by: (none)
-- Notes:
+- Notes: All 18 test files (320 tests) pass. `npm run typecheck`, `npm test`, and `npm run build` pass. All contract invariants (3-5) and forbidden word checks pass.
 
 ### P3 Interface (`feat/ui`)
 
@@ -57,6 +57,8 @@ Purpose: this file is the working memory that survives between agent sessions. R
 ## 5. Requests to other roles (append `[from → to] request`; the receiving role marks DONE)
 
 - [P1 → P2, P3] checkpoint 2 merged to `main` (tag `checkpoint-2`): `analyze`, `generateScenario`, `mergeEntries`, `truncateDataset`, `SYSTEMS`, and `buildResultsFile` are live in `src/engine`, and `public/data/results.json` is committed. Rebase `feat/guidance` and `feat/ui` on `main`.
+- [P2 → P1] Note on multi_signal_pattern: on day 120 of slow_drift (seed 42), earliest candidate onset is day 71 (heart_rate); candidate filtering `onset - earliest.onset <= 14` clusters only cardiovascular indicators, so multi_signal_pattern finding is active on days 80-87 but converts to individual persistent_change findings by day 120. Alert cards display review cards for all flagged persistent changes cleanly.
+- [P2 → P3] guidance and storage modules are complete and tested. Exported APIs match CONTRACTS.md 4.2 and 4.3. PWA and deployment configuration ready.
 
 ## 6. Contract change proposals (see `RULES.md` section 6)
 
@@ -105,3 +107,4 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 2026-11-14 10:20 [P1] Checkpoint 0 merged: scaffold, contracts, stubs, gate green; next E1 rng, E2 simulator, E3 scenarios.
 2026-11-14 10:45 [P1] E1–E9: engine, systems, metrics, tuned and frozen constants, harness written; next checkpoint 2 merge and E10 performance.
 2026-11-14 10:55 [P1] Checkpoint 2 merged (tag `checkpoint-2`): frozen detector config `CUSUM_K` 1.25 / `H_FLAG` 8 / `PERSIST_Z` 1.0 / `PERSIST_MIN_DAYS` 5, evaluation results on seeds 1–100 committed; E10 measured 6.1 ms. Next: E11 support, no open requests.
+2026-11-14 11:35 [P2] G1–G10 complete: sources, reference ranges, measurement help, library, storage, alert cards, wellbeing, PWA, and integration tests; 320 tests green, build green; next G11 deployment.
