@@ -13,7 +13,7 @@ describe('contracts', () => {
     expect(new Set(DOMAIN_ORDER).size).toBe(6);
   });
 
-  it('is contract version 1', () => {
-    expect(CONTRACT_VERSION).toBe(1);
+  it('is contract version 2', () => {
+    expect(CONTRACT_VERSION).toBe(2);
   });
 });

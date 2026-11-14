@@ -16,7 +16,7 @@ Purpose: this file is the working memory that survives between agent sessions. R
 | D-008 | Mood, stress, energy come from the check-in, not the Log screen | Single place for wellbeing input |
 | D-009 | Urgent hard thresholds: bp_sys ≥ 180, bp_dia ≥ 120, glucose < 54 | General clinical references, demo only |
 | D-010 | Only the 5 organizer URLs in ARCHITECTURE 7.2 are filled; all other sources stay `url: null` until a human fills them | No invented citations |
-| D-011 | Contract version 1 frozen at checkpoint 0 | Parallel work |
+| D-011 | Contract version 2 frozen on redesign/premium | SupportingSignal, AlertCard cluster/procedure fields, FollowUpEvaluation |
 
 ## 2. Key facts agents must not get wrong
 
@@ -149,3 +149,4 @@ Evaluation seeds 1–100 (`deep_space`), from `results.json`: Vigil false alarms
 2026-11-14 14:48 [P1/P3] Full automated QA browser verification (scripts/qa-browser.mjs): verified service worker offline cache across all routes, body map keyboard navigation, alert cards, 44px touch targets on external sources, responsive layout on 390px/1024px, 0 runtime exceptions. All checks passed (100% green). Committed QA report and screenshots.
 2026-11-14 22:20 [Redesign] Phase 0 complete on branch redesign/premium (base pre-redesign-v1): installed lucide-react, framer-motion, @fontsource-variable/inter; verified typecheck and 294 tests green; drafted docs/REDESIGN_PLAN.md. Next: Phase 1 design system tokens and component kit.
 2026-11-14 22:36 [Redesign] Phase 1 complete: wrote docs/DESIGN_V2.md; created tokens.css Aurora Glass & Night Cabin themes; implemented Component Kit (GlassCard, StatusPill, Sparkline, RangeGauge, MetricTile, RestTimerWidget, BreathingPacerWidget, Stepper, SegmentedTabs, BodyFigure, CommandPalette, Sidebar); added /dev/kit route; typecheck 0, 24 test files / 294 tests pass, build 0, browser QA 100% green. Next: Phase 2 Dashboard, Contract v2 & grouped procedures.
+2026-11-14 22:45 [Redesign] contracts: v2. Bumped CONTRACT_VERSION to 2; added SupportingSignal, AlertCard fields (supportingSignals, hasRestTimer, hasBreathingPacer, clusterKey), FollowUpEvaluation, and evaluateFollowUp engine interface. Updated docs/CONTRACTS.md and test suites.

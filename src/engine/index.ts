@@ -11,6 +11,7 @@ import { zscoreFlagDays } from './systems/zscore';
 export { analyze } from './detector';
 export { phaseOffset } from './simulator';
 export { generateScenario } from './scenarios';
+export { evaluateFollowUp } from './followUp';
 
 /** Entry values overwrite that day's values; entries outside -29..180 are ignored. */
 export function mergeEntries(dataset: CrewDataset, entries: MeasurementEntry[]): CrewDataset {

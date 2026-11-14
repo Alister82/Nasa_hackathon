@@ -1,13 +1,13 @@
 # CONTRACTS: frozen types and function signatures
 
-Version: `CONTRACT_VERSION = 1` · 2026-11-13.
+Version: `CONTRACT_VERSION = 2` · 2026-11-14 (bumped for redesign/premium: SupportingSignal, AlertCard cluster/procedure fields, FollowUpEvaluation).
 
 These files are created **exactly as written below** in checkpoint 0 (by P1, merged to `main`) and then **frozen**. Changing them requires the contract-change process in `RULES.md` section 6. Do not rename, reorder, or "improve" anything. Copy the code blocks verbatim.
 
 ## 1. `src/contracts/types.ts`
 
 ```ts
-export const CONTRACT_VERSION = 1;
+export const CONTRACT_VERSION = 2;
 
 /* ---------- identifiers ---------- */
 export type IndicatorId =
@@ -219,6 +219,17 @@ export interface Escalation {
   expectedReplyMinutes: number | null;
 }
 
+export interface SupportingSignal {
+  indicatorId: IndicatorId;
+  name: string;
+  severity: SeverityLevel;
+  summary: string;
+  currentValue?: number;
+  unit?: string;
+  baselineMean?: number;
+  baselineStd?: number;
+}
+
 export interface AlertCard {
   id: string;
   kind: FindingKind | 'early_signal';
@@ -234,6 +245,19 @@ export interface AlertCard {
   recommendedActions: ActionItem[];
   escalation: Escalation;
   sourceIds: string[];
+  supportingSignals?: SupportingSignal[];
+  hasRestTimer?: boolean;
+  hasBreathingPacer?: boolean;
+  clusterKey?: string;
+}
+
+export interface FollowUpEvaluation {
+  baselineReading: number;
+  repeatReading: number;
+  delta: number;
+  direction: 'improved' | 'unchanged' | 'worsened';
+  guidanceMessage: string;
+  recommendedNextStep: string;
 }
 
 export interface MissionSetting {
