@@ -1,8 +1,10 @@
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import { useLocation } from 'react-router-dom';
-import type { AlertCard, LogEntry } from '@/contracts/types';
+import type { AlertCard, LogEntry, IndicatorId, FollowUpEvaluation } from '@/contracts/types';
 import { addLogEntry, listLogEntries } from '@/storage';
 import { useAppState } from '@/app/AppState';
+import { evaluateFollowUp } from '@/engine';
+import { CheckCircle2, RotateCcw, Activity } from 'lucide-react';
 
 type Reviewer = LogEntry['reviewedBy'];
 
@@ -26,6 +28,23 @@ export function JournalPage() {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [saved, setSaved] = useState(false);
   const statusRef = useRef<HTMLSpanElement>(null);
+
+  // Procedure follow-up evaluation state
+  const [followUpIndicator, setFollowUpIndicator] = useState<IndicatorId>('heart_rate');
+  const [initialReading, setInitialReading] = useState<number>(90);
+  const [repeatReading, setRepeatReading] = useState<number>(76);
+  const [evaluation, setEvaluation] = useState<FollowUpEvaluation | null>(null);
+
+  const handleEvaluate = () => {
+    const res = evaluateFollowUp(followUpIndicator, initialReading, repeatReading);
+    setEvaluation(res);
+  };
+
+  const handleApplyToJournal = () => {
+    if (!evaluation) return;
+    const text = `Repeat reading evaluated: ${evaluation.baselineReading} → ${evaluation.repeatReading} (${evaluation.delta > 0 ? '+' : ''}${evaluation.delta}, ${evaluation.direction}). ${evaluation.guidanceMessage}`;
+    setActionTaken((prev) => (prev ? `${prev}. ${text}` : text));
+  };
 
   useEffect(() => {
     if (card) setObservation(card.observation);
@@ -80,6 +99,98 @@ export function JournalPage() {
           Record observations, actions taken, and reviews on this device so the flight surgeon
           can follow the evidence.
         </p>
+      </div>
+
+      {/* Interactive Procedure Follow-Up Evaluator */}
+      <div className="glass-panel border border-line rounded-3xl p-5 shadow-card space-y-4">
+        <div>
+          <div className="flex items-center gap-2">
+            <Activity className="w-4 h-4 text-accent-primary" />
+            <h2 className="text-base font-bold text-ink">Procedure Follow-up Evaluator</h2>
+          </div>
+          <p className="text-xs text-ink-soft mt-0.5">
+            Test whether an in-flight intervention (e.g. 5m seated rest, 4s/6s breathing) produced favorable telemetry movement.
+          </p>
+        </div>
+
+        <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-ink-soft">Indicator</label>
+            <select
+              value={followUpIndicator}
+              onChange={(e) => setFollowUpIndicator(e.target.value as IndicatorId)}
+              className="w-full bg-panel text-ink text-xs border border-line rounded-xl px-2.5 py-2 min-h-[44px]"
+            >
+              <option value="heart_rate">Resting heart rate</option>
+              <option value="bp_sys">Systolic BP</option>
+              <option value="bp_dia">Diastolic BP</option>
+              <option value="body_temp">Core temperature</option>
+              <option value="glucose">Glucose</option>
+            </select>
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-ink-soft">Initial Reading</label>
+            <input
+              type="number"
+              value={initialReading}
+              onChange={(e) => setInitialReading(Number(e.target.value))}
+              className="w-full bg-panel text-ink text-xs border border-line rounded-xl px-2.5 py-2 min-h-[44px] tabular-nums"
+            />
+          </div>
+
+          <div className="space-y-1">
+            <label className="text-xs font-bold text-ink-soft">Repeat Reading</label>
+            <input
+              type="number"
+              value={repeatReading}
+              onChange={(e) => setRepeatReading(Number(e.target.value))}
+              className="w-full bg-panel text-ink text-xs border border-line rounded-xl px-2.5 py-2 min-h-[44px] tabular-nums"
+            />
+          </div>
+        </div>
+
+        <div className="flex items-center gap-3">
+          <button
+            type="button"
+            onClick={handleEvaluate}
+            className="px-4 py-2 bg-accent-primary text-panel font-bold text-xs rounded-xl shadow-sm hover:opacity-95 min-h-[44px]"
+          >
+            Evaluate Follow-up
+          </button>
+        </div>
+
+        {evaluation && (
+          <div className="p-4 rounded-2xl bg-panel/80 border border-line space-y-2 text-xs">
+            <div className="flex items-center justify-between">
+              <span className="font-bold text-ink">Evaluation Result:</span>
+              <span
+                className={`font-bold px-2 py-0.5 rounded-full capitalize text-[11px] ${
+                  evaluation.direction === 'improved'
+                    ? 'bg-status-ok/20 text-status-ok'
+                    : evaluation.direction === 'unchanged'
+                      ? 'bg-status-watch/20 text-status-watch'
+                      : 'bg-status-review/20 text-status-review'
+                }`}
+              >
+                {evaluation.direction} ({evaluation.delta > 0 ? `+${evaluation.delta}` : evaluation.delta})
+              </span>
+            </div>
+            <p className="text-ink leading-relaxed">{evaluation.guidanceMessage}</p>
+            <p className="text-ink-soft leading-relaxed">
+              <strong>Next step:</strong> {evaluation.recommendedNextStep}
+            </p>
+            <div className="pt-1">
+              <button
+                type="button"
+                onClick={handleApplyToJournal}
+                className="text-xs font-semibold text-accent-primary hover:underline min-h-[44px] inline-flex items-center"
+              >
+                + Copy evaluation into action taken
+              </button>
+            </div>
+          </div>
+        )}
       </div>
 
       <form

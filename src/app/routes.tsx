@@ -11,8 +11,11 @@ import { ProofPage } from '@/ui/pages/ProofPage';
 import { MissionPage } from '@/ui/pages/MissionPage';
 import { JournalPage } from '@/ui/pages/JournalPage';
 import { AboutPage } from '@/ui/pages/AboutPage';
+import { HelpPage } from '@/ui/pages/HelpPage';
 import { DailyCheckPage } from '@/ui/pages/DailyCheckPage';
 import { HealthMonitorPage } from '@/ui/pages/HealthMonitorPage';
+import { HandoverReportsPage } from '@/ui/pages/HandoverReportsPage';
+import { GroundConsolePage } from '@/ui/pages/GroundConsolePage';
 import { DevKitPage } from '@/ui/pages/DevKitPage';
 
 export function AppRoutes() {
@@ -27,8 +30,12 @@ export function AppRoutes() {
       <Route path="/urgent" element={<ErrorBoundary><UrgentPage /></ErrorBoundary>} />
       <Route path="/lab" element={<ErrorBoundary><LabPage /></ErrorBoundary>} />
       <Route path="/proof" element={<ErrorBoundary><ProofPage /></ErrorBoundary>} />
+      <Route path="/verification" element={<ErrorBoundary><ProofPage /></ErrorBoundary>} />
+      <Route path="/reports" element={<ErrorBoundary><HandoverReportsPage /></ErrorBoundary>} />
+      <Route path="/ground" element={<ErrorBoundary><GroundConsolePage /></ErrorBoundary>} />
       <Route path="/mission" element={<ErrorBoundary><MissionPage /></ErrorBoundary>} />
       <Route path="/journal" element={<ErrorBoundary><JournalPage /></ErrorBoundary>} />
+      <Route path="/help" element={<ErrorBoundary><HelpPage /></ErrorBoundary>} />
       <Route path="/about" element={<ErrorBoundary><AboutPage /></ErrorBoundary>} />
       <Route path="/dev/kit" element={<ErrorBoundary><DevKitPage /></ErrorBoundary>} />
     </Routes>

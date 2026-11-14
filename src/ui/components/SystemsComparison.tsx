@@ -7,13 +7,13 @@ export interface SystemsComparisonProps {
 }
 
 const SYSTEM_LABELS: Record<SystemId, string> = {
-  vigil: 'Vigil',
+  vigil: 'Vigil (Adaptive CUSUM)',
   threshold: 'Fixed thresholds',
   zscore: 'Rolling z-score',
 };
 
 const SYSTEM_COLORS: Record<SystemId, string> = {
-  vigil: 'bg-instrument',
+  vigil: 'bg-accent-primary',
   threshold: 'bg-status-watch',
   zscore: 'bg-status-review',
 };
@@ -53,12 +53,11 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
   });
 
   return (
-    <div className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-6">
+    <div className="glass-panel border border-line rounded-3xl p-5 sm:p-6 shadow-card flex flex-col gap-6">
       <div>
         <h2 className="text-lg font-bold text-ink mb-1">Who flags first</h2>
         <p className="text-xs sm:text-sm text-ink-soft">
-          Detection timing and pre-onset flags for this scenario. The ground-truth onset comes
-          from the simulator.
+          Detection timing and pre-onset false alarms for this scenario. Ground truth onset comes from the mathematical simulator.
         </p>
       </div>
 
@@ -81,7 +80,7 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
                       className={`w-2.5 h-2.5 rounded-full ${SYSTEM_COLORS[system.systemId]}`}
                       aria-hidden="true"
                     />
-                    {system.label}
+                    <strong className="font-semibold">{system.label}</strong>
                   </span>
                 </td>
                 <td className="py-3 px-4 text-center">{system.firstFlagDay}</td>
@@ -93,33 +92,39 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
         </table>
       </div>
 
-      <div className="flex flex-col gap-2 pt-2 border-t border-line">
+      {/* Flag Timeline Visualization */}
+      <div className="flex flex-col gap-3 pt-3 border-t border-line/70">
         <div className="flex justify-between items-center text-xs font-semibold text-ink-soft gap-2 flex-wrap">
           <span>Flag timeline across mission days 1 to {dataset.missionDays}</span>
           {onsetDay !== null && (
-            <span className="text-status-urgent font-bold">Known onset: day {onsetDay}</span>
+            <span className="text-status-urgent font-bold flex items-center gap-1.5 bg-status-urgent/10 px-2 py-0.5 rounded-md border border-status-urgent/20">
+              <span className="w-2 h-2 rounded-full bg-status-urgent" />
+              Known ground-truth onset: Day {onsetDay}
+            </span>
           )}
         </div>
 
-        <div className="relative bg-ceramic rounded-sheet p-3 flex flex-col gap-3">
-          {onsetDay !== null && (
-            <div
-              className="absolute top-0 bottom-0 w-0.5 bg-status-urgent z-10 pointer-events-none"
-              style={{ left: `${positionPercent(onsetDay, dataset.missionDays)}%` }}
-              title={`Ground-truth onset: day ${onsetDay}`}
-            />
-          )}
-
+        <div className="p-4 bg-panel/60 rounded-2xl border border-line/70 flex flex-col gap-3.5">
           {stats.map((system) => (
             <div key={system.systemId} className="flex items-center gap-3">
-              <span className="w-28 text-xs font-bold text-ink truncate flex-shrink-0">
+              <span className="w-36 text-xs font-bold text-ink truncate flex-shrink-0">
                 {system.label}
               </span>
-              <div className="relative flex-1 h-3 bg-panel rounded border border-line">
+              <div className="relative flex-1 h-5 bg-panel-solid rounded-lg border border-line/80 overflow-hidden shadow-inner">
+                {/* Onset Guide Marker */}
+                {onsetDay !== null && (
+                  <span
+                    className="absolute top-0 bottom-0 w-0.5 bg-status-urgent z-10 pointer-events-none opacity-85"
+                    style={{ left: `${positionPercent(onsetDay, dataset.missionDays)}%` }}
+                    title={`Known onset: Day ${onsetDay}`}
+                  />
+                )}
+
+                {/* Visible Flags */}
                 {system.flaggedDays.map((day) => (
                   <span
                     key={day}
-                    className={`absolute top-0.5 bottom-0.5 w-1 rounded-sm ${SYSTEM_COLORS[system.systemId]}`}
+                    className={`absolute top-0.5 bottom-0.5 w-1.5 rounded-xs ${SYSTEM_COLORS[system.systemId]} shadow-[0_0_4px_currentColor]`}
                     style={{ left: `${positionPercent(day, dataset.missionDays)}%` }}
                     title={`${system.label} flagged on day ${day}`}
                   />
@@ -127,6 +132,18 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
               </div>
             </div>
           ))}
+
+          {/* Timeline Scale Marks */}
+          <div className="flex items-center gap-3 pt-1">
+            <span className="w-36 flex-shrink-0" />
+            <div className="flex-1 flex justify-between text-[10px] text-ink-soft font-semibold tabular-nums px-1">
+              <span>Day 1</span>
+              <span>Day 45</span>
+              <span>Day 90</span>
+              <span>Day 135</span>
+              <span>Day 180</span>
+            </div>
+          </div>
         </div>
       </div>
     </div>

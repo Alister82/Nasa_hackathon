@@ -2,6 +2,7 @@ import { readFileSync } from 'node:fs';
 import { resolve } from 'node:path';
 import { describe, expect, it } from 'vitest';
 import type { ResultsFile, SystemId } from '@/contracts/types';
+import { CONTRACT_VERSION } from '@/contracts/types';
 import { SCENARIO_IDS } from '@/contracts/constants';
 
 const SYSTEM_IDS: SystemId[] = ['vigil', 'threshold', 'zscore'];
@@ -15,7 +16,7 @@ describe('results file', () => {
   it('matches the frozen schema shape', () => {
     const results = loadResults();
     expect(results.schemaVersion).toBe(1);
-    expect(results.contractVersion).toBe(1);
+    expect(results.contractVersion).toBe(CONTRACT_VERSION);
     expect(results.evaluationSeeds).toEqual({ start: 1, end: 100 });
     expect(results.tuningSeeds).toEqual({ start: 1000, end: 1099 });
     expect(results.missionDays).toBe(180);

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 1,
-  "contractVersion": 1,
+  "contractVersion": 2,
   "evaluationSeeds": {
     "start": 1,
     "end": 100
