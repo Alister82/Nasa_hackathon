@@ -366,3 +366,4 @@ describe('Contract invariants 3-5 in alert cards', () => {
     expect(cards.map((c) => c.severity)).toEqual(['urgent', 'review', 'watch', 'info']);
   });
 });
+

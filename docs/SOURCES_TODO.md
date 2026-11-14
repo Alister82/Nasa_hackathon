@@ -58,3 +58,4 @@ Per `RULES.md` and `ARCHITECTURE.md` section 7.2:
 - **Title**: General adult clinical reference ranges (heart rate, temperature)
 - **Status**: Unverified (`url: null`)
 - **Verified URL to paste**: 
+
