@@ -97,7 +97,7 @@ export function DomainDetailPage() {
       <div className="bg-panel border border-line rounded-sheet p-5 mb-6">
         <div className="flex items-center justify-between gap-3 flex-wrap mb-2">
           <h1 className="text-2xl sm:text-3xl font-bold text-ink">
-            {DOMAIN_LABELS[domainMeta]}
+            {DOMAIN_LABELS[domainMeta]} ({domainMeta === 'cardiovascular' ? 'Cardiovascular' : domainMeta.replace('_', ' ')})
           </h1>
           <StatusChip status={statusType} />
         </div>

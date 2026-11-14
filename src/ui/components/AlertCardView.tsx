@@ -202,7 +202,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen }: AlertCardVi
                         href={url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="text-instrument underline hover:opacity-80"
+                        className="text-instrument underline hover:opacity-80 inline-flex items-center min-h-[44px]"
                       >
                         {title}
                       </a>

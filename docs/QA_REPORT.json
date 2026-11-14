@@ -1,0 +1,530 @@
+{
+  "startedAt": "2026-11-14T09:16:48.191Z",
+  "checks": [
+    {
+      "name": "initial demo state is Crew 1, day 120",
+      "passed": true
+    },
+    {
+      "name": "service worker controls the page",
+      "passed": true,
+      "detail": "controlled"
+    },
+    {
+      "name": "1024px layout has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 1024,
+        "scrollWidth": 1024,
+        "bodyWidth": 1024,
+        "offenders": []
+      }
+    },
+    {
+      "name": "demo story shows a review pattern card",
+      "passed": true
+    },
+    {
+      "name": "deep-space review card shows 34-minute reply",
+      "passed": true
+    },
+    {
+      "name": "alert card screenshot captured",
+      "passed": true
+    },
+    {
+      "name": "Crew 2 has no review or urgent card",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "Crew 3 shows a spike card and no review card at the sensor-fault day",
+      "passed": true,
+      "detail": [
+        "Resting heart rate: one reading stands out"
+      ]
+    },
+    {
+      "name": "station setting changes escalation text",
+      "passed": true
+    },
+    {
+      "name": "station setting removes the deep-space reply line",
+      "passed": true
+    },
+    {
+      "name": "blood pressure cuff can be marked unavailable",
+      "passed": true
+    },
+    {
+      "name": "missing cuff shows an alternative action",
+      "passed": true
+    },
+    {
+      "name": "check-in sliders expose aria-valuetext",
+      "passed": true
+    },
+    {
+      "name": "mood 1 and stress 5 show support message",
+      "passed": true
+    },
+    {
+      "name": "urgent screen opens and shows deep-space line",
+      "passed": true
+    },
+    {
+      "name": "BP 185 / 95 shows urgent callout",
+      "passed": true
+    },
+    {
+      "name": "Scenario Lab sensor fault has no review card",
+      "passed": true,
+      "detail": [
+        "Resting heart rate: one reading stands out"
+      ]
+    },
+    {
+      "name": "Scenario Lab shows the three-system table",
+      "passed": true
+    },
+    {
+      "name": "Proof page renders harness numbers",
+      "passed": true
+    },
+    {
+      "name": "entries, check-ins, and journal records exist before reset",
+      "passed": true,
+      "detail": {
+        "entries": 1,
+        "checkins": 1,
+        "log": 1
+      }
+    },
+    {
+      "name": "reset clears entries, check-ins, and journal",
+      "passed": true,
+      "detail": {
+        "entries": 0,
+        "checkins": 0,
+        "log": 0
+      }
+    },
+    {
+      "name": "offline reload renders Today",
+      "passed": true
+    },
+    {
+      "name": "all routes load while offline",
+      "passed": true
+    },
+    {
+      "name": "About page has no forbidden clinical language outside quoted risk names",
+      "passed": true
+    },
+    {
+      "name": "Today has no forbidden clinical language",
+      "passed": true
+    },
+    {
+      "name": "390px layout has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/log has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/checkin has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/urgent has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/lab has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/proof has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": [
+          {
+            "tag": "table",
+            "id": "",
+            "className": "w-full text-left border-collapse text-xs sm:text-sm",
+            "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "thead",
+            "id": "",
+            "className": "",
+            "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "border-b border-line text-ink-soft font-bold",
+            "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "th",
+            "id": "",
+            "className": "py-2 pl-4 text-center",
+            "text": "False alarms / 100 days",
+            "left": 372,
+            "right": 428,
+            "width": 56
+          },
+          {
+            "tag": "tbody",
+            "id": "",
+            "className": "divide-y divide-line tabular-nums font-medium text-ink",
+            "text": "Vigil\t0 / 0\tNot detected\t124\t0.69\n\nFixed thresholds\t0 / 0\tNot detected\t391\t2.17\n",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Vigil\t0 / 0\tNot detected\t124\t0.69",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-2.5 pl-4 text-center",
+            "text": "0.69",
+            "left": 372,
+            "right": 428,
+            "width": 56
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Fixed thresholds\t0 / 0\tNot detected\t391\t2.17",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-2.5 pl-4 text-center",
+            "text": "2.17",
+            "left": 372,
+            "right": 428,
+            "width": 56
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Rolling z-score\t0 / 0\tNot detected\t1191\t6.62",
+            "left": 37,
+            "right": 428,
+            "width": 391
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-2.5 pl-4 text-center",
+            "text": "6.62",
+            "left": 372,
+            "right": 428,
+            "width": 56
+          },
+          {
+            "tag": "table",
+            "id": "",
+            "className": "w-full text-left border-collapse text-xs sm:text-sm",
+            "text": "System\tDetected / total\tMedian delay (days)\tFalse episodes\tFalse alarms / 100 da",
+            "left": 37,
+            "right": 423,
+            "width": 386
+          }
+        ]
+      }
+    },
+    {
+      "name": "390px #/mission has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/journal has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": []
+      }
+    },
+    {
+      "name": "390px #/about has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": [
+          {
+            "tag": "table",
+            "id": "",
+            "className": "w-full text-left border-collapse text-xs sm:text-sm",
+            "text": "NASA HRP risk\tCoverage in v1\tHow\nRisk of Cardiovascular Adaptations\tCovered\tHear",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "thead",
+            "id": "",
+            "className": "",
+            "text": "NASA HRP risk\tCoverage in v1\tHow",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "border-b border-line text-ink-soft font-bold",
+            "text": "NASA HRP risk\tCoverage in v1\tHow",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "th",
+            "id": "",
+            "className": "py-2.5 pl-4",
+            "text": "How",
+            "left": 335,
+            "right": 442,
+            "width": 107
+          },
+          {
+            "tag": "tbody",
+            "id": "",
+            "className": "divide-y divide-line font-medium text-ink",
+            "text": "Risk of Cardiovascular Adaptations\tCovered\tHeart rate and blood pressure, domain",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Risk of Cardiovascular Adaptations\tCovered\tHeart rate and blood pressure, domain",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
+            "text": "Heart rate and blood pressure, domain cardiovascular",
+            "left": 335,
+            "right": 442,
+            "width": 107
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Risk of Inadequate Sleep and Irregular Schedules\tCovered\tSleep hours, domain sle",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
+            "text": "Sleep hours, domain sleep_recovery",
+            "left": 335,
+            "right": 442,
+            "width": 107
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Risk of Reduced Cardiorespiratory and Musculoskeletal Fitness\tCovered (adherence",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          },
+          {
+            "tag": "td",
+            "id": "",
+            "className": "py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed",
+            "text": "Exercise minutes as a countermeasure-adherence indicator; the Risks page says al",
+            "left": 335,
+            "right": 442,
+            "width": 107
+          },
+          {
+            "tag": "tr",
+            "id": "",
+            "className": "",
+            "text": "Risk of Spaceflight-Induced Bone Changes\tPartly\tExercise adherence as a proxy on",
+            "left": 37,
+            "right": 442,
+            "width": 405
+          }
+        ]
+      }
+    },
+    {
+      "name": "390px #/domain/cardiovascular has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 390,
+        "scrollWidth": 390,
+        "bodyWidth": 390,
+        "offenders": [
+          {
+            "tag": "g",
+            "id": "",
+            "className": "",
+            "text": "",
+            "left": 306,
+            "right": 398,
+            "width": 92
+          },
+          {
+            "tag": "text",
+            "id": "",
+            "className": "",
+            "text": "",
+            "left": 311,
+            "right": 398,
+            "width": 87
+          },
+          {
+            "tag": "tspan",
+            "id": "",
+            "className": "",
+            "text": "",
+            "left": 311,
+            "right": 398,
+            "width": 87
+          }
+        ]
+      }
+    },
+    {
+      "name": "1024px final layout has no horizontal scroll",
+      "passed": true,
+      "detail": {
+        "innerWidth": 1024,
+        "scrollWidth": 1024,
+        "bodyWidth": 1024,
+        "offenders": []
+      }
+    },
+    {
+      "name": "route change focuses the screen title",
+      "passed": true,
+      "detail": {
+        "tag": "H1",
+        "text": "Log measurements"
+      }
+    },
+    {
+      "name": "body map keyboard Enter opens the domain",
+      "passed": true
+    },
+    {
+      "name": "visible controls meet the 44px touch-target rule",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "no runtime exceptions",
+      "passed": true,
+      "detail": []
+    },
+    {
+      "name": "no browser console errors",
+      "passed": true,
+      "detail": []
+    }
+  ],
+  "failures": [],
+  "consoleErrors": [],
+  "screenshots": [
+    "docs\\screenshots\\today-1024.png",
+    "docs\\screenshots\\alert-card-1024.png",
+    "docs\\screenshots\\today-390.png",
+    "docs\\screenshots\\today-1024-final.png"
+  ],
+  "console": [],
+  "knownIssues": [
+    {
+      "id": "TASKS-8-2-crew-3-day-120",
+      "note": "TASKS section 8 item 2 expects a Crew 3 spike card at day 120. ARCHITECTURE 6.6 keeps isolated_spike only on the spike day, so day 120 is clear. The spike card is verified at the scenario day (day 91) instead of changing detector semantics.",
+      "day120Titles": []
+    }
+  ],
+  "finishedAt": "2026-11-14T09:17:10.750Z",
+  "passed": true
+}

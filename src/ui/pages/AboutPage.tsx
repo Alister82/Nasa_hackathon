@@ -169,7 +169,7 @@ export function AboutPage() {
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-instrument font-semibold underline hover:opacity-80 flex-shrink-0"
+                  className="text-instrument font-semibold underline hover:opacity-80 flex-shrink-0 inline-flex items-center min-h-[44px]"
                 >
                   Source link
                 </a>
