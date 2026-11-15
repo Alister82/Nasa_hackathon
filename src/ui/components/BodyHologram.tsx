@@ -17,6 +17,7 @@ export interface BodyHologramProps {
 }
 
 type MarchingCubesConstructor = typeof import('three/examples/jsm/objects/MarchingCubes.js')['MarchingCubes'];
+type GLTFLoaderConstructor = typeof import('three/examples/jsm/loaders/GLTFLoader.js')['GLTFLoader'];
 
 const STATUS_COLORS: Record<DomainAnalysis['status'], { hex: number; css: string }> = {
   ok: { hex: 0x2dd4bf, css: '#2dd4bf' },
@@ -232,18 +233,27 @@ export function BodyHologram({
     const boot = async () => {
       let THREE: typeof THREE_NS;
       let MarchingCubesCtor: MarchingCubesConstructor;
+      let GLTFLoader: GLTFLoaderConstructor;
+      let realisticScene: THREE_NS.Group | null = null;
       try {
-        const [threeModule, marchingModule] = await Promise.all([
+        const [threeModule, marchingModule, loaderModule] = await Promise.all([
           import('three'),
           import('three/examples/jsm/objects/MarchingCubes.js'),
+          import('three/examples/jsm/loaders/GLTFLoader.js'),
         ]);
         THREE = threeModule;
         MarchingCubesCtor = marchingModule.MarchingCubes;
+        GLTFLoader = loaderModule.GLTFLoader;
       } catch {
         if (!disposed) setWebglFailed(true);
         return;
       }
       if (disposed) return;
+      try {
+        realisticScene = (await new GLTFLoader().loadAsync('/models/male-base-mesh.glb')).scene;
+      } catch {
+        // Keep the procedural hologram available when the optional mesh cannot load.
+      }
 
       try {
         const width = mount.clientWidth || 360;
@@ -281,12 +291,14 @@ export function BodyHologram({
         scene.add(under);
 
         /* Materials ----------------------------------------------- */
-        const bodyMaterial = new THREE.MeshStandardMaterial({
+        const bodyMaterial = new THREE.MeshPhysicalMaterial({
           color: risk.base,
           emissive: risk.emissive,
           emissiveIntensity: 0.62,
-          roughness: 0.38,
-          metalness: 0.16,
+          roughness: 0.3,
+          metalness: 0.2,
+          clearcoat: 0.8,
+          clearcoatRoughness: 0.2,
           transparent: true,
           opacity: 0.88,
           side: THREE.FrontSide,
@@ -295,14 +307,15 @@ export function BodyHologram({
         const fillUniforms = {
           uRiskFill: { value: risk.fill },
           uRiskTime: { value: 0 },
+          uBodyHeightScale: { value: 1 },
           uRiskColor: { value: new THREE.Color(0xff2020) },
         };
         bodyMaterial.onBeforeCompile = (shader) => {
           Object.assign(shader.uniforms, fillUniforms);
           shader.vertexShader = shader.vertexShader.replace(
             '#include <common>',
-            '#include <common>\nvarying float vBodyHeight;',
-          ).replace('#include <begin_vertex>', '#include <begin_vertex>\nvBodyHeight = position.y;');
+            '#include <common>\nuniform float uBodyHeightScale;\nvarying float vBodyHeight;',
+          ).replace('#include <project_vertex>', 'vBodyHeight = transformed.y * uBodyHeightScale;\n#include <project_vertex>');
           shader.fragmentShader = shader.fragmentShader.replace(
             '#include <common>',
             '#include <common>\nuniform float uRiskFill;\nuniform float uRiskTime;\nuniform vec3 uRiskColor;\nvarying float vBodyHeight;',
@@ -352,6 +365,26 @@ export function BodyHologram({
 
         const bodyGroup = new THREE.Group();
         scene.add(bodyGroup);
+
+        if (realisticScene) {
+          realisticScene.traverse((object) => {
+            if (!(object instanceof THREE.Mesh)) return;
+            // Use the full anatomical base mesh; the separate high-poly entry
+            // is a small overlapping detail mesh and would z-fight at this scale.
+            object.visible = object.name === 'base_male_body';
+            if (object.visible) object.material = bodyMaterial;
+          });
+          realisticScene.updateMatrixWorld(true);
+          const bounds = new THREE.Box3().setFromObject(realisticScene);
+          const size = bounds.getSize(new THREE.Vector3());
+          const center = bounds.getCenter(new THREE.Vector3());
+          const scale = 3.0 / Math.max(size.y, 0.001);
+          fillUniforms.uBodyHeightScale.value = 1 / Math.max(size.y, 0.001);
+          realisticScene.scale.setScalar(scale);
+          realisticScene.position.set(-center.x * scale, 0.08 - center.y * scale, -center.z * scale);
+          realisticScene.updateMatrixWorld(true);
+          bodyGroup.add(realisticScene);
+        }
 
         const geometries: THREE_NS.BufferGeometry[] = [];
         const materials: THREE_NS.Material[] = [bodyMaterial, glowMaterial];
@@ -519,6 +552,7 @@ export function BodyHologram({
         body.scale.set(SCAN_HEIGHT, SCAN_HEIGHT, SCAN_HEIGHT * 0.78);
         body.position.y = 0.1;
         body.renderOrder = 1;
+        body.visible = !realisticScene;
         geometries.push(body.geometry);
         bodyGroup.add(body);
 
@@ -526,6 +560,7 @@ export function BodyHologram({
         bodyGlow.scale.copy(body.scale).multiplyScalar(1.014);
         bodyGlow.position.copy(body.position);
         bodyGlow.renderOrder = 2;
+        bodyGlow.visible = !realisticScene;
         bodyGroup.add(bodyGlow);
 
         /* Internal constellation ---------------------------------
@@ -559,6 +594,7 @@ export function BodyHologram({
         });
         materials.push(starMaterial);
         const starPoints = new THREE.Points(starGeometry, starMaterial);
+        starPoints.visible = !realisticScene;
         starPoints.scale.copy(body.scale);
         starPoints.position.copy(body.position);
         starPoints.renderOrder = 3;
