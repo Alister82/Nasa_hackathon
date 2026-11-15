@@ -9,7 +9,7 @@ import {
   FileText,
   LineChart,
   Stethoscope,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { CheckInRecord, DomainId, IndicatorId, MeasurementEntry } from '@/contracts/types';
 import { DOMAIN_LABELS, DOMAIN_ORDER, INDICATORS } from '@/contracts/indicators';
 import { MISSION_SETTINGS, REFERENCE_RANGES } from '@/guidance';
@@ -151,7 +151,7 @@ export function LogPage() {
                   <ClipboardList className="h-4 w-4" aria-hidden="true" />
                 </span>
                 <div>
-                  <h2 className="text-[0.78rem] font-bold text-ink">After you save</h2>
+                  <h2 className="text-[0.78rem] font-semibold text-ink">After you save</h2>
                   <p className="text-[0.62rem] text-ink-soft">Deterministic, on-device steps</p>
                 </div>
               </div>
@@ -163,7 +163,7 @@ export function LogPage() {
                   'The timeline and domain status refresh from the same evidence.',
                 ].map((step, index) => (
                   <li key={step} className="flex gap-2 text-[0.68rem] leading-relaxed text-ink-soft">
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-surface3 text-[0.54rem] font-bold text-ink-soft tabular-nums">
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-surface3 text-[0.54rem] font-semibold text-ink-soft tabular-nums">
                       {index + 1}
                     </span>
                     {step}
@@ -173,7 +173,7 @@ export function LogPage() {
             </section>
 
             <section className="panel p-3.5">
-              <h2 className="text-[0.78rem] font-bold text-ink">Current context</h2>
+              <h2 className="text-[0.78rem] font-semibold text-ink">Current context</h2>
               <dl className="mt-2.5 space-y-2 text-[0.68rem]">
                 {[
                   ['Viewed day', `Day ${viewDay}`],
@@ -191,14 +191,14 @@ export function LogPage() {
             </section>
 
             <section className="rounded-[18px] border border-status-watch/25 bg-status-watch-soft/70 p-3.5">
-              <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-watch">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-status-watch">
                 Safety note
               </p>
               <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">
                 Reference ranges are illustrative. If you feel unwell, follow your emergency
                 procedures rather than waiting for a reading to change.
               </p>
-              <Link to="/urgent" className="mt-2 inline-flex text-[0.66rem] font-bold text-status-urgent underline">
+              <Link to="/urgent" className="mt-2 inline-flex text-[0.66rem] font-semibold text-status-urgent underline">
                 Emergency support
               </Link>
             </section>
@@ -218,7 +218,7 @@ export function LogPage() {
                   'inline-flex min-h-[36px] items-center gap-1.5 rounded-full border px-3 text-[0.68rem] font-semibold transition-all',
                   domain === id
                     ? 'border-instrument/25 bg-instrument-soft text-instrument-deep shadow-xs'
-                    : 'border-line bg-white/70 text-ink-soft hover:border-line-strong hover:text-ink',
+                    : 'border-line bg-white text-ink-soft hover:border-line-strong hover:text-ink',
                 )}
               >
                 <DomainIcon domain={id} className="h-3.5 w-3.5" />
@@ -229,7 +229,7 @@ export function LogPage() {
 
           <div className="flex flex-wrap items-center justify-between gap-2">
             <div className="flex items-center gap-2">
-              <h2 className="font-display text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">
+              <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
                 {DOMAIN_LABELS[domain]}
               </h2>
               <span
@@ -307,7 +307,7 @@ export function LogPage() {
           <section className="panel overflow-hidden">
             <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line px-4 py-3">
               <div>
-                <h2 className="text-[0.85rem] font-bold text-ink">Manually saved measurements</h2>
+                <h2 className="text-[0.85rem] font-semibold text-ink">Manually saved measurements</h2>
                 <p className="text-[0.62rem] text-ink-soft">
                   Newest mission day first. Each row replaces the simulated reading for that day.
                 </p>
@@ -381,7 +381,7 @@ export function LogPage() {
           {checkIns.length > 0 && (
             <section className="panel overflow-hidden">
               <header className="border-b border-line px-4 py-3">
-                <h2 className="text-[0.85rem] font-bold text-ink">Recent wellbeing check-ins</h2>
+                <h2 className="text-[0.85rem] font-semibold text-ink">Recent wellbeing check-ins</h2>
                 <p className="text-[0.62rem] text-ink-soft">Notes remain on this device and are not transmitted.</p>
               </header>
               <ul className="divide-y divide-line/70">

@@ -9,7 +9,7 @@ import {
   XAxis,
   YAxis,
 } from 'recharts';
-import { Clock3, ShieldAlert, Target } from 'lucide-react';
+import { Clock3, ShieldAlert, Target } from '@/ui/components/icons';
 import type { ScenarioResult, SystemId } from '@/contracts/types';
 import { SCENARIO_LABELS } from '@/contracts/constants';
 
@@ -20,8 +20,8 @@ export interface ProofChartProps {
 
 const SYSTEM_COLORS: Record<SystemId, string> = {
   vigil: 'var(--instrument)',
-  threshold: 'var(--status-watch)',
-  zscore: 'var(--status-review)',
+  threshold: 'var(--chart-temp)',
+  zscore: 'var(--chart-stress)',
 };
 
 const SYSTEMS: SystemId[] = ['vigil', 'threshold', 'zscore'];
@@ -39,8 +39,8 @@ function MetricTooltip({
   const entry = payload[0];
   if (!entry) return null;
   return (
-    <div className="rounded-xl border border-white/90 bg-white/97 px-3 py-2 shadow-float backdrop-blur">
-      <p className="text-[0.62rem] font-bold text-ink">{entry.payload?.name}</p>
+    <div className="rounded-[10px] border border-line bg-white px-3 py-2 shadow-float">
+      <p className="text-[0.62rem] font-semibold text-ink">{entry.payload?.name}</p>
       <p className="mt-0.5 text-[0.7rem] font-semibold tabular-nums text-ink-soft">
         {entry.value} {suffix}
       </p>
@@ -76,7 +76,7 @@ export function ProofChart({ scenario, labels }: ProofChartProps) {
       <header className="flex flex-wrap items-start justify-between gap-3 border-b border-line/80 bg-surface2/45 px-4 py-3">
         <div>
           <p className="section-kicker">Scenario</p>
-          <h2 className="font-display text-[1.02rem] font-extrabold tracking-[-0.03em] text-ink">
+          <h2 className="font-display text-[1.02rem] font-semibold tracking-[-0.03em] text-ink">
             {SCENARIO_LABELS[scenario.scenarioId] ?? scenario.scenarioId}
           </h2>
         </div>
@@ -85,7 +85,7 @@ export function ProofChart({ scenario, labels }: ProofChartProps) {
 
       <div className="grid grid-cols-1 gap-4 p-4 sm:grid-cols-2">
         <div className="flex flex-col gap-1.5">
-          <span className="inline-flex items-center gap-1.5 text-[0.66rem] font-bold text-ink-soft">
+          <span className="inline-flex items-center gap-1.5 text-[0.66rem] font-semibold text-ink-soft">
             <Clock3 className="h-3.5 w-3.5 text-instrument" aria-hidden="true" />
             Median detection delay (days from onset)
           </span>
@@ -106,7 +106,7 @@ export function ProofChart({ scenario, labels }: ProofChartProps) {
                   axisLine={false}
                   width={38}
                 />
-                <Tooltip cursor={{ fill: 'rgba(40,105,216,0.05)' }} content={<MetricTooltip suffix="days" />} />
+                <Tooltip cursor={{ fill: 'rgba(0,0,0,0.035)' }} content={<MetricTooltip suffix="days" />} />
                 <Bar dataKey="medianDelay" radius={[6, 6, 0, 0]} maxBarSize={54}>
                   {delayData.map((entry) => (
                     <Cell key={entry.systemId} fill={entry.color} />
@@ -118,7 +118,7 @@ export function ProofChart({ scenario, labels }: ProofChartProps) {
         </div>
 
         <div className="flex flex-col gap-1.5">
-          <span className="inline-flex items-center gap-1.5 text-[0.66rem] font-bold text-ink-soft">
+          <span className="inline-flex items-center gap-1.5 text-[0.66rem] font-semibold text-ink-soft">
             <ShieldAlert className="h-3.5 w-3.5 text-status-review" aria-hidden="true" />
             False alarms per 100 days
           </span>
@@ -139,7 +139,7 @@ export function ProofChart({ scenario, labels }: ProofChartProps) {
                   axisLine={false}
                   width={38}
                 />
-                <Tooltip cursor={{ fill: 'rgba(40,105,216,0.05)' }} content={<MetricTooltip suffix="per 100 days" />} />
+                <Tooltip cursor={{ fill: 'rgba(0,0,0,0.035)' }} content={<MetricTooltip suffix="per 100 days" />} />
                 <Bar dataKey="rate" radius={[6, 6, 0, 0]} maxBarSize={54}>
                   {falseAlarmData.map((entry) => (
                     <Cell key={entry.systemId} fill={entry.color} />

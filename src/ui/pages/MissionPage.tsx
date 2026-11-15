@@ -8,7 +8,7 @@ import {
   ShieldAlert,
   Sparkles,
   Timer,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import { MissionPicker } from '@/ui/components/MissionPicker';
 import { SupplyChecklist } from '@/ui/components/SupplyChecklist';
 import { PageHeader, SectionHeading, TextLink } from '@/ui/components/ui';
@@ -101,7 +101,7 @@ export function MissionPage() {
           return (
             <div key={stat.label} className="panel px-3.5 py-3">
               <div className="flex items-center justify-between gap-2">
-                <p className="text-[0.6rem] font-bold uppercase tracking-[0.1em] text-ink-faint">{stat.label}</p>
+                <p className="text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">{stat.label}</p>
                 <Icon className="h-3.5 w-3.5 text-ink-faint" aria-hidden="true" />
               </div>
               <p className="metric-number mt-1.5 text-[1.3rem] leading-none">{stat.value}</p>
@@ -118,32 +118,28 @@ export function MissionPage() {
         </div>
 
         <aside className="flex min-w-0 flex-col gap-3">
-          <section className="relative overflow-hidden rounded-[20px] border border-white/15 panel-dark p-4">
-            <div
-              className="pointer-events-none absolute -right-12 -top-14 h-40 w-40 rounded-full border border-white/10"
-              aria-hidden="true"
-            />
+          <section className="relative overflow-hidden rounded-[16px] border border-white/10 panel-dark p-4">
             <div className="relative flex items-start justify-between gap-3">
               <div>
-                <p className="text-[0.58rem] font-bold uppercase tracking-[0.15em] text-blue-200/80">
+                <p className="text-[0.58rem] font-medium uppercase tracking-[0.1em] text-white/50">
                   Why the setting matters
                 </p>
-                <p className="mt-1.5 font-display text-[1rem] font-bold leading-snug tracking-[-0.02em]">
+                <p className="mt-1.5 font-display text-[1rem] font-semibold leading-snug tracking-[-0.02em]">
                   Escalation has to fit the link
                 </p>
               </div>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-100">
-                <Radio className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/10 text-white/80">
+                <Radio className="h-4 w-4" weight="fill" aria-hidden="true" />
               </span>
             </div>
-            <p className="relative mt-2 text-[0.68rem] leading-relaxed text-blue-100/75">
+            <p className="relative mt-2 text-[0.68rem] leading-relaxed text-white/55">
               On station, ground can respond quickly. On a lunar base or in deep space, a reply may
               take longer than the clinical decision. Vigil keeps the on-board steps explicit so
               care does not wait on the link.
             </p>
             <div className="relative mt-3 flex flex-wrap gap-1.5">
-              <span className="chip !border-white/15 !bg-white/10 !text-blue-50">{setting.label}</span>
-              <span className="chip !border-white/15 !bg-white/10 !text-blue-50">≥ {reply} min reply</span>
+              <span className="chip !border-white/10 !bg-white/10 !text-white/80">{setting.label}</span>
+              <span className="chip !border-white/10 !bg-white/10 !text-white/80">≥ {reply} min reply</span>
             </div>
           </section>
 
@@ -167,7 +163,7 @@ export function MissionPage() {
           <section className="rounded-[18px] border border-status-urgent/25 bg-status-urgent-soft/65 p-3.5">
             <div className="flex items-center gap-1.5">
               <ShieldAlert className="h-3.5 w-3.5 text-status-urgent" aria-hidden="true" />
-              <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-urgent">
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-status-urgent">
                 Reset demo data
               </p>
             </div>
@@ -180,7 +176,7 @@ export function MissionPage() {
             </button>
           </section>
 
-          <section className="rounded-[16px] border border-line bg-white/65 px-3.5 py-3">
+          <section className="rounded-[16px] border border-line bg-surface2 px-3.5 py-3">
             <p className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold text-ink">
               <Sparkles className="h-3.5 w-3.5 text-instrument" aria-hidden="true" />
               Need the guidance behind these settings?

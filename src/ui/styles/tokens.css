@@ -1,84 +1,84 @@
 /* ------------------------------------------------------------------
-   Vigil design tokens — premium aerospace health system
-   A calm, icy-blue clinical palette with deep navy typography.
+   Vigil design tokens — calm, instrument-grade Apple-inspired system
+   Neutral graphite canvas, hairline separators, system accents.
    ------------------------------------------------------------------ */
 
 :root {
   /* Canvas */
-  --bg-0: #f8fbff;
-  --bg-1: #edf4ff;
-  --bg-2: #e2ecfa;
-  --bg-3: #d8e6f8;
+  --bg-0: #ffffff;
+  --bg-1: #f5f5f7;
+  --bg-2: #ededf0;
+  --bg-3: #e5e5ea;
 
   /* Surfaces */
   --surface: #ffffff;
-  --surface-2: #f5f8fd;
-  --surface-3: #edf3fb;
-  --glass: rgba(255, 255, 255, 0.74);
-  --glass-strong: rgba(255, 255, 255, 0.9);
-  --glass-border: rgba(255, 255, 255, 0.82);
+  --surface-2: #fafafc;
+  --surface-3: #f2f2f5;
+  --glass: rgba(255, 255, 255, 0.72);
+  --glass-strong: rgba(255, 255, 255, 0.88);
+  --glass-border: rgba(0, 0, 0, 0.06);
 
   /* Text */
-  --ink: #0f2442;
-  --ink-2: #243856;
-  --ink-soft: #66758c;
-  --ink-faint: #93a2b6;
+  --ink: #1d1d1f;
+  --ink-2: #3a3a3c;
+  --ink-soft: #6e6e73;
+  --ink-faint: #86868b;
 
   /* Lines */
-  --line: #dce6f2;
-  --line-strong: #c7d7ea;
+  --line: #e5e5ea;
+  --line-strong: #d2d2d7;
 
   /* Brand */
-  --instrument: #2869d8;
-  --instrument-deep: #1a4fae;
-  --instrument-soft: #e3eeff;
+  --instrument: #0071e3;
+  --instrument-deep: #0062c4;
+  --instrument-soft: #eaf4ff;
 
-  /* Semantic */
-  --status-ok: #128a77;
-  --status-ok-soft: #e2f6f1;
-  --status-info: #2563c9;
-  --status-info-soft: #e7f0ff;
-  --status-watch: #b57712;
-  --status-watch-soft: #fff5df;
-  --status-review: #c4562e;
-  --status-review-soft: #ffefe7;
-  --status-urgent: #cf3f49;
-  --status-urgent-soft: #ffecee;
+  /* Semantic — Apple system colors, tuned for text contrast */
+  --status-ok: #1d8a3c;
+  --status-ok-soft: #e8f7ed;
+  --status-info: #0071e3;
+  --status-info-soft: #eaf4ff;
+  --status-watch: #a85b00;
+  --status-watch-soft: #fff4e5;
+  --status-review: #c93400;
+  --status-review-soft: #fff0eb;
+  --status-urgent: #d70015;
+  --status-urgent-soft: #ffebec;
 
   /* Scientific accents */
-  --violet: #7462e8;
-  --violet-soft: #f0edff;
-  --teal: #159b87;
-  --coral: #d94b52;
-  --amber: #e0a03a;
+  --violet: #5856d6;
+  --violet-soft: #eeeefc;
+  --teal: #0f8b9e;
+  --coral: #d70015;
+  --amber: #ff9500;
 
   /* Legacy aliases used across the app */
   --ceramic: var(--bg-1);
   --panel: var(--surface);
 
   /* Charts */
-  --chart-hr: #2869d8;
-  --chart-bp: #7462e8;
-  --chart-temp: #e0a03a;
-  --chart-sleep: #159b87;
-  --chart-stress: #d94b52;
-  --chart-grid: #e6eef8;
+  --chart-hr: #0071e3;
+  --chart-bp: #5856d6;
+  --chart-temp: #ff9f0a;
+  --chart-sleep: #30b0c7;
+  --chart-stress: #ff375f;
+  --chart-grid: #ececef;
 
-  /* Radii */
+  /* Radii — continuous-corner feel */
   --r-xs: 8px;
-  --r-sm: 12px;
-  --r-md: 16px;
-  --r-lg: 22px;
-  --r-xl: 28px;
+  --r-sm: 10px;
+  --r-md: 14px;
+  --r-lg: 18px;
+  --r-xl: 22px;
   --r-pill: 999px;
 
-  /* Elevation */
-  --shadow-xs: 0 1px 2px rgba(16, 37, 68, 0.04);
-  --shadow-sm: 0 2px 8px rgba(16, 37, 68, 0.05);
-  --shadow-card: 0 10px 30px -18px rgba(22, 48, 87, 0.2), 0 2px 6px rgba(22, 48, 87, 0.04);
-  --shadow-float: 0 24px 60px -28px rgba(18, 46, 88, 0.32), 0 8px 20px -12px rgba(18, 46, 88, 0.14);
-  --shadow-ring: 0 0 0 1px rgba(40, 105, 216, 0.08);
-  --glow-blue: 0 0 42px rgba(40, 105, 216, 0.24);
+  /* Elevation — quiet, neutral shadows (no colored glow) */
+  --shadow-xs: 0 1px 1px rgba(0, 0, 0, 0.03), 0 1px 2px rgba(0, 0, 0, 0.04);
+  --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.04), 0 4px 12px -8px rgba(0, 0, 0, 0.1);
+  --shadow-card: 0 1px 2px rgba(0, 0, 0, 0.04), 0 10px 30px -22px rgba(0, 0, 0, 0.18);
+  --shadow-float: 0 2px 6px rgba(0, 0, 0, 0.05), 0 24px 56px -32px rgba(0, 0, 0, 0.22);
+  --shadow-ring: 0 0 0 1px rgba(0, 0, 0, 0.04);
+  --glow-blue: 0 0 0 rgba(0, 0, 0, 0);
 
   /* Focus */
   --focus-ring: 2px solid var(--instrument);
@@ -88,16 +88,18 @@
 body {
   background-color: var(--bg-1);
   color: var(--ink);
-  font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'SF Pro Text', 'SF Pro Display', -apple-system, BlinkMacSystemFont,
+    'Inter Variable', 'Inter', 'Segoe UI Variable Text', 'Segoe UI', system-ui, sans-serif;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
   font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+  letter-spacing: -0.006em;
 }
 
 ::selection {
-  background: rgba(40, 105, 216, 0.18);
+  background: rgba(0, 113, 227, 0.16);
   color: var(--ink);
 }
 

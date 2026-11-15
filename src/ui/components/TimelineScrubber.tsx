@@ -1,5 +1,5 @@
 import React from 'react';
-import { CalendarClock, Flag, Play, SkipForward } from 'lucide-react';
+import { CalendarClock, Flag, Play, SkipForward } from '@/ui/components/icons';
 import { cn } from '@/ui/lib/format';
 
 export interface ScrubberMarker {
@@ -65,32 +65,30 @@ export function TimelineScrubber({
   return (
     <section
       aria-label="Mission timeline"
-      className="relative overflow-hidden rounded-[20px] border border-white/80 bg-white/78 p-4 shadow-card backdrop-blur-md"
+      className="relative overflow-hidden rounded-[16px] border border-line bg-white p-4 shadow-xs"
     >
-      <div className="pointer-events-none absolute inset-x-0 top-0 h-20 bg-[radial-gradient(80%_120%_at_50%_-40%,rgba(68,131,226,0.16),transparent_70%)]" aria-hidden="true" />
-
       <div className="relative flex flex-wrap items-start justify-between gap-3">
         <div className="flex items-center gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-instrument/15 bg-instrument-soft text-instrument">
-            <CalendarClock className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+          <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-instrument-soft text-instrument">
+            <CalendarClock className="h-[18px] w-[18px]" weight="fill" aria-hidden="true" />
           </span>
           <div>
-            <p className="text-[0.58rem] font-bold uppercase tracking-[0.13em] text-ink-faint">
+            <p className="text-[0.58rem] font-medium uppercase tracking-[0.08em] text-ink-faint">
               Mission timeline
             </p>
-            <p className="font-display text-[1.15rem] font-extrabold leading-tight tracking-[-0.03em] text-ink tabular-nums">
+            <p className="font-display text-[1.15rem] font-semibold leading-tight tracking-[-0.03em] text-ink tabular-nums">
               Day {day} of {maxDay}
             </p>
           </div>
         </div>
 
         <div className="flex items-center gap-1.5">
-          <button type="button" onClick={onToday} className="btn btn-secondary !min-h-[44px] !px-2.5 !text-[0.68rem]">
+          <button type="button" onClick={onToday} className="btn btn-secondary !min-h-[36px] !px-2.5 !text-[0.68rem]">
             <SkipForward className="h-3.5 w-3.5" aria-hidden="true" />
             Today
           </button>
-          <button type="button" onClick={onPlayDemo} className="btn btn-primary !min-h-[44px] !px-2.5 !text-[0.68rem]">
-            <Play className="h-3.5 w-3.5" aria-hidden="true" />
+          <button type="button" onClick={onPlayDemo} className="btn btn-primary !min-h-[36px] !px-2.5 !text-[0.68rem]">
+            <Play className="h-3.5 w-3.5" weight="fill" aria-hidden="true" />
             Play demo story
           </button>
         </div>
@@ -99,7 +97,7 @@ export function TimelineScrubber({
       <div className="relative mt-4 pb-1">
         <div className="pointer-events-none absolute inset-x-0 top-[19px] h-1.5 overflow-hidden rounded-full bg-surface3" aria-hidden="true">
           <div
-            className="h-full rounded-full bg-gradient-to-r from-[#7fb0f5] via-[var(--instrument)] to-[#1c56bd]"
+            className="h-full rounded-full bg-instrument"
             style={{ width: `${progress}%` }}
           />
         </div>
@@ -114,7 +112,7 @@ export function TimelineScrubber({
                 style={{ left: `${pct}%` }}
                 title={`${marker.label} on Day ${marker.day}`}
               >
-                <Flag className={cn('h-3 w-3 drop-shadow-sm', MARKER_COLOR[marker.status])} strokeWidth={2.4} />
+                <Flag className={cn('h-3 w-3', MARKER_COLOR[marker.status])} weight="fill" />
               </div>
             );
           })}
@@ -135,10 +133,10 @@ export function TimelineScrubber({
           aria-valuemax={maxDay}
           aria-valuenow={day}
           aria-valuetext={`Day ${day} of ${maxDay}`}
-          className="relative z-10 h-11 w-full cursor-pointer appearance-none bg-transparent accent-instrument [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-5px] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-instrument [&::-webkit-slider-thumb]:shadow-[0_1px_6px_rgba(24,66,135,0.45)]"
+          className="relative z-10 h-11 w-full cursor-pointer appearance-none bg-transparent accent-instrument [&::-webkit-slider-runnable-track]:h-1.5 [&::-webkit-slider-runnable-track]:rounded-full [&::-webkit-slider-runnable-track]:bg-transparent [&::-webkit-slider-thumb]:mt-[-5px] [&::-webkit-slider-thumb]:h-4 [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:rounded-full [&::-webkit-slider-thumb]:border-2 [&::-webkit-slider-thumb]:border-white [&::-webkit-slider-thumb]:bg-instrument [&::-webkit-slider-thumb]:shadow-[0_1px_4px_rgba(0,0,0,0.25)]"
         />
 
-        <div className="mt-0.5 flex justify-between px-0.5 text-[0.6rem] font-semibold tabular-nums text-ink-faint">
+        <div className="mt-0.5 flex justify-between px-0.5 text-[0.6rem] font-medium tabular-nums text-ink-faint">
           <span>Day 1</span>
           {ticks.map((tick) => (
             <span key={tick} className={cn(tick === day && 'text-instrument')}>
@@ -150,7 +148,7 @@ export function TimelineScrubber({
 
       {markers.length > 0 && (
         <div className="mt-2.5 flex flex-wrap items-center gap-x-3 gap-y-1 border-t border-line/70 pt-2">
-          <span className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Flags</span>
+          <span className="text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">Flags</span>
           {markers.slice(-6).map((marker, index) => (
             <span key={`${marker.day}-${index}`} className="inline-flex items-center gap-1 text-[0.6rem] text-ink-soft">
               <span className={cn('h-1.5 w-1.5 rounded-full', MARKER_BG[marker.status])} aria-hidden="true" />

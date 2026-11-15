@@ -1,5 +1,5 @@
 import React from 'react';
-import { ShieldCheck } from 'lucide-react';
+import { ShieldCheck } from '@/ui/components/icons';
 import { DISCLAIMER_BANNER } from '@/contracts/constants';
 
 export interface DisclaimerBannerProps {}

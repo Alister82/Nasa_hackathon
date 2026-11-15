@@ -2,7 +2,7 @@ import React, { useEffect, useMemo, useRef, useState } from 'react';
 import type { IndicatorId, MissionSettingId, ValueClass } from '@/contracts/types';
 import { INDICATORS } from '@/contracts/indicators';
 import { classifyValue, MEASUREMENT_HELP } from '@/guidance';
-import { CheckCircle2, ChevronDown, CircleHelp, TriangleAlert } from 'lucide-react';
+import { CheckCircle2, ChevronDown, CircleHelp, TriangleAlert } from '@/ui/components/icons';
 import { StatusChip, type StatusType } from './StatusChip';
 import { IndicatorIcon } from './MetricTile';
 import { cn } from '@/ui/lib/format';
@@ -126,7 +126,7 @@ export function MeasurementForm({
     <form onSubmit={handleSubmit} className="flex w-full flex-col gap-4" aria-label="Log measurements form">
       <div className="flex flex-wrap items-center justify-between gap-2 rounded-[14px] border border-instrument/15 bg-instrument-soft/55 px-3.5 py-2.5 text-[0.72rem] font-medium text-ink-2">
         <span className="inline-flex items-center gap-2">
-          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[0.58rem] font-bold text-instrument tabular-nums">
+          <span className="flex h-6 w-6 items-center justify-center rounded-full bg-white text-[0.58rem] font-semibold text-instrument tabular-nums">
             {completed}/{rows.length}
           </span>
           {dueIndicators.length > 0 ? (
@@ -148,7 +148,7 @@ export function MeasurementForm({
         >
           <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-status-urgent" aria-hidden="true" />
           <div className="text-[0.72rem] font-medium leading-relaxed">
-            <strong className="mb-0.5 block font-bold text-status-urgent">Urgent attention</strong>
+            <strong className="mb-0.5 block font-semibold text-status-urgent">Urgent attention</strong>
             One reading is in the urgent range. Repeat it once, and if it is confirmed, follow
             your emergency medical procedures and contact the crew medical officer now.
           </div>
@@ -160,7 +160,7 @@ export function MeasurementForm({
           <section key={group.id} aria-label={`${group.label} measurements`} className="panel overflow-hidden">
             <header className="flex items-center justify-between gap-2 border-b border-line/80 bg-surface2/55 px-4 py-2.5">
               <div>
-                <h2 className="text-[0.8rem] font-bold tracking-[-0.01em] text-ink">{group.label}</h2>
+                <h2 className="text-[0.8rem] font-semibold tracking-[-0.01em] text-ink">{group.label}</h2>
                 <p className="text-[0.62rem] text-ink-soft">{group.hint}</p>
               </div>
               <span className="chip chip-neutral">
@@ -191,7 +191,7 @@ export function MeasurementForm({
                           ? 'border-status-urgent/40 bg-status-urgent-soft/35'
                           : filled
                             ? 'border-status-ok/20 bg-status-ok-soft/25'
-                            : 'border-line bg-white/70',
+                            : 'border-line bg-surface2',
                       )}
                     >
                       <div className="flex items-start justify-between gap-2">
@@ -290,7 +290,7 @@ export function MeasurementForm({
         </p>
       )}
 
-      <div className="sticky bottom-[72px] z-20 flex flex-wrap items-center gap-3 rounded-[16px] border border-white/85 bg-white/88 px-3.5 py-2.5 shadow-float backdrop-blur-xl lg:static lg:shadow-none">
+      <div className="sticky bottom-[72px] z-20 flex flex-wrap items-center gap-3 rounded-[16px] border border-line bg-white px-3.5 py-2.5 shadow-float lg:static lg:shadow-none">
         <button
           type="submit"
           disabled={isSaving || hasInvalid || !hasAnyValue}
@@ -307,7 +307,7 @@ export function MeasurementForm({
             ref={statusRef}
             tabIndex={-1}
             role="status"
-            className="ml-auto inline-flex items-center gap-1.5 text-[0.72rem] font-bold text-status-ok"
+            className="ml-auto inline-flex items-center gap-1.5 text-[0.72rem] font-semibold text-status-ok"
           >
             <CheckCircle2 className="h-4 w-4" aria-hidden="true" />
             {savedSuccess}

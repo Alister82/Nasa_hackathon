@@ -1,5 +1,5 @@
 import React from 'react';
-import { AlertTriangle, CheckCircle2, ChevronRight } from 'lucide-react';
+import { AlertTriangle, CheckCircle2, ChevronRight } from '@/ui/components/icons';
 import type { DomainId, DomainAnalysis } from '@/contracts/types';
 import { DOMAIN_LABELS } from '@/contracts/indicators';
 import { DomainIcon, DOMAIN_VISUALS } from './MetricTile';
@@ -39,18 +39,18 @@ export function DomainRow({ domain, analysis, summary, onOpen, selected = false 
         aria-label={`${DOMAIN_LABELS[domain]}, ${statusMeta.label}: ${summary}. Open details.`}
         aria-current={selected ? 'true' : undefined}
         className={cn(
-          'group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left transition-all',
+          'group flex w-full items-center gap-3 rounded-[11px] border px-2.5 py-2.5 text-left transition-all',
           selected
-            ? 'border-instrument/25 bg-instrument-soft/70 shadow-xs'
-            : 'border-transparent hover:border-line hover:bg-white/80',
+            ? 'border-instrument/20 bg-instrument-soft/70'
+            : 'border-transparent hover:border-line hover:bg-white',
         )}
       >
         <span
-          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px]"
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px]"
           style={{ backgroundColor: visual.soft, color: visual.color }}
           aria-hidden="true"
         >
-          <DomainIcon domain={domain} className="h-4 w-4" />
+          <DomainIcon domain={domain} className="h-[18px] w-[18px]" />
         </span>
 
         <span className="min-w-0 flex-1">
@@ -65,7 +65,7 @@ export function DomainRow({ domain, analysis, summary, onOpen, selected = false 
           title={statusMeta.label}
           aria-label={statusMeta.label}
         >
-          <StatusIcon className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+          <StatusIcon className="h-4 w-4" weight="fill" aria-hidden="true" />
         </span>
         <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
       </button>

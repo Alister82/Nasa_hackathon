@@ -66,11 +66,11 @@ export function IndicatorChart({
     <article className="panel overflow-hidden">
       <header className="flex flex-wrap items-start justify-between gap-3 px-4 pt-3.5">
         <div className="flex items-start gap-2.5">
-          <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-instrument-soft text-instrument">
+          <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-instrument-soft text-instrument">
             <IndicatorIcon indicator={meta.id} className="h-4 w-4" />
           </span>
           <div>
-            <h3 className="text-[0.88rem] font-bold tracking-[-0.015em] text-ink">{meta.label}</h3>
+            <h3 className="text-[0.88rem] font-semibold tracking-[-0.015em] text-ink">{meta.label}</h3>
             <p className="mt-0.5 text-[0.64rem] text-ink-soft">
               Reference: {range.displayText}
               <span className="ml-1.5 rounded border border-line bg-surface2 px-1 py-0.5 text-[0.54rem] font-semibold uppercase tracking-wide text-ink-faint">
@@ -104,10 +104,10 @@ export function IndicatorChart({
 
       <div className="mt-2 flex flex-wrap items-center gap-x-4 gap-y-1 px-4 text-[0.6rem] text-ink-soft">
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-1.5 w-4 rounded-full bg-ink" aria-hidden="true" /> Observed
+          <span className="h-1.5 w-4 rounded-full bg-instrument" aria-hidden="true" /> Observed
         </span>
         <span className="inline-flex items-center gap-1.5">
-          <span className="h-0 w-4 border-t-2 border-dashed border-instrument" aria-hidden="true" /> Expected adaptation
+          <span className="h-0 w-4 border-t-2 border-dashed border-line-strong" aria-hidden="true" /> Expected adaptation
         </span>
         {baseline && (
           <span className="inline-flex items-center gap-1.5">
@@ -131,8 +131,8 @@ export function IndicatorChart({
           <ComposedChart data={chartData} margin={{ top: 10, right: 14, left: -18, bottom: 4 }}>
             <defs>
               <linearGradient id={gradientId} x1="0" y1="0" x2="0" y2="1">
-                <stop offset="0%" stopColor="var(--instrument)" stopOpacity={0.2} />
-                <stop offset="100%" stopColor="var(--instrument)" stopOpacity={0.01} />
+                <stop offset="0%" stopColor="var(--instrument)" stopOpacity={0.14} />
+                <stop offset="100%" stopColor="var(--instrument)" stopOpacity={0} />
               </linearGradient>
             </defs>
             <CartesianGrid stroke="var(--chart-grid)" strokeDasharray="3 5" vertical={false} />
@@ -161,8 +161,8 @@ export function IndicatorChart({
                   | undefined;
                 if (!data) return null;
                 return (
-                  <div className="rounded-xl border border-white/90 bg-white/97 px-3 py-2 text-[0.68rem] shadow-float backdrop-blur">
-                    <p className="mb-1 text-[0.58rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+                  <div className="rounded-[10px] border border-line bg-white px-3 py-2 text-[0.68rem] shadow-float">
+                    <p className="mb-1 text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">
                       Day {data.day}
                     </p>
                     <p className="font-semibold text-ink">
@@ -199,7 +199,7 @@ export function IndicatorChart({
             <Area
               type="monotone"
               dataKey="value"
-              stroke="var(--ink)"
+              stroke="var(--instrument)"
               strokeWidth={2}
               fill={`url(#${gradientId})`}
               dot={false}
@@ -211,10 +211,10 @@ export function IndicatorChart({
             <Line
               type="monotone"
               dataKey="expected"
-              stroke="var(--instrument)"
+              stroke="var(--ink-faint)"
               strokeDasharray="4 4"
               strokeWidth={1.5}
-              strokeOpacity={0.75}
+              strokeOpacity={0.8}
               dot={false}
               isAnimationActive={false}
             />

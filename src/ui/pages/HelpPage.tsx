@@ -14,7 +14,7 @@ import {
   ShieldAlert,
   Stethoscope,
   TriangleAlert,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { IndicatorId } from '@/contracts/types';
 import { DOMAIN_LABELS, INDICATORS } from '@/contracts/indicators';
 import { MEASUREMENT_HELP, MISSION_SETTINGS, SOURCES, SUPPLIES, expectedReplyMinutes } from '@/guidance';
@@ -124,12 +124,12 @@ export function HelpPage() {
         }
       />
 
-      <section className="relative overflow-hidden rounded-[20px] border border-status-urgent/25 bg-[linear-gradient(160deg,rgba(255,255,255,0.96),rgba(255,242,242,0.9))] p-4">
-        <div className="relative flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
+      <section className="rounded-[16px] border border-status-urgent/25 bg-status-urgent-soft/40 p-4">
+        <div className="flex flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <div className="flex items-start gap-2.5">
             <TriangleAlert className="mt-0.5 h-4 w-4 shrink-0 text-status-urgent" aria-hidden="true" />
             <div>
-              <h2 className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+              <h2 className="font-display text-[0.9rem] font-semibold tracking-[-0.02em] text-ink">
                 If you feel unwell, act before you read further
               </h2>
               <p className="mt-0.5 text-[0.72rem] leading-relaxed text-ink-2">
@@ -210,7 +210,7 @@ export function HelpPage() {
                       </button>
 
                       {isOpen && help && (
-                        <div className="border-t border-line/60 bg-white/55 px-4 py-3">
+                        <div className="border-t border-line/60 bg-surface2/60 px-4 py-3">
                           <div className="grid grid-cols-1 gap-3 md:grid-cols-2">
                             <div>
                               <p className="section-kicker mb-1">How to measure</p>
@@ -222,7 +222,7 @@ export function HelpPage() {
                             </div>
                           </div>
                           <div className="mt-2.5 flex flex-wrap items-center gap-1.5">
-                            <span className="text-[0.58rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
+                            <span className="text-[0.58rem] font-semibold uppercase tracking-[0.08em] text-ink-faint">
                               Hazards
                             </span>
                             {help.hazards.map((hazard) => (
@@ -254,7 +254,7 @@ export function HelpPage() {
             </header>
             <div className="grid grid-cols-1 gap-2 p-3.5 sm:grid-cols-2">
               {SEVERITY_GUIDE.map((item) => (
-                <div key={item.level} className="rounded-[14px] border border-line bg-white/70 px-3 py-2.5">
+                <div key={item.level} className="rounded-[12px] border border-line bg-surface2 px-3 py-2.5">
                   <span className={cn('chip !py-0.5 !text-[0.56rem]', item.tone)}>{item.level}</span>
                   <p className="mt-1.5 text-[0.68rem] leading-relaxed text-ink-soft">{item.text}</p>
                 </div>
@@ -267,7 +267,7 @@ export function HelpPage() {
                 ['Do now / Measure next', 'Fixed library actions and the next readings to repeat.'],
               ].map(([title, text]) => (
                 <div key={title}>
-                  <p className="text-[0.66rem] font-bold text-ink">{title}</p>
+                  <p className="text-[0.66rem] font-semibold text-ink">{title}</p>
                   <p className="mt-0.5 text-[0.62rem] leading-relaxed text-ink-soft">{text}</p>
                 </div>
               ))}
@@ -284,7 +284,7 @@ export function HelpPage() {
             <ol className="divide-y divide-line/70">
               {DECISION_STEPS.map((step, index) => (
                 <li key={step.title} className="flex gap-3 px-4 py-3">
-                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-instrument-soft text-[0.62rem] font-bold tabular-nums text-instrument-deep">
+                  <span className="mt-0.5 flex h-6 w-6 shrink-0 items-center justify-center rounded-full bg-instrument-soft text-[0.62rem] font-semibold tabular-nums text-instrument-deep">
                     {index + 1}
                   </span>
                   <div>
@@ -355,7 +355,7 @@ export function HelpPage() {
               {SUPPLIES.map((supply) => (
                 <li
                   key={supply.id}
-                  className="flex items-center justify-between gap-2 rounded-xl border border-line bg-white/70 px-3 py-2 text-[0.7rem] font-medium text-ink"
+                  className="flex items-center justify-between gap-2 rounded-[10px] border border-line bg-surface2 px-3 py-2 text-[0.7rem] font-medium text-ink"
                 >
                   {supply.label}
                   <Stethoscope className="h-3.5 w-3.5 text-ink-faint" aria-hidden="true" />
@@ -437,8 +437,8 @@ export function HelpPage() {
             </dl>
           </section>
 
-          <section className="rounded-[18px] border border-line bg-white/65 p-3.5">
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Quick links</p>
+          <section className="rounded-[16px] border border-line bg-surface2 p-3.5">
+            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">Quick links</p>
             <div className="mt-1.5 flex flex-col gap-1">
               {([
                 ['/checkin', 'Start a wellbeing check-in'],
@@ -459,7 +459,7 @@ export function HelpPage() {
           </section>
 
           <section className="rounded-[18px] border border-status-watch/25 bg-status-watch-soft/60 p-3.5">
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-watch">
+            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-status-watch">
               Reminder
             </p>
             <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">

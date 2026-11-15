@@ -8,7 +8,7 @@ import {
   Info,
   ShieldCheck,
   Sparkles,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import { SOURCES } from '@/guidance';
 import { APP_NAME, DISCLAIMER_BANNER } from '@/contracts/constants';
 import { PageHeader, SectionHeading } from '@/ui/components/ui';
@@ -130,12 +130,8 @@ export function AboutPage() {
         actions={<Link to="/help" className="btn btn-secondary">Help &amp; Support</Link>}
       />
 
-      <section className="relative overflow-hidden rounded-[20px] border border-instrument/20 bg-instrument-soft/55 px-4 py-3.5">
-        <div
-          className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(78,139,235,0.18),transparent_70%)]"
-          aria-hidden="true"
-        />
-        <div className="relative flex items-start gap-2.5">
+      <section className="rounded-[16px] border border-instrument/20 bg-instrument-soft/40 px-4 py-3.5">
+        <div className="flex items-start gap-2.5">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-instrument" aria-hidden="true" />
           <p className="text-[0.76rem] font-medium leading-relaxed text-ink-2">
             {DISCLAIMER_BANNER} Sleep period means use published NASA ISS group summaries as an
@@ -151,7 +147,7 @@ export function AboutPage() {
         <section className="panel overflow-hidden">
           <header className="flex items-center gap-2 border-b border-line/80 bg-status-ok-soft/40 px-4 py-3">
             <CheckCircle2 className="h-4 w-4 text-status-ok" aria-hidden="true" />
-            <h2 className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+            <h2 className="font-display text-[0.9rem] font-semibold tracking-[-0.02em] text-ink">
               What the app does
             </h2>
           </header>
@@ -168,7 +164,7 @@ export function AboutPage() {
         <section className="panel overflow-hidden">
           <header className="flex items-center gap-2 border-b border-line/80 bg-surface2/60 px-4 py-3">
             <CircleSlash className="h-4 w-4 text-ink-soft" aria-hidden="true" />
-            <h2 className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+            <h2 className="font-display text-[0.9rem] font-semibold tracking-[-0.02em] text-ink">
               What the app does not do
             </h2>
           </header>

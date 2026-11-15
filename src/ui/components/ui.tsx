@@ -3,34 +3,39 @@
  * Phase 1 design system components
  */
 import React from 'react';
-import { ArrowUpRight, TrendingDown, TrendingUp, Minus } from 'lucide-react';
+import { ArrowUpRight, TrendingDown, TrendingUp, Minus } from '@/ui/components/icons';
 import { Link } from 'react-router-dom';
 import { cn } from '@/ui/lib/format';
 
 /* ==========================================================================
-   Brand mark — V in a blue rounded square
+   Brand mark — white V monogram on a graphite squircle
    ========================================================================== */
 export function VigilMark({ className = 'w-10 h-10' }: { className?: string }) {
+  const uid = React.useId().replace(/:/g, '');
   return (
-    <svg viewBox="0 0 48 48" className={className} role="img" aria-label="Vigil mark">
+    <svg viewBox="0 0 48 48" className={className} role="img" aria-label="Vigil">
       <defs>
-        <linearGradient id="vigil-bg" x1="8" y1="6" x2="40" y2="42" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#4B8CF5" />
-          <stop offset="0.55" stopColor="#2869D8" />
-          <stop offset="1" stopColor="#123B86" />
+        <linearGradient id={`vigil-base-${uid}`} x1="10" y1="2" x2="38" y2="46" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#4A4A4D" />
+          <stop offset="0.55" stopColor="#2C2C2E" />
+          <stop offset="1" stopColor="#1C1C1E" />
         </linearGradient>
-        <linearGradient id="vigil-ring" x1="4" y1="24" x2="44" y2="24" gradientUnits="userSpaceOnUse">
-          <stop stopColor="#DDEBFF" stopOpacity="0.35" />
-          <stop offset="0.5" stopColor="#FFFFFF" stopOpacity="0.95" />
-          <stop offset="1" stopColor="#DDEBFF" stopOpacity="0.35" />
+        <linearGradient id={`vigil-sheen-${uid}`} x1="24" y1="1" x2="24" y2="25" gradientUnits="userSpaceOnUse">
+          <stop stopColor="#FFFFFF" stopOpacity="0.18" />
+          <stop offset="1" stopColor="#FFFFFF" stopOpacity="0" />
         </linearGradient>
       </defs>
-      <rect x="1" y="1" width="46" height="46" rx="14" fill="url(#vigil-bg)" />
-      <path d="M4 31.5c8.2-6.4 18.4-9.8 40-9.2" stroke="url(#vigil-ring)" strokeWidth="1.15" fill="none" opacity="0.9" />
-      <ellipse cx="24" cy="24" rx="16.5" ry="6.7" transform="rotate(-27 24 24)" stroke="rgba(255,255,255,0.42)" strokeWidth="1.1" fill="none" />
-      <circle cx="35.4" cy="16.2" r="2.1" fill="#FFFFFF" />
-      <path d="M17.6 15.2 23.9 32l6.4-16.8" stroke="#FFFFFF" strokeWidth="2.9" strokeLinecap="round" strokeLinejoin="round" fill="none" />
-      <circle cx="13.1" cy="32.4" r="1.35" fill="#BFD7FF" opacity="0.9" />
+      <rect x="1" y="1" width="46" height="46" rx="11.5" fill={`url(#vigil-base-${uid})`} />
+      <rect x="1" y="1" width="46" height="25" rx="11.5" fill={`url(#vigil-sheen-${uid})`} />
+      <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="none" stroke="#FFFFFF" strokeOpacity="0.12" />
+      <path
+        d="M15.7 16.4 24 32.2l8.3-15.8"
+        stroke="#FFFFFF"
+        strokeWidth="3.3"
+        strokeLinecap="round"
+        strokeLinejoin="round"
+        fill="none"
+      />
     </svg>
   );
 }
@@ -86,12 +91,12 @@ export function SectionCard({ header, children, className, bodyClassName }: Sect
 export type BadgeVariant = 'ok' | 'watch' | 'review' | 'urgent' | 'blue' | 'neutral';
 
 const BADGE_STYLES: Record<BadgeVariant, string> = {
-  ok:      'bg-[var(--ok-bg)] text-[var(--ok)]',
-  watch:   'bg-[var(--watch-bg)] text-[var(--watch)]',
-  review:  'bg-[var(--review-bg)] text-[var(--review)]',
-  urgent:  'bg-[var(--urgent-bg)] text-[var(--urgent)]',
-  blue:    'bg-[var(--blue-soft)] text-[var(--blue-deep)]',
-  neutral: 'bg-[var(--bg-surface-3)] text-[var(--text-muted)]',
+  ok:      'bg-[var(--status-ok-soft)] text-[var(--status-ok)]',
+  watch:   'bg-[var(--status-watch-soft)] text-[var(--status-watch)]',
+  review:  'bg-[var(--status-review-soft)] text-[var(--status-review)]',
+  urgent:  'bg-[var(--status-urgent-soft)] text-[var(--status-urgent)]',
+  blue:    'bg-[var(--instrument-soft)] text-[#0066cc]',
+  neutral: 'bg-[var(--surface-3)] text-[var(--ink-soft)]',
 };
 
 export interface BadgeProps {
@@ -124,12 +129,12 @@ export interface StatusDotProps {
 }
 
 const DOT_COLOR: Record<BadgeVariant, string> = {
-  ok:      'bg-[var(--ok)]',
-  watch:   'bg-[var(--watch)]',
-  review:  'bg-[var(--review)]',
-  urgent:  'bg-[var(--urgent)]',
-  blue:    'bg-[var(--blue)]',
-  neutral: 'bg-[var(--text-faint)]',
+  ok:      'bg-[var(--status-ok)]',
+  watch:   'bg-[var(--status-watch)]',
+  review:  'bg-[var(--status-review)]',
+  urgent:  'bg-[var(--status-urgent)]',
+  blue:    'bg-[var(--instrument)]',
+  neutral: 'bg-[var(--ink-faint)]',
 };
 
 export function StatusDot({ variant = 'neutral', size = 'md', className }: StatusDotProps) {
@@ -164,7 +169,7 @@ export function PageHeader({ kicker, title, description, meta, actions, classNam
     <header className={cn('flex flex-col gap-4 lg:flex-row lg:items-start lg:justify-between', className)}>
       <div className="min-w-0">
         {kicker && <p className="section-kicker mb-1.5">{kicker}</p>}
-        <h1 className="font-display text-[1.6rem] leading-tight font-extrabold tracking-[-0.035em] text-ink sm:text-[1.9rem]">
+        <h1 className="font-display text-[1.6rem] leading-tight font-semibold tracking-[-0.035em] text-ink sm:text-[1.9rem]">
           {title}
         </h1>
         {description && (
@@ -186,13 +191,13 @@ export type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'danger';
 
 const BUTTON_STYLES: Record<ButtonVariant, string> = {
   primary:
-    'bg-[var(--blue)] text-white hover:bg-[var(--blue-deep)] border border-[var(--blue-deep)]',
+    'bg-[var(--instrument)] text-white hover:bg-[#0077ed] border border-[var(--instrument)] shadow-[0_1px_2px_rgba(0,0,0,0.12)]',
   secondary:
-    'bg-[var(--bg-surface)] text-[var(--text-primary)] border border-[var(--border)] hover:bg-[var(--bg-surface-2)] hover:border-[var(--border-strong)]',
+    'bg-white text-[var(--ink)] border border-[var(--line-strong)] hover:bg-[var(--surface-3)] shadow-xs',
   ghost:
-    'bg-transparent text-[var(--text-secondary)] hover:bg-[var(--bg-surface-2)] border border-transparent',
+    'bg-transparent text-[var(--ink-soft)] hover:bg-black/[0.045] hover:text-[var(--ink)] border border-transparent',
   danger:
-    'bg-[var(--urgent-bg)] text-[var(--urgent)] border border-[var(--urgent)]/30 hover:bg-[var(--urgent)] hover:text-white',
+    'bg-[var(--status-urgent-soft)] text-[var(--status-urgent)] border border-[var(--status-urgent)]/15 hover:bg-[var(--status-urgent)] hover:text-white',
 };
 
 export interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
@@ -274,7 +279,7 @@ export function Tooltip({ content, children, className }: TooltipProps) {
       {children}
       <span
         role="tooltip"
-        className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded bg-[var(--text-primary)] text-white text-[0.65rem] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50"
+        className="pointer-events-none absolute bottom-full left-1/2 -translate-x-1/2 mb-1.5 px-2 py-1 rounded-md bg-[var(--ink)] text-white text-[0.65rem] font-medium whitespace-nowrap opacity-0 group-hover:opacity-100 transition-opacity z-50"
       >
         {content}
       </span>
@@ -324,7 +329,7 @@ export function Metric({ value, unit, label, delta, deltaInverse = false, decima
       <div className="flex items-baseline gap-1.5">
         {hasValue ? (
           <>
-            <span className="font-display text-2xl font-extrabold tabular-nums text-ink">
+            <span className="font-display text-2xl font-semibold tabular-nums text-ink">
               {(value as number).toFixed(decimals)}
             </span>
             {unit && (
@@ -437,7 +442,7 @@ export function EmptyState({
       )}
     >
       {icon && (
-        <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-blue-soft text-blue">
+        <div className="mb-3 flex h-11 w-11 items-center justify-center rounded-[12px] bg-instrument-soft text-instrument">
           {icon}
         </div>
       )}
@@ -474,7 +479,7 @@ export function SegmentedControl<T extends string>({
     <div
       role="tablist"
       aria-label={ariaLabel}
-      className={cn('inline-flex items-center gap-1 rounded-xl border border-line bg-surface/70 p-1 shadow-sm backdrop-blur', className)}
+      className={cn('inline-flex items-center gap-1 rounded-[10px] border border-line bg-surface2 p-1', className)}
     >
       {options.map((option) => {
         const active = option.value === value;
@@ -486,10 +491,10 @@ export function SegmentedControl<T extends string>({
             aria-selected={active}
             onClick={() => onChange(option.value)}
             className={cn(
-              'inline-flex min-h-[44px] items-center gap-1.5 rounded-lg px-3 text-[0.75rem] font-semibold transition-all',
+              'inline-flex min-h-[44px] items-center gap-1.5 rounded-[8px] px-3 text-[0.75rem] font-semibold transition-all',
               active
-                ? 'bg-surface text-ink shadow-sm ring-1 ring-line'
-                : 'text-ink-soft hover:text-ink hover:bg-surface/60',
+                ? 'bg-white text-ink shadow-sm ring-1 ring-black/[0.04]'
+                : 'text-ink-soft hover:bg-white/70 hover:text-ink',
             )}
           >
             {option.label}

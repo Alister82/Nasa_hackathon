@@ -20,9 +20,9 @@ type MarchingCubesConstructor = typeof import('three/examples/jsm/objects/Marchi
 type GLTFLoaderConstructor = typeof import('three/examples/jsm/loaders/GLTFLoader.js')['GLTFLoader'];
 
 const STATUS_COLORS: Record<DomainAnalysis['status'], { hex: number; css: string }> = {
-  ok: { hex: 0x2dd4bf, css: '#2dd4bf' },
-  watch: { hex: 0xf4b740, css: '#f4b740' },
-  flagged: { hex: 0xfb7185, css: '#fb7185' },
+  ok: { hex: 0x34c759, css: '#34c759' },
+  watch: { hex: 0xff9f0a, css: '#ff9f0a' },
+  flagged: { hex: 0xff3b30, css: '#ff3b30' },
 };
 
 interface RiskTheme {
@@ -50,71 +50,71 @@ interface RiskTheme {
 const RISK_THEMES: Record<BodyRiskTone, RiskTheme> = {
   ok: {
     label: 'Nominal',
-    css: '#7dd3fc',
-    baseCss: '#2563eb',
+    css: '#0a84ff',
+    baseCss: '#0a84ff',
     fill: 0.04,
-    rimCss: '#bae6fd',
-    base: 0x1d4ed8,
-    emissive: 0x0b2a55,
-    rim: 0x9bd9ff,
-    star: 0xbfdbfe,
-    ring: 0x4d8ee8,
-    ambient: 0x86b4ff,
-    key: 0xdcecff,
-    warm: 0x8ad4ff,
-    under: 0x2a6fe0,
-    glow: 'rgba(59,130,246,0.24)',
+    rimCss: '#bfe0ff',
+    base: 0x0a84ff,
+    emissive: 0x0a2540,
+    rim: 0xbfe0ff,
+    star: 0xd6e9ff,
+    ring: 0x0a84ff,
+    ambient: 0x9cc7ff,
+    key: 0xf2f7ff,
+    warm: 0x9ed2ff,
+    under: 0x0a84ff,
+    glow: 'rgba(10,132,255,0.18)',
   },
   watch: {
     label: 'Watch',
-    css: '#fbbf24',
-    baseCss: '#b45309',
+    css: '#ff9f0a',
+    baseCss: '#b25000',
     fill: 0.35,
-    rimCss: '#fde68a',
-    base: 0xb45309,
-    emissive: 0x4a1d00,
-    rim: 0xfde68a,
-    star: 0xfff1c2,
-    ring: 0xf59e0b,
-    ambient: 0xffd08a,
-    key: 0xfff4d6,
-    warm: 0xffd166,
+    rimCss: '#ffd9a8',
+    base: 0xb25000,
+    emissive: 0x3d1d00,
+    rim: 0xffd9a8,
+    star: 0xfff0d6,
+    ring: 0xff9f0a,
+    ambient: 0xffc98a,
+    key: 0xfff6e8,
+    warm: 0xffc266,
     under: 0xd97706,
-    glow: 'rgba(245,158,11,0.24)',
+    glow: 'rgba(255,159,10,0.18)',
   },
   review: {
     label: 'Review',
-    css: '#fb7185',
-    baseCss: '#be123c',
+    css: '#ff453a',
+    baseCss: '#c93400',
     fill: 0.68,
-    rimCss: '#fecdd3',
-    base: 0xbe123c,
-    emissive: 0x4c0519,
-    rim: 0xfecdd3,
-    star: 0xffd6dc,
-    ring: 0xfb7185,
-    ambient: 0xffb3b3,
-    key: 0xffe4e4,
-    warm: 0xff8a8a,
-    under: 0xbe123c,
-    glow: 'rgba(244,63,94,0.28)',
+    rimCss: '#ffc9c4',
+    base: 0xc93400,
+    emissive: 0x3d0a00,
+    rim: 0xffc9c4,
+    star: 0xffdcd8,
+    ring: 0xff453a,
+    ambient: 0xffb3ad,
+    key: 0xffeae8,
+    warm: 0xff8a80,
+    under: 0xc93400,
+    glow: 'rgba(255,69,58,0.2)',
   },
   urgent: {
     label: 'Urgent',
-    css: '#ef4444',
-    baseCss: '#dc2626',
+    css: '#ff3b30',
+    baseCss: '#d70015',
     fill: 0.96,
-    rimCss: '#ffb3b3',
-    base: 0xdc2626,
-    emissive: 0x450a0a,
-    rim: 0xffb3b3,
-    star: 0xffc2c2,
-    ring: 0xef4444,
-    ambient: 0xffb4b4,
-    key: 0xfff0f0,
-    warm: 0xff6b6b,
-    under: 0xdc2626,
-    glow: 'rgba(239,68,68,0.34)',
+    rimCss: '#ffb8b3',
+    base: 0xd70015,
+    emissive: 0x3a0006,
+    rim: 0xffb8b3,
+    star: 0xffcbc7,
+    ring: 0xff3b30,
+    ambient: 0xffb0ab,
+    key: 0xfff0ee,
+    warm: 0xff6b62,
+    under: 0xd70015,
+    glow: 'rgba(255,59,48,0.24)',
   },
 };
 
@@ -172,13 +172,13 @@ function HologramFallback({
       <svg viewBox="0 0 220 380" className="h-full max-h-[360px] w-auto" aria-hidden="false">
         <defs>
           <linearGradient id="body-fallback-fill" x1="0" y1="0" x2="0" y2="1">
-            <stop offset="0%" stopColor="#9bd9ff" stopOpacity="0.5" />
-            <stop offset={`${Math.max(0, (1 - risk.fill) * 100 - 1)}%`} stopColor="#3b82f6" stopOpacity="0.34" />
-            <stop offset={`${(1 - risk.fill) * 100}%`} stopColor="#ff2020" stopOpacity="0.88" />
-            <stop offset="100%" stopColor="#dc2626" stopOpacity="0.62" />
+            <stop offset="0%" stopColor="#bfe0ff" stopOpacity="0.5" />
+            <stop offset={`${Math.max(0, (1 - risk.fill) * 100 - 1)}%`} stopColor="#0a84ff" stopOpacity="0.34" />
+            <stop offset={`${(1 - risk.fill) * 100}%`} stopColor="#ff3b30" stopOpacity="0.88" />
+            <stop offset="100%" stopColor="#d70015" stopOpacity="0.62" />
           </linearGradient>
           <filter id="body-fallback-glow">
-            <feGaussianBlur stdDeviation="3" result="blur" />
+            <feGaussianBlur stdDeviation="1.4" result="blur" />
             <feMerge>
               <feMergeNode in="blur" />
               <feMergeNode in="SourceGraphic" />
@@ -186,7 +186,7 @@ function HologramFallback({
           </filter>
         </defs>
         <ellipse cx="110" cy="350" rx="64" ry="12" fill={risk.baseCss} opacity="0.16" />
-        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke="#7dd3fc" strokeWidth="1.1">
+        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke="#bfe0ff" strokeWidth="1.1">
           {region('behavioral', <ellipse cx="110" cy="54" rx="24" ry="28" />, { x: 110, y: 54 })}
           {region('cardiovascular', <path d="M88 88c0-8 8-14 22-14s22 6 22 14l-4 38c-1 7-9 11-18 11s-17-4-18-11z" />, { x: 110, y: 102 })}
           {region('metabolic_general', <path d="M91 130h38l-3 48c-1 8-7 12-16 12s-15-4-16-12z" />, { x: 110, y: 152 })}
@@ -277,31 +277,31 @@ export function BodyHologram({
         camera.lookAt(0, 0.1, 0);
 
         /* Lights -------------------------------------------------- */
-        scene.add(new THREE.AmbientLight(0x86b4ff, 0.72));
-        const key = new THREE.DirectionalLight(0xdcecff, 2.2);
+        scene.add(new THREE.AmbientLight(0xffffff, 0.72));
+        const key = new THREE.DirectionalLight(0xffffff, 2.0);
         key.position.set(2.4, 3.4, 4);
         scene.add(key);
-        const rim = new THREE.DirectionalLight(0x5b9dff, 4.2);
+        const rim = new THREE.DirectionalLight(0xf2f2f7, 1.7);
         rim.position.set(-3.4, 1.4, -2.4);
         scene.add(rim);
-        const warm = new THREE.PointLight(0x8ad4ff, 5, 7);
+        const warm = new THREE.PointLight(0xffffff, 1.3, 7);
         warm.position.set(0.5, 0.8, 2.2);
         scene.add(warm);
-        const under = new THREE.PointLight(0x2a6fe0, 4, 6);
+        const under = new THREE.PointLight(0xffffff, 0.5, 6);
         under.position.set(0, -1.4, 1.2);
         scene.add(under);
 
         /* Materials ----------------------------------------------- */
         const bodyMaterial = new THREE.MeshPhysicalMaterial({
-          color: 0x2563a8,
-          emissive: 0x08284d,
-          emissiveIntensity: 0.48,
-          roughness: 0.3,
-          metalness: 0.2,
-          clearcoat: 0.8,
-          clearcoatRoughness: 0.2,
+          color: 0x48484a,
+          emissive: 0x08080a,
+          emissiveIntensity: 0.28,
+          roughness: 0.44,
+          metalness: 0.12,
+          clearcoat: 0.45,
+          clearcoatRoughness: 0.35,
           transparent: true,
-          opacity: 0.88,
+          opacity: 0.95,
           side: THREE.FrontSide,
           depthWrite: true,
         });
@@ -310,7 +310,7 @@ export function BodyHologram({
           uRiskTime: { value: 0 },
           uBodyHeightMin: { value: 0 },
           uBodyHeightInvRange: { value: 1 },
-          uRiskColor: { value: new THREE.Color(0xff2020) },
+          uRiskColor: { value: new THREE.Color(risk.base).lerp(new THREE.Color(0x8e8e93), 0.35) },
         };
         bodyMaterial.onBeforeCompile = (shader) => {
           Object.assign(shader.uniforms, fillUniforms);
@@ -330,12 +330,12 @@ export function BodyHologram({
              float waterline = clamp(uRiskFill + sin(vBodyHeight * 34.0 + uRiskTime * 2.1) * 0.006, 0.02, 0.98);
              float submerged = 1.0 - smoothstep(waterline - 0.012, waterline + 0.012, vBodyHeight);
              float waterEdge = 1.0 - smoothstep(0.0, 0.025, abs(vBodyHeight - waterline));
-             diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.92);
-             diffuseColor.rgb += uRiskColor * waterEdge * 0.85;`,
+             diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.07);
+             diffuseColor.rgb += uRiskColor * waterEdge * 0.10;`,
           );
           shader.fragmentShader = shader.fragmentShader.replace(
             '#include <emissivemap_fragment>',
-            '#include <emissivemap_fragment>\ntotalEmissiveRadiance = mix(totalEmissiveRadiance, uRiskColor * 0.32, submerged);',
+            '#include <emissivemap_fragment>\ntotalEmissiveRadiance = mix(totalEmissiveRadiance, uRiskColor * 0.06, submerged);',
           );
         };
 
@@ -344,7 +344,7 @@ export function BodyHologram({
         const glowMaterial = new THREE.ShaderMaterial({
           uniforms: {
             uColor: { value: new THREE.Color(risk.rim) },
-            uStrength: { value: 1.35 },
+            uStrength: { value: 0.45 },
           },
           vertexShader: `
             varying vec3 vNormal;
@@ -617,7 +617,7 @@ export function BodyHologram({
         starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
         geometries.push(starGeometry);
         const starMaterial = new THREE.PointsMaterial({
-          color: 0xbfdbfe,
+          color: 0x9cc7ff,
           size: 0.018,
           transparent: true,
           opacity: 1,
@@ -638,7 +638,7 @@ export function BodyHologram({
         const ringMaterial = new THREE.MeshBasicMaterial({
           color: risk.ring,
           transparent: true,
-          opacity: 0.28,
+          opacity: 0.12,
           side: THREE.DoubleSide,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
@@ -669,10 +669,10 @@ export function BodyHologram({
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
         geometries.push(particleGeometry);
         const particleMaterial = new THREE.PointsMaterial({
-          color: 0xbfdbfe,
+          color: 0xd2d2d7,
           size: 0.018,
           transparent: true,
-          opacity: 0.55,
+          opacity: 0.18,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           sizeAttenuation: true,
@@ -685,7 +685,7 @@ export function BodyHologram({
         const scanMaterial = new THREE.MeshBasicMaterial({
           color: risk.rim,
           transparent: true,
-          opacity: 0.16,
+          opacity: 0.08,
           blending: THREE.AdditiveBlending,
           depthWrite: false,
           depthTest: false,
@@ -936,7 +936,7 @@ export function BodyHologram({
   return (
     <div
       className={cn(
-        'relative flex min-h-[430px] w-full flex-col overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(165deg,#061a33_0%,#0a2649_48%,#061321_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]',
+        'relative flex min-h-[430px] w-full flex-col overflow-hidden rounded-[14px] border border-white/10 bg-[linear-gradient(180deg,#2c2c2e_0%,#1c1c1e_100%)]',
         className,
       )}
       role="group"
@@ -944,44 +944,31 @@ export function BodyHologram({
     >
       <div
         className="pointer-events-none absolute inset-0"
-        style={{ background: `radial-gradient(75% 80% at 50% 36%, ${risk.glow} 0%, transparent 72%)` }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-x-6 top-1/2 h-px"
-        style={{ background: `linear-gradient(90deg, transparent, ${risk.rimCss}66, transparent)` }}
-        aria-hidden="true"
-      />
-      <div
-        className="pointer-events-none absolute inset-0 opacity-[0.22] [background-image:linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:100%_30px]"
+        style={{ background: 'radial-gradient(70% 70% at 50% 38%, rgba(255,255,255,0.06) 0%, transparent 70%)' }}
         aria-hidden="true"
       />
 
-      <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2 py-1 text-[0.58rem] font-semibold text-blue-50 shadow-[0_4px_18px_rgba(0,0,0,0.22)] backdrop-blur">
+      <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full bg-white/[0.08] px-2 py-1 text-[0.58rem] font-medium text-white/75 backdrop-blur">
         <span className="relative flex h-1.5 w-1.5">
-          <span
-            className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-70"
-            style={{ backgroundColor: risk.css }}
-          />
           <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: risk.css }} />
         </span>
         Live body map
       </div>
-      <div className="absolute right-3 top-3 z-10 rounded-full border border-white/15 bg-black/20 px-2 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.1em] text-blue-100/60 backdrop-blur">
+      <div className="absolute right-3 top-3 z-10 rounded-full bg-white/[0.08] px-2 py-1 text-[0.55rem] font-medium text-white/45 backdrop-blur">
         3D scan
       </div>
 
       <div
         ref={mountRef}
         className="relative z-0 h-[360px] w-full sm:h-[400px]"
-        style={{ filter: `drop-shadow(0 0 16px ${risk.css}55)` }}
+        style={{ filter: 'drop-shadow(0 10px 28px rgba(0,0,0,0.35))' }}
         aria-hidden="true"
       />
 
       {!ready && !webglFailed && (
         <div
           className="absolute inset-x-8 top-16 bottom-14 animate-pulse rounded-[40%]"
-          style={{ background: `radial-gradient(circle, ${risk.glow}, transparent 68%)` }}
+          style={{ background: 'radial-gradient(circle, rgba(255,255,255,0.08), transparent 68%)' }}
           aria-hidden="true"
         />
       )}
@@ -992,12 +979,12 @@ export function BodyHologram({
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-2 border-t border-white/10 bg-[#04111f]/75 px-3 py-2 backdrop-blur">
+      <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-2 border-t border-white/10 bg-[#1c1c1e]/85 px-3 py-2 backdrop-blur">
         <div className="min-w-0">
-          <p className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-blue-100/50">
+          <p className="text-[0.58rem] font-medium uppercase tracking-[0.08em] text-white/40">
             {hovered ? 'Domain selected' : selectedDomain ? 'Focused domain' : `Crew risk · ${risk.label} · ${Math.round(risk.fill * 100)}%`}
           </p>
-          <p className="truncate text-[0.66rem] font-semibold text-blue-50">
+          <p className="truncate text-[0.66rem] font-medium text-white/85">
             {hovered ? DOMAIN_LABELS[hovered] : selectedDomain ? DOMAIN_LABELS[selectedDomain] : 'Drag to rotate · click a signal'}
           </p>
         </div>

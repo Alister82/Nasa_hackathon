@@ -9,7 +9,7 @@ import {
   MoonStar,
   Sparkles,
   TrendingUp,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { CheckInInput, CheckInRecord, CheckInResult } from '@/contracts/types';
 import { CheckInForm } from '@/ui/components/CheckInForm';
 import { CheckInTrend, type CheckInTrendPoint } from '@/ui/charts/CheckInTrend';
@@ -110,25 +110,21 @@ export function CheckInPage() {
         </div>
 
         <aside className="flex min-w-0 flex-col gap-3">
-          <section className="relative overflow-hidden rounded-[20px] border border-white/15 panel-dark p-4">
-            <div
-              className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full border border-white/10"
-              aria-hidden="true"
-            />
+          <section className="relative overflow-hidden rounded-[16px] border border-white/10 panel-dark p-4">
             <div className="relative flex items-start justify-between gap-3">
               <div>
-                <p className="text-[0.58rem] font-bold uppercase tracking-[0.15em] text-blue-200/80">
+                <p className="text-[0.58rem] font-medium uppercase tracking-[0.1em] text-white/50">
                   Why this matters
                 </p>
-                <p className="mt-1.5 font-display text-[1rem] font-bold leading-snug tracking-[-0.02em]">
+                <p className="mt-1.5 font-display text-[1rem] font-semibold leading-snug tracking-[-0.02em]">
                   Self-report catches what sensors miss
                 </p>
               </div>
-              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-100">
-                <Sparkles className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[10px] bg-white/10 text-white/80">
+                <Sparkles className="h-4 w-4" weight="fill" aria-hidden="true" />
               </span>
             </div>
-            <p className="relative mt-2 text-[0.68rem] leading-relaxed text-blue-100/75">
+            <p className="relative mt-2 text-[0.68rem] leading-relaxed text-white/55">
               Mood, stress, and energy are compared with your own record across the mission. The
               check-in does not diagnose; it surfaces changes worth discussing.
             </p>
@@ -138,22 +134,22 @@ export function CheckInPage() {
                 ['Stress', latest?.stress],
                 ['Energy', latest?.energy],
               ].map(([label, value]) => (
-                <div key={String(label)} className="rounded-xl border border-white/10 bg-white/5 px-2 py-1.5 text-center">
-                  <p className="text-[0.55rem] font-semibold uppercase tracking-wide text-blue-200/70">{label}</p>
-                  <p className="font-display text-[1rem] font-extrabold tabular-nums">
+                <div key={String(label)} className="rounded-[10px] bg-white/[0.06] px-2 py-1.5 text-center">
+                  <p className="text-[0.55rem] font-medium uppercase tracking-[0.06em] text-white/45">{label}</p>
+                  <p className="font-display text-[1rem] font-semibold tabular-nums">
                     {typeof value === 'number' ? value : '—'}
-                    <span className="text-[0.58rem] font-semibold text-blue-100/50">/5</span>
+                    <span className="text-[0.58rem] font-normal text-white/40">/5</span>
                   </p>
                 </div>
               ))}
             </div>
-            <p className="relative mt-2 text-[0.58rem] text-blue-100/60">
+            <p className="relative mt-2 text-[0.58rem] text-white/40">
               {latest ? `Latest entry: day ${latest.day} · ${timeAgo(latest.createdAt)}` : 'No check-ins saved yet.'}
             </p>
           </section>
 
           <section className="panel p-3.5">
-            <h2 className="text-[0.8rem] font-bold text-ink">After you save</h2>
+            <h2 className="text-[0.8rem] font-semibold text-ink">After you save</h2>
             <ol className="mt-2.5 space-y-2">
               {[
                 'The rating is stored for this mission day on this device.',
@@ -162,7 +158,7 @@ export function CheckInPage() {
                 'Emergency routes stay available without waiting for a reply.',
               ].map((step, index) => (
                 <li key={step} className="flex gap-2 text-[0.68rem] leading-relaxed text-ink-soft">
-                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-surface3 text-[0.54rem] font-bold tabular-nums text-ink-soft">
+                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-surface3 text-[0.54rem] font-semibold tabular-nums text-ink-soft">
                     {index + 1}
                   </span>
                   {step}
@@ -172,7 +168,7 @@ export function CheckInPage() {
           </section>
 
           <section className="rounded-[18px] border border-status-urgent/25 bg-status-urgent-soft/70 p-3.5">
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-urgent">
+            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-status-urgent">
               If you feel unwell
             </p>
             <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">
@@ -181,7 +177,7 @@ export function CheckInPage() {
             </p>
             <Link
               to="/urgent"
-              className="mt-2 inline-flex items-center gap-1 text-[0.66rem] font-bold text-status-urgent hover:underline"
+              className="mt-2 inline-flex items-center gap-1 text-[0.66rem] font-semibold text-status-urgent hover:underline"
             >
               Open emergency support
               <ArrowRight className="h-3 w-3" aria-hidden="true" />
@@ -196,7 +192,7 @@ export function CheckInPage() {
             title="30-day trends"
             subtitle="Saved check-ins next to sleep hours for the same days. Days without a check-in stay blank."
             action={
-              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-2.5 py-1 text-[0.62rem] font-semibold text-ink-soft">
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-surface2 px-2.5 py-1 text-[0.62rem] font-semibold text-ink-soft">
                 <TrendingUp className="h-3 w-3 text-instrument" aria-hidden="true" />
                 Days {Math.max(1, viewDay - 29)}–{viewDay}
               </span>

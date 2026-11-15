@@ -1,5 +1,5 @@
 import React, { useEffect, useState } from 'react';
-import { Wifi, WifiOff } from 'lucide-react';
+import { Wifi, WifiOff } from '@/ui/components/icons';
 import { cn } from '@/ui/lib/format';
 
 export interface OfflineBadgeProps {
@@ -28,10 +28,10 @@ export function OfflineBadge({ compact = false, className }: OfflineBadgeProps) 
   return (
     <span
       className={cn(
-        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.66rem] font-semibold transition-colors',
+        'inline-flex items-center gap-1.5 rounded-full border px-2.5 py-1 text-[0.66rem] font-medium transition-colors',
         isOnline
-          ? 'border-line bg-white/70 text-ink-soft'
-          : 'border-status-watch/25 bg-status-watch-soft text-status-watch',
+          ? 'border-line bg-white text-ink-soft'
+          : 'border-status-watch/15 bg-status-watch-soft text-status-watch',
         className,
       )}
       aria-live="polite"
@@ -43,10 +43,8 @@ export function OfflineBadge({ compact = false, className }: OfflineBadgeProps) 
           isOnline ? 'bg-status-ok' : 'bg-status-watch',
         )}
         aria-hidden="true"
-      >
-        {isOnline && <span className="absolute inset-0 animate-ping rounded-full bg-status-ok/40" />}
-      </span>
-      {isOnline ? <Wifi className="h-3 w-3" strokeWidth={2} aria-hidden="true" /> : <WifiOff className="h-3 w-3" strokeWidth={2} aria-hidden="true" />}
+      />
+      {isOnline ? <Wifi className="h-3 w-3" weight="bold" aria-hidden="true" /> : <WifiOff className="h-3 w-3" weight="bold" aria-hidden="true" />}
       <span>{compact ? (isOnline ? 'Online' : 'Offline') : isOnline ? 'Online' : 'Offline: everything still works'}</span>
     </span>
   );

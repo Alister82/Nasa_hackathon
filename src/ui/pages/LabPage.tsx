@@ -7,7 +7,7 @@ import {
   SlidersHorizontal,
   Sparkles,
   TestTube2,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { DailyFlag, MissionSettingId, ScenarioId, SystemId } from '@/contracts/types';
 import { MISSION_DAYS, SCENARIO_IDS, SCENARIO_LABELS } from '@/contracts/constants';
 import { generateScenario, SYSTEMS } from '@/engine';
@@ -119,7 +119,7 @@ export function LabPage() {
             <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+            <h2 className="font-display text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
               Scenario controls
             </h2>
             <p className="text-[0.64rem] text-ink-soft">
@@ -177,8 +177,8 @@ export function LabPage() {
           </div>
         </div>
 
-        <div className="flex flex-wrap items-center gap-2 border-t border-line/80 bg-white/45 px-3.5 py-3">
-          <span className="inline-flex items-center gap-1.5 text-[0.64rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+        <div className="flex flex-wrap items-center gap-2 border-t border-line/80 bg-surface2 px-3.5 py-3">
+          <span className="inline-flex items-center gap-1.5 text-[0.64rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">
             <TestTube2 className="h-3.5 w-3.5" aria-hidden="true" />
             Inject scenarios
           </span>
@@ -191,7 +191,7 @@ export function LabPage() {
                 'inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border px-2.5 text-[0.68rem] font-semibold transition-all',
                 scenarioId === injection.id
                   ? 'border-instrument/30 bg-instrument-soft text-instrument-deep shadow-xs'
-                  : 'border-line bg-white/75 text-ink-soft hover:border-line-strong hover:text-ink',
+                  : 'border-line bg-white text-ink-soft hover:border-line-strong hover:text-ink',
               )}
             >
               {injection.label}
@@ -238,8 +238,8 @@ export function LabPage() {
           }
         />
         {cards.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 rounded-[20px] border border-dashed border-line bg-white/60 px-6 py-10 text-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-status-ok-soft text-status-ok">
+          <div className="flex flex-col items-center gap-2 rounded-[16px] border border-dashed border-line bg-surface2 px-6 py-10 text-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-status-ok-soft text-status-ok">
               <Sparkles className="h-5 w-5" aria-hidden="true" />
             </span>
             <p className="text-sm font-semibold text-ink">

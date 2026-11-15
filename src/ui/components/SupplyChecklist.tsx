@@ -1,5 +1,5 @@
 import React from 'react';
-import { BriefcaseMedical, Check } from 'lucide-react';
+import { BriefcaseMedical, Check } from '@/ui/components/icons';
 import type { SupplyId } from '@/contracts/types';
 import { SUPPLIES } from '@/guidance';
 import { cn } from '@/ui/lib/format';
@@ -25,7 +25,7 @@ export function SupplyChecklist({ supplies, onChange }: SupplyChecklistProps) {
             <BriefcaseMedical className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+            <h2 className="font-display text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
               Medical supplies aboard
             </h2>
             <p className="text-[0.64rem] text-ink-soft">
@@ -47,7 +47,7 @@ export function SupplyChecklist({ supplies, onChange }: SupplyChecklistProps) {
               className={cn(
                 'flex min-h-[44px] cursor-pointer select-none items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition-all',
                 isAboard
-                  ? 'border-line bg-white/75 hover:border-line-strong'
+                  ? 'border-line bg-surface2 hover:border-line-strong'
                   : 'border-dashed border-line bg-surface2/55',
               )}
             >
@@ -75,7 +75,7 @@ export function SupplyChecklist({ supplies, onChange }: SupplyChecklistProps) {
               />
               <span
                 className={cn(
-                  'rounded-full px-1.5 py-0.5 text-[0.54rem] font-bold uppercase tracking-wide',
+                  'rounded-full px-1.5 py-0.5 text-[0.54rem] font-semibold uppercase tracking-wide',
                   isAboard ? 'bg-status-ok-soft text-status-ok' : 'bg-surface3 text-ink-faint',
                 )}
                 aria-hidden="true"

@@ -38,8 +38,8 @@ function TrendTooltip({
 }) {
   if (!active || !payload || payload.length === 0) return null;
   return (
-    <div className="rounded-xl border border-white/90 bg-white/97 px-3 py-2 shadow-float backdrop-blur">
-      <p className="mb-1 text-[0.58rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+    <div className="rounded-[10px] border border-line bg-white px-3 py-2 shadow-float">
+      <p className="mb-1 text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">
         Mission day {label}
       </p>
       <ul className="space-y-1">
@@ -50,7 +50,7 @@ function TrendTooltip({
             <li key={String(entry.dataKey)} className="flex items-center gap-2 text-[0.68rem]">
               <span className="h-1.5 w-1.5 rounded-full" style={{ backgroundColor: series.color }} aria-hidden="true" />
               <span className="font-medium text-ink-soft">{series.label}</span>
-              <span className="ml-auto font-bold tabular-nums text-ink">{entry.value}</span>
+              <span className="ml-auto font-semibold tabular-nums text-ink">{entry.value}</span>
             </li>
           );
         })}
@@ -65,7 +65,7 @@ export function CheckInTrend({ data }: CheckInTrendProps) {
     <div className="flex flex-col gap-5">
       <div>
         <div className="mb-1.5 flex flex-wrap items-center gap-x-3 gap-y-1">
-          <span className="text-[0.72rem] font-bold text-ink">Check-in ratings (1 to 5)</span>
+          <span className="text-[0.72rem] font-semibold text-ink">Check-in ratings (1 to 5)</span>
           {RATING_SERIES.map((series) => (
             <span key={series.id} className="inline-flex items-center gap-1 text-[0.62rem] font-medium text-ink-soft">
               <span className="h-1.5 w-4 rounded-full" style={{ backgroundColor: series.color }} aria-hidden="true" />
@@ -118,7 +118,7 @@ export function CheckInTrend({ data }: CheckInTrendProps) {
       </div>
 
       <div>
-        <span className="text-[0.72rem] font-bold text-ink">Sleep (hours)</span>
+        <span className="text-[0.72rem] font-semibold text-ink">Sleep (hours)</span>
         <div
           className="mt-1 h-32 w-full"
           role="img"
@@ -148,7 +148,7 @@ export function CheckInTrend({ data }: CheckInTrendProps) {
                 type="monotone"
                 dataKey="sleep"
                 name="Sleep"
-                stroke="var(--ink)"
+                stroke="var(--chart-sleep)"
                 strokeWidth={2}
                 dot={false}
                 activeDot={{ r: 3.5, stroke: '#fff', strokeWidth: 2 }}

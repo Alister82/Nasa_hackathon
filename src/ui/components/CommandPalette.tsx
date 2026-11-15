@@ -14,8 +14,8 @@ import {
   ShieldCheck,
   TriangleAlert,
   X,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+} from '@/ui/components/icons';
+import type { IconComponent } from '@/ui/components/icons';
 import type { DomainId, IndicatorId } from '@/contracts/types';
 import { DOMAIN_LABELS, INDICATORS } from '@/contracts/indicators';
 import { cn } from '@/ui/lib/format';
@@ -25,7 +25,7 @@ interface PaletteItem {
   label: string;
   hint: string;
   group: 'Pages' | 'Health domains' | 'Measurements' | 'Actions';
-  icon: LucideIcon;
+  icon: IconComponent;
   path: string;
   keywords: string;
 }
@@ -148,7 +148,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
   return (
     <div
-      className="fixed inset-0 z-[80] flex items-start justify-center bg-[#0a1a31]/35 px-4 pt-[10vh] backdrop-blur-sm"
+      className="fixed inset-0 z-[80] flex items-start justify-center bg-black/30 px-4 pt-[10vh]"
       onMouseDown={(event) => {
         if (event.target === event.currentTarget) onClose();
       }}
@@ -158,9 +158,9 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
         role="dialog"
         aria-modal="true"
         aria-label="Search Vigil"
-        className="w-full max-w-[620px] overflow-hidden rounded-[22px] border border-white/80 bg-white/95 shadow-[0_40px_120px_-30px_rgba(10,32,62,0.55)] backdrop-blur-2xl"
+        className="w-full max-w-[600px] overflow-hidden rounded-[16px] border border-black/[0.07] bg-white shadow-[0_24px_80px_-24px_rgba(0,0,0,0.35)]"
       >
-        <div className="flex items-center gap-3 border-b border-line px-4 py-3">
+        <div className="flex items-center gap-3 border-b border-line px-4 py-2.5">
           <Search className="h-[18px] w-[18px] text-ink-faint" aria-hidden="true" />
           <input
             ref={inputRef}
@@ -168,7 +168,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
             onChange={(event) => setQuery(event.target.value)}
             onKeyDown={handleKeyDown}
             placeholder="Search metrics, alerts, or procedures…"
-            className="min-w-0 flex-1 bg-transparent py-1 text-[0.9rem] font-medium text-ink placeholder:text-ink-faint focus:outline-none"
+            className="min-w-0 flex-1 bg-transparent py-1 text-[0.9rem] font-normal text-ink placeholder:text-ink-faint focus:outline-none"
             aria-label="Search metrics, alerts, or procedures"
             autoComplete="off"
             spellCheck={false}
@@ -176,7 +176,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
           <button
             type="button"
             onClick={onClose}
-            className="inline-flex h-11 w-11 items-center justify-center rounded-lg text-ink-faint hover:bg-surface3 hover:text-ink"
+            className="inline-flex h-9 w-9 items-center justify-center rounded-[9px] text-ink-faint hover:bg-black/[0.045] hover:text-ink"
             aria-label="Close search"
           >
             <X className="h-4 w-4" />
@@ -193,7 +193,7 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
 
           {Object.entries(grouped).map(([group, items]) => (
             <div key={group} className="mb-1.5">
-              <p className="px-3 pb-1 pt-2 text-[0.6rem] font-bold uppercase tracking-[0.14em] text-ink-faint">{group}</p>
+              <p className="px-3 pb-1 pt-2 text-[0.6rem] font-medium uppercase tracking-[0.06em] text-ink-faint">{group}</p>
               {items.map((item) => {
                 runningIndex += 1;
                 const index = runningIndex;
@@ -205,23 +205,23 @@ export function CommandPalette({ open, onClose }: CommandPaletteProps) {
                     onMouseEnter={() => setActive(index)}
                     onClick={() => select(item)}
                     className={cn(
-                      'flex w-full items-center gap-3 rounded-xl px-3 py-2.5 text-left transition-colors',
-                      index === active ? 'bg-instrument-soft text-ink' : 'text-ink-2 hover:bg-surface2',
+                      'flex w-full items-center gap-3 rounded-[10px] px-3 py-2.5 text-left transition-colors',
+                      index === active ? 'bg-black/[0.05] text-ink' : 'text-ink-2 hover:bg-surface2',
                     )}
                     aria-current={index === active ? 'true' : undefined}
                   >
                     <span
                       className={cn(
-                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border',
+                        'flex h-8 w-8 shrink-0 items-center justify-center rounded-[9px]',
                         index === active
-                          ? 'border-instrument/20 bg-white text-instrument'
-                          : 'border-line bg-white/70 text-ink-soft',
+                          ? 'bg-white text-instrument shadow-xs'
+                          : 'bg-surface3 text-ink-soft',
                       )}
                     >
-                      <Icon className="h-4 w-4" strokeWidth={1.8} />
+                      <Icon className="h-4 w-4" />
                     </span>
                     <span className="min-w-0 flex-1">
-                      <span className="block truncate text-[0.8rem] font-semibold">{item.label}</span>
+                      <span className="block truncate text-[0.8rem] font-medium">{item.label}</span>
                       <span className="block truncate text-[0.66rem] text-ink-soft">{item.hint}</span>
                     </span>
                     {index === active ? (

@@ -8,7 +8,7 @@ import {
   LineChart,
   ShieldCheck,
   Sparkles,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { CheckInRecord, DomainId, IndicatorId } from '@/contracts/types';
 import { DOMAIN_LABELS, DOMAIN_ORDER, INDICATORS } from '@/contracts/indicators';
 import { StatusChip, type StatusType } from '@/ui/components/StatusChip';
@@ -86,7 +86,7 @@ export function DomainDetailPage() {
     return (
       <div className="page-wrap">
         <div className="panel mx-auto max-w-xl px-6 py-12 text-center" role="status">
-          <h1 className="font-display text-2xl font-extrabold text-ink">{DOMAIN_LABELS[domainMeta]}</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">{DOMAIN_LABELS[domainMeta]}</h1>
           <p className="mt-2 text-sm text-ink-soft">Loading simulated crew data…</p>
         </div>
       </div>
@@ -119,17 +119,12 @@ export function DomainDetailPage() {
         Back to Today
       </Link>
 
-      <section className="relative overflow-hidden rounded-[24px] border border-white/85 bg-[linear-gradient(158deg,rgba(255,255,255,0.94)_0%,rgba(241,248,255,0.88)_100%)] p-4 shadow-float backdrop-blur-xl sm:p-5">
-        <div
-          className="pointer-events-none absolute -right-16 -top-20 h-56 w-56 rounded-full blur-2xl"
-          style={{ background: `radial-gradient(circle, ${visual.soft}, transparent 70%)` }}
-          aria-hidden="true"
-        />
-        <div className="relative flex flex-col gap-4">
+      <section className="panel p-4 sm:p-5">
+        <div className="flex flex-col gap-4">
           <div className="flex flex-wrap items-start justify-between gap-3">
             <div className="flex min-w-0 items-start gap-3">
               <span
-                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[14px] border border-white/80 shadow-sm"
+                className="flex h-12 w-12 shrink-0 items-center justify-center rounded-[12px]"
                 style={{ backgroundColor: visual.soft, color: visual.color }}
                 aria-hidden="true"
               >
@@ -137,7 +132,7 @@ export function DomainDetailPage() {
               </span>
               <div className="min-w-0">
                 <p className="section-kicker">Health domain</p>
-                <h1 className="font-display text-[1.5rem] font-extrabold leading-tight tracking-[-0.035em] text-ink sm:text-[1.8rem]">
+                <h1 className="font-display text-[1.5rem] font-semibold leading-tight tracking-[-0.035em] text-ink sm:text-[1.8rem]">
                   {DOMAIN_LABELS[domainMeta]}
                 </h1>
                 <div className="mt-1.5 flex flex-wrap items-center gap-2">
@@ -166,7 +161,7 @@ export function DomainDetailPage() {
 
           <p className="max-w-3xl text-[0.8rem] leading-relaxed text-ink-2">{whyItMattersCombined}</p>
 
-          <div className="flex flex-wrap items-start gap-2 rounded-[14px] border border-line/80 bg-white/65 px-3 py-2.5">
+          <div className="flex flex-wrap items-start gap-2 rounded-[12px] border border-line/80 bg-surface2 px-3 py-2.5">
             <ShieldCheck
               className={cn(
                 'mt-0.5 h-4 w-4 shrink-0',
@@ -259,7 +254,7 @@ export function DomainDetailPage() {
                         />
                       </button>
                       {isHowToOpen && (
-                        <div className="mt-1 rounded-xl border border-line bg-white/75 px-3 py-2.5">
+                        <div className="mt-1 rounded-[12px] border border-line bg-surface2 px-3 py-2.5">
                           <p className="text-[0.72rem] leading-relaxed text-ink-2">{help.howToMeasure}</p>
                           <p className="mt-2 text-[0.64rem] leading-relaxed text-ink-soft">
                             <strong className="font-semibold text-ink-soft">Associated spaceflight hazards:</strong>{' '}

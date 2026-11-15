@@ -14,8 +14,8 @@ export default defineConfig({
         name: 'Vigil',
         short_name: 'Vigil',
         description: 'Offline-first astronaut health monitoring software',
-        theme_color: '#1D56B8',
-        background_color: '#E8EDF1',
+        theme_color: '#f5f5f7',
+        background_color: '#f5f5f7',
         display: 'standalone',
         icons: [
           {

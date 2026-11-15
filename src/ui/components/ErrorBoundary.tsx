@@ -29,7 +29,7 @@ export class ErrorBoundary extends Component<Props, State> {
     if (this.state.hasError) {
       return (
         <div role="alert" className="p-6 text-center max-w-md mx-auto my-12 bg-panel rounded-sheet border border-line">
-          <h2 className="text-xl font-bold text-ink mb-2">Something went wrong on this screen.</h2>
+          <h2 className="text-xl font-semibold text-ink mb-2">Something went wrong on this screen.</h2>
           <p className="text-ink-soft text-sm mb-6">
             An unexpected error occurred while rendering this view.
           </p>

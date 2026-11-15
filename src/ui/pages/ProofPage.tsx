@@ -8,7 +8,7 @@ import {
   ShieldCheck,
   Terminal,
   TriangleAlert,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { ResultsFile, SystemId } from '@/contracts/types';
 import { loadResults } from '@/app/services';
 import { ProofChart } from '@/ui/charts/ProofChart';
@@ -56,7 +56,7 @@ export function ProofPage() {
     return (
       <div className="page-wrap">
         <div className="panel mx-auto max-w-xl px-6 py-12 text-center" role="status">
-          <span className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-2xl bg-instrument-soft text-instrument">
+          <span className="mx-auto mb-3 flex h-11 w-11 items-center justify-center rounded-[12px] bg-instrument-soft text-instrument">
             <Activity className="h-5 w-5 animate-pulse" aria-hidden="true" />
           </span>
           <p className="text-sm font-semibold text-ink">Loading evaluation results…</p>
@@ -70,10 +70,10 @@ export function ProofPage() {
       <div className="page-wrap">
         <div className="mx-auto max-w-xl">
           <div className="panel px-6 py-10 text-center">
-            <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-status-watch-soft text-status-watch">
+            <span className="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-[12px] bg-status-watch-soft text-status-watch">
               <TriangleAlert className="h-6 w-6" aria-hidden="true" />
             </span>
-            <h1 className="font-display text-[1.35rem] font-extrabold tracking-[-0.03em] text-ink">
+            <h1 className="font-display text-[1.35rem] font-semibold tracking-[-0.03em] text-ink">
               Proof results
             </h1>
             <p className="mt-2 text-sm text-ink-soft">
@@ -146,7 +146,7 @@ export function ProofPage() {
         {aggregate.map((system) => (
           <article key={system.systemId} className="panel px-3.5 py-3">
             <div className="flex items-center justify-between gap-2">
-              <span className="inline-flex items-center gap-2 text-[0.72rem] font-bold text-ink">
+              <span className="inline-flex items-center gap-2 text-[0.72rem] font-semibold text-ink">
                 <span className={['h-2 w-2 rounded-full', SYSTEM_TONE[system.systemId]].join(' ')} aria-hidden="true" />
                 {system.label}
               </span>
@@ -154,7 +154,7 @@ export function ProofPage() {
             </div>
             <div className="mt-2 grid grid-cols-2 gap-2">
               <div>
-                <p className="text-[0.55rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
+                <p className="text-[0.55rem] font-semibold uppercase tracking-[0.08em] text-ink-faint">
                   Detection
                 </p>
                 <p className="metric-number text-[1.15rem] leading-tight">
@@ -165,7 +165,7 @@ export function ProofPage() {
                 </p>
               </div>
               <div>
-                <p className="text-[0.55rem] font-bold uppercase tracking-[0.08em] text-ink-faint">
+                <p className="text-[0.55rem] font-semibold uppercase tracking-[0.08em] text-ink-faint">
                   False alarms
                 </p>
                 <p className="metric-number text-[1.15rem] leading-tight">
@@ -182,7 +182,7 @@ export function ProofPage() {
         <div className="rounded-[18px] border border-status-ok/25 bg-status-ok-soft/45 px-4 py-3.5">
           <div className="flex items-center gap-2">
             <CheckCircle2 className="h-4 w-4 text-status-ok" aria-hidden="true" />
-            <h2 className="text-[0.8rem] font-bold text-ink">What this shows</h2>
+            <h2 className="text-[0.8rem] font-semibold text-ink">What this shows</h2>
           </div>
           <p className="mt-1.5 text-[0.7rem] leading-relaxed text-ink-2">
             How each detector behaves on the same simulated scenarios, seeds, and mission length.
@@ -193,7 +193,7 @@ export function ProofPage() {
         <div className="rounded-[18px] border border-status-watch/25 bg-status-watch-soft/45 px-4 py-3.5">
           <div className="flex items-center gap-2">
             <Info className="h-4 w-4 text-status-watch" aria-hidden="true" />
-            <h2 className="text-[0.8rem] font-bold text-ink">What this does not show</h2>
+            <h2 className="text-[0.8rem] font-semibold text-ink">What this does not show</h2>
           </div>
           <p className="mt-1.5 text-[0.7rem] leading-relaxed text-ink-2">
             Clinical validity, diagnostic accuracy, or performance on real astronaut data. The
@@ -221,7 +221,7 @@ export function ProofPage() {
         </div>
       </section>
 
-      <footer className="flex flex-wrap items-center justify-between gap-2 rounded-[16px] border border-line bg-white/60 px-4 py-3 text-[0.64rem] text-ink-soft">
+      <footer className="flex flex-wrap items-center justify-between gap-2 rounded-[16px] border border-line bg-surface2 px-4 py-3 text-[0.64rem] text-ink-soft">
         <span>
           Simulated evaluation only. Not a medical-device validation and not a clinical claim.
         </span>

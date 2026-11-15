@@ -1,6 +1,6 @@
 import React, { useEffect, useRef, useState } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
-import { Bell, ChevronDown, Menu, Search, TriangleAlert } from 'lucide-react';
+import { Bell, ChevronDown, Menu, Search, TriangleAlert } from '@/ui/components/icons';
 import { DEFAULT_CREW } from '@/contracts/constants';
 import { MISSION_SETTINGS } from '@/guidance';
 import { useAppState } from '@/app/AppState';
@@ -51,33 +51,33 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
   }, [notificationsOpen]);
 
   return (
-    <header className="sticky top-0 z-30 border-b border-white/65 bg-[linear-gradient(180deg,rgba(248,251,255,0.9),rgba(245,250,255,0.72))] backdrop-blur-2xl">
-      <div className="flex min-h-[64px] items-center gap-2 px-3 py-2.5 sm:px-4 lg:px-8">
+    <header className="sticky top-0 z-30 border-b border-black/[0.06] bg-[rgba(252,252,253,0.82)] backdrop-blur-2xl">
+      <div className="flex min-h-[60px] items-center gap-2 px-3 py-2 sm:px-4 lg:px-8">
         <button
           type="button"
           onClick={onOpenMobileNav}
           className="icon-btn lg:hidden"
           aria-label="Open navigation"
         >
-          <Menu className="h-[18px] w-[18px]" strokeWidth={1.9} />
+          <Menu className="h-[18px] w-[18px]" />
         </button>
 
         {/* Functional search entry */}
         <button
           type="button"
           onClick={onOpenSearch}
-          className="group hidden h-11 min-w-0 flex-1 items-center gap-2.5 rounded-xl border border-white/80 bg-white/70 px-3 text-left shadow-xs backdrop-blur transition-all hover:border-line-strong hover:bg-white sm:flex lg:max-w-[420px]"
+          className="group hidden h-9 min-w-0 flex-1 items-center gap-2 rounded-[9px] border border-transparent bg-black/[0.045] px-3 text-left transition-colors hover:bg-black/[0.065] sm:flex lg:max-w-[420px]"
           aria-label="Search metrics, alerts, or procedures"
         >
-          <Search className="h-4 w-4 shrink-0 text-ink-faint transition-colors group-hover:text-ink-soft" aria-hidden="true" />
-          <span className="truncate text-[0.78rem] font-medium text-ink-faint">Search metrics, alerts, or procedures…</span>
-          <kbd className="ml-auto hidden shrink-0 items-center gap-0.5 rounded-md border border-line bg-white px-1.5 py-0.5 font-sans text-[0.58rem] font-semibold text-ink-soft lg:inline-flex">
+          <Search className="h-4 w-4 shrink-0 text-ink-faint" aria-hidden="true" />
+          <span className="truncate text-[0.78rem] font-normal text-ink-soft">Search metrics, alerts, or procedures…</span>
+          <kbd className="ml-auto hidden shrink-0 items-center gap-0.5 rounded-[5px] border border-black/[0.08] bg-white px-1.5 py-0.5 font-sans text-[0.58rem] font-medium text-ink-faint lg:inline-flex">
             ⌘ K
           </kbd>
         </button>
 
         <div className="flex min-w-0 flex-1 items-center gap-1.5 sm:flex-none sm:ml-auto">
-          <span className="hidden items-center gap-2 rounded-full border border-white/80 bg-white/55 px-2.5 py-1 text-[0.64rem] font-semibold text-ink-soft xl:inline-flex">
+          <span className="hidden items-center gap-2 rounded-full bg-black/[0.04] px-2.5 py-1 text-[0.64rem] font-medium text-ink-soft xl:inline-flex">
             <span className="h-1.5 w-1.5 rounded-full bg-status-ok" />
             Mission day <span className="tabular-nums text-ink">{viewDay}</span>
           </span>
@@ -90,7 +90,7 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
               id="crew-select"
               value={crewId}
               onChange={(event) => setCrewId(event.target.value)}
-              className="h-11 max-w-[122px] appearance-none rounded-lg border border-line bg-white/80 pl-2.5 pr-7 text-[0.72rem] font-semibold text-ink shadow-xs transition-colors hover:border-line-strong focus:border-instrument sm:max-w-none"
+              className="h-9 max-w-[122px] appearance-none rounded-[9px] border border-line-strong bg-white pl-2.5 pr-7 text-[0.72rem] font-medium text-ink transition-colors hover:border-[#b8b8bf] focus:border-instrument sm:max-w-none"
             >
               {DEFAULT_CREW.map((crew) => (
                 <option key={crew.crewId} value={crew.crewId}>
@@ -103,7 +103,7 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
 
           <Link
             to="/mission"
-            className="hidden h-11 items-center gap-1.5 rounded-lg border border-instrument/15 bg-instrument-soft/80 px-2.5 text-[0.68rem] font-semibold text-instrument-deep transition-colors hover:bg-instrument-soft md:inline-flex"
+            className="hidden h-9 items-center gap-1.5 rounded-[9px] px-2.5 text-[0.68rem] font-medium text-[#0066cc] transition-colors hover:bg-instrument-soft md:inline-flex"
             title={`Mission setting: ${setting.label}`}
           >
             <span className="h-1.5 w-1.5 rounded-full bg-instrument" aria-hidden="true" />
@@ -120,9 +120,9 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
               aria-label={`Notifications${attention.length > 0 ? `, ${attention.length} need attention` : ''}`}
               aria-expanded={notificationsOpen}
             >
-              <Bell className="h-[17px] w-[17px]" strokeWidth={1.9} />
+              <Bell className="h-[18px] w-[18px]" />
               {attention.length > 0 && (
-                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-status-review px-0.5 text-[0.52rem] font-bold text-white tabular-nums">
+                <span className="absolute -right-0.5 -top-0.5 flex h-4 min-w-4 items-center justify-center rounded-full border-2 border-white bg-status-review px-0.5 text-[0.52rem] font-semibold text-white tabular-nums">
                   {attention.length > 9 ? '9+' : attention.length}
                 </span>
               )}
@@ -136,7 +136,7 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
               >
                 <div className="flex items-center justify-between border-b border-line px-4 py-3">
                   <div>
-                    <p className="text-[0.8rem] font-bold text-ink">Health alerts</p>
+                    <p className="text-[0.8rem] font-semibold text-ink">Health alerts</p>
                     <p className="text-[0.62rem] text-ink-soft">Derived from the viewed mission day</p>
                   </div>
                   <span className="chip chip-neutral tabular-nums">{attention.length}</span>
@@ -184,16 +184,15 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
           <button
             type="button"
             onClick={() => navigate('/urgent')}
-            className="inline-flex h-11 items-center justify-center gap-2 rounded-lg border border-status-urgent/25 bg-status-urgent-soft px-0 text-status-urgent transition-colors hover:bg-status-urgent hover:text-white lg:min-h-[44px] lg:px-3"
+            className="inline-flex h-9 w-9 shrink-0 items-center justify-center gap-2 rounded-[9px] border border-status-urgent/15 bg-status-urgent-soft text-status-urgent transition-colors hover:bg-status-urgent hover:text-white lg:w-auto lg:px-3"
             aria-label="Get urgent medical help"
           >
-            <TriangleAlert className="h-[17px] w-[17px] lg:h-4 lg:w-4" strokeWidth={2.1} aria-hidden="true" />
-            <span className="hidden text-[0.72rem] font-bold lg:inline">Urgent help</span>
-            <span className="w-9 lg:hidden" aria-hidden="true" />
+            <TriangleAlert className="h-[17px] w-[17px] lg:h-4 lg:w-4" weight="fill" aria-hidden="true" />
+            <span className="hidden text-[0.72rem] font-medium lg:inline">Urgent help</span>
           </button>
 
           <div
-            className="ml-0.5 hidden h-9 w-9 shrink-0 items-center justify-center rounded-full border border-white bg-[linear-gradient(145deg,#dcebff,#b8d3f8)] text-[0.66rem] font-bold tracking-wide text-[#19457e] shadow-xs sm:flex"
+            className="ml-0.5 hidden h-8 w-8 shrink-0 items-center justify-center rounded-full border border-line bg-surface3 text-[0.64rem] font-medium tracking-wide text-ink-soft sm:flex"
             title={`${crewName} — active crew record`}
             aria-label={`${crewName} profile`}
           >

@@ -1,6 +1,6 @@
 import React from 'react';
-import { Check, ExternalLink, Radio, Satellite, Telescope } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Check, ExternalLink, Radio, Satellite, Telescope } from '@/ui/components/icons';
+import type { IconComponent } from '@/ui/components/icons';
 import type { MissionSetting, MissionSettingId } from '@/contracts/types';
 import { MISSION_SETTINGS, SOURCES, expectedReplyMinutes } from '@/guidance';
 import { cn } from '@/ui/lib/format';
@@ -12,7 +12,7 @@ export interface MissionPickerProps {
 
 const ORDER: MissionSettingId[] = ['station', 'lunar_base', 'deep_space'];
 
-const SETTING_ICONS: Record<MissionSettingId, LucideIcon> = {
+const SETTING_ICONS: Record<MissionSettingId, IconComponent> = {
   station: Satellite,
   lunar_base: Telescope,
   deep_space: Radio,
@@ -28,7 +28,7 @@ export function MissionPicker({ value, onChange }: MissionPickerProps) {
             <Radio className="h-4 w-4" aria-hidden="true" />
           </span>
           <div>
-            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+            <h2 className="font-display text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
               Operational setting
             </h2>
             <p className="text-[0.64rem] text-ink-soft">
@@ -51,7 +51,7 @@ export function MissionPicker({ value, onChange }: MissionPickerProps) {
                 'group relative flex cursor-pointer flex-col gap-2 rounded-[16px] border px-3.5 py-3 transition-all',
                 isSelected
                   ? 'border-instrument/40 bg-instrument-soft/60 shadow-xs ring-1 ring-instrument/15'
-                  : 'border-line bg-white/70 hover:border-line-strong hover:bg-white',
+                  : 'border-line bg-surface2 hover:border-line-strong hover:bg-white',
               )}
             >
               <input
@@ -86,7 +86,7 @@ export function MissionPicker({ value, onChange }: MissionPickerProps) {
               </span>
 
               <span className="min-w-0">
-                <span className="block text-[0.82rem] font-bold text-ink">{setting.label}</span>
+                <span className="block text-[0.82rem] font-semibold text-ink">{setting.label}</span>
                 <span className="mt-0.5 block text-[0.66rem] leading-relaxed text-ink-soft">
                   {setting.description}
                 </span>

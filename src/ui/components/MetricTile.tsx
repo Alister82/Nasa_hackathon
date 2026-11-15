@@ -11,8 +11,8 @@ import {
   Sparkles,
   Thermometer,
   Zap,
-} from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+} from '@/ui/components/icons';
+import type { IconComponent } from '@/ui/components/icons';
 import type { DomainId, IndicatorId } from '@/contracts/types';
 import { DOMAIN_LABELS } from '@/contracts/indicators';
 import { cn } from '@/ui/lib/format';
@@ -23,17 +23,17 @@ import { DeltaBadge } from './ui';
 
 export const DOMAIN_VISUALS: Record<
   DomainId,
-  { color: string; soft: string; Icon: LucideIcon; short: string }
+  { color: string; soft: string; Icon: IconComponent; short: string }
 > = {
-  cardiovascular: { color: '#cf4653', soft: '#ffedef', Icon: HeartPulse, short: 'Cardiovascular' },
-  sleep_recovery: { color: '#6f5de0', soft: '#f0edff', Icon: MoonStar, short: 'Sleep' },
-  physical_performance: { color: '#0f8f7c', soft: '#e4f7f2', Icon: Dumbbell, short: 'Performance' },
-  behavioral: { color: '#7b61d9', soft: '#f2eeff', Icon: Brain, short: 'Mood & stress' },
-  metabolic_general: { color: '#b77918', soft: '#fff5df', Icon: Thermometer, short: 'Metabolic' },
-  radiation: { color: '#c36b1f', soft: '#fff0e3', Icon: Radiation, short: 'Radiation' },
+  cardiovascular: { color: '#ff3b30', soft: '#ffedec', Icon: HeartPulse, short: 'Cardiovascular' },
+  sleep_recovery: { color: '#5856d6', soft: '#eeeefc', Icon: MoonStar, short: 'Sleep' },
+  physical_performance: { color: '#1d8a3c', soft: '#e8f7ed', Icon: Dumbbell, short: 'Performance' },
+  behavioral: { color: '#a259d4', soft: '#f8edfc', Icon: Brain, short: 'Mood & stress' },
+  metabolic_general: { color: '#b25000', soft: '#fff4e5', Icon: Thermometer, short: 'Metabolic' },
+  radiation: { color: '#0b7c8e', soft: '#e8f7fa', Icon: Radiation, short: 'Radiation' },
 };
 
-const INDICATOR_ICONS: Record<IndicatorId, LucideIcon> = {
+const INDICATOR_ICONS: Record<IndicatorId, IconComponent> = {
   heart_rate: HeartPulse,
   bp_sys: Activity,
   bp_dia: Activity,
@@ -49,12 +49,12 @@ const INDICATOR_ICONS: Record<IndicatorId, LucideIcon> = {
 
 export function DomainIcon({ domain, className = 'h-4 w-4' }: { domain: DomainId; className?: string }) {
   const Icon = DOMAIN_VISUALS[domain].Icon;
-  return <Icon className={className} strokeWidth={1.8} />;
+  return <Icon className={className} weight="fill" />;
 }
 
 export function IndicatorIcon({ indicator, className = 'h-4 w-4' }: { indicator: IndicatorId; className?: string }) {
   const Icon = INDICATOR_ICONS[indicator] ?? Activity;
-  return <Icon className={className} strokeWidth={1.8} />;
+  return <Icon className={className} weight="regular" />;
 }
 
 export function domainLabel(domain: DomainId): string {
@@ -102,10 +102,10 @@ export function MetricTile({
       <div className="flex items-start justify-between gap-2">
         <div className="flex items-center gap-2.5">
           <span
-            className="flex h-8 w-8 items-center justify-center rounded-[10px]"
+            className="flex h-8 w-8 items-center justify-center rounded-[9px]"
             style={{ backgroundColor: visual.soft, color: visual.color }}
           >
-            <Icon className="h-4 w-4" strokeWidth={1.9} />
+            <Icon className="h-4 w-4" weight="fill" />
           </span>
           <div className="min-w-0">
             <p className="truncate text-[0.72rem] font-semibold text-ink-2">{label}</p>
@@ -147,8 +147,8 @@ export function MetricTile({
   );
 
   const className = cn(
-    'group relative flex min-w-0 flex-col rounded-[18px] border border-white/80 bg-white/78 p-3.5 text-left shadow-card backdrop-blur-sm transition-all duration-200',
-    onClick && 'hover:-translate-y-0.5 hover:bg-white hover:shadow-float',
+    'group relative flex min-w-0 flex-col rounded-[16px] border border-line bg-white p-3.5 text-left shadow-card transition-all duration-200',
+    onClick && 'hover:-translate-y-px hover:shadow-float',
   );
 
   if (onClick) {
@@ -164,7 +164,7 @@ export function MetricTile({
 export function StableBadge({ stable }: { stable: boolean }) {
   return (
     <span className={cn('chip', stable ? 'chip-ok' : 'chip-watch')}>
-      <Sparkles className="h-3 w-3" strokeWidth={2} aria-hidden="true" />
+      <Sparkles className="h-3 w-3" weight="bold" aria-hidden="true" />
       {stable ? 'Within expected range' : 'Needs review'}
     </span>
   );

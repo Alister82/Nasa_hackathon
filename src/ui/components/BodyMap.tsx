@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import type { DomainId, DomainAnalysis, IndicatorStatus } from '@/contracts/types';
 import { DOMAIN_LABELS } from '@/contracts/indicators';
 import { StatusChip } from './StatusChip';
-import { MoonCrescentIcon, RadiationIcon } from './Icons';
+import { MoonStar, Radiation } from './icons';
 
 export interface BodyMapProps {
   domains: Record<DomainId, DomainAnalysis>;
@@ -175,7 +175,7 @@ export function BodyMap({ domains, summaries, selected, onSelect }: BodyMapProps
             />
             <foreignObject x="150" y="30" width="20" height="20" className="pointer-events-none">
               <div className="w-full h-full flex items-center justify-center text-ink-soft">
-                <MoonCrescentIcon className="w-3.5 h-3.5" />
+                <MoonStar className="w-3.5 h-3.5" weight="fill" />
               </div>
             </foreignObject>
           </g>
@@ -193,7 +193,7 @@ export function BodyMap({ domains, summaries, selected, onSelect }: BodyMapProps
             />
             <foreignObject x="30" y="30" width="20" height="20" className="pointer-events-none">
               <div className="w-full h-full flex items-center justify-center text-ink-soft">
-                <RadiationIcon className="w-3.5 h-3.5" />
+                <Radiation className="w-3.5 h-3.5" weight="fill" />
               </div>
             </foreignObject>
           </g>

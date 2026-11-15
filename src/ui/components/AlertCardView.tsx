@@ -13,7 +13,7 @@ import {
   Pill,
   Radio,
   X,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { AlertCard, AnalysisResult, EvidenceStrength, MissionSettingId, SeverityLevel, SourceRef, SupplyId } from '@/contracts/types';
 import { INDICATORS } from '@/contracts/indicators';
 import { MISSION_SETTINGS, SUPPLIES } from '@/guidance';
@@ -46,7 +46,7 @@ const SEVERITY_STYLES: Record<
 };
 
 const SECTION_HEADING =
-  'flex items-center gap-1.5 text-[0.62rem] font-bold uppercase tracking-[0.1em] text-ink-faint mb-2';
+  'flex items-center gap-1.5 text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-ink-faint mb-2';
 
 function supplyLabel(id: string): string {
   return SUPPLIES.find((supply) => supply.id === id)?.label ?? id.replace(/_/g, ' ');
@@ -131,16 +131,14 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
           type="button"
           onClick={() => setIsOpen(true)}
           className={cn(
-            'group relative flex min-h-[170px] w-full flex-col overflow-hidden rounded-[20px] border bg-white/80 p-4 text-left shadow-card backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/95 hover:shadow-float focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-instrument focus-visible:ring-offset-2',
+            'group relative flex min-h-[170px] w-full flex-col overflow-hidden rounded-[16px] border bg-white p-4 text-left shadow-card transition-all duration-200 hover:-translate-y-px hover:shadow-float focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-instrument focus-visible:ring-offset-2',
             card.severity === 'urgent' ? 'border-status-urgent/35' : card.severity === 'review' ? 'border-status-review/30' : 'border-line',
           )}
           aria-haspopup="dialog"
           aria-expanded={isOpen}
           aria-label={`Open alert details: ${card.title}`}
         >
-          <span className={cn('absolute inset-y-0 left-0 w-1', style.accent)} aria-hidden="true" />
-          <span className={cn('pointer-events-none absolute -right-12 -top-14 h-36 w-36 rounded-full opacity-[0.12] blur-2xl transition-opacity group-hover:opacity-25', style.accent)} aria-hidden="true" />
-          <span className="relative flex w-full items-center justify-between gap-2 pl-1">
+          <span className="relative flex w-full items-center justify-between gap-2">
             <span className="flex min-w-0 flex-wrap items-center gap-2">
               <SeverityMark severity={card.severity} />
               <span className={cn('chip', style.soft, style.text, 'capitalize')}>{style.label}</span>
@@ -148,16 +146,16 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
             </span>
             <ChevronDown className="h-4 w-4 shrink-0 -rotate-90 text-ink-faint transition-transform duration-300 group-hover:translate-x-1 group-hover:text-instrument" aria-hidden="true" />
           </span>
-          <span className="relative mt-3 pl-1 font-display text-[0.94rem] font-bold leading-snug text-ink">{card.title}</span>
-          <span className="relative mt-1 line-clamp-2 pl-1 text-[0.72rem] leading-relaxed text-ink-soft">{card.observation}</span>
-          <span className="relative mt-auto flex flex-wrap gap-x-1 pl-1 pt-3 text-[0.6rem] font-medium capitalize text-ink-faint">
+          <span className="relative mt-3 font-display text-[0.94rem] font-semibold leading-snug text-ink">{card.title}</span>
+          <span className="relative mt-1 line-clamp-2 text-[0.72rem] leading-relaxed text-ink-soft">{card.observation}</span>
+          <span className="relative mt-auto flex flex-wrap gap-x-1 pt-3 text-[0.6rem] font-medium capitalize text-ink-faint">
             {card.domains.map((domain, index) => <React.Fragment key={domain}>{index > 0 && <span>·</span>}{domain.replace(/_/g, ' ')}</React.Fragment>)}
             <span className="ml-auto font-semibold text-instrument">Open details</span>
           </span>
         </button>
         {isOpen && createPortal(
           <div
-            className="attention-overlay fixed inset-0 z-[100] flex items-center justify-center bg-[#06152b]/60 p-3 backdrop-blur-md sm:p-6"
+            className="attention-overlay fixed inset-0 z-[100] flex items-center justify-center bg-black/35 p-3 sm:p-6"
             onMouseDown={(event) => { if (event.target === event.currentTarget) setIsOpen(false); }}
           >
             <div
@@ -166,7 +164,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
               aria-modal="true"
               aria-label={`Alert details: ${card.title}`}
               tabIndex={-1}
-              className="attention-dialog max-h-[92dvh] w-[min(820px,100%)] overflow-y-auto rounded-[26px] border border-white/60 bg-[linear-gradient(155deg,rgba(255,255,255,0.93),rgba(232,242,255,0.86))] shadow-[0_40px_120px_-30px_rgba(3,15,35,0.72)] backdrop-blur-2xl"
+              className="attention-dialog max-h-[92dvh] w-[min(820px,100%)] overflow-y-auto rounded-[18px] border border-black/[0.07] bg-white shadow-[0_32px_80px_-24px_rgba(0,0,0,0.35)]"
             >
               <AlertCardView
                 card={card}
@@ -189,7 +187,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
     <>
     <article
       className={cn(
-        'group relative overflow-hidden rounded-[20px] border bg-white/86 shadow-card backdrop-blur-sm transition-shadow hover:shadow-float',
+        'group relative overflow-hidden rounded-[16px] border bg-white shadow-card transition-shadow',
         detailMode && 'rounded-none border-0 bg-transparent shadow-none hover:shadow-none',
         !detailMode &&
           (card.severity === 'urgent'
@@ -200,13 +198,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
       )}
       aria-labelledby={titleId}
     >
-      <span className={cn('absolute inset-y-0 left-0 w-[3px]', style.accent)} aria-hidden="true" />
-      <span
-        className={cn('pointer-events-none absolute -right-16 -top-20 h-44 w-44 rounded-full opacity-[0.13] blur-2xl', style.accent)}
-        aria-hidden="true"
-      />
-
-      <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3.5 pl-5">
+      <div className="flex flex-wrap items-start justify-between gap-3 px-4 py-3.5">
         <div className="flex min-w-0 items-start gap-2.5">
           <SeverityMark severity={card.severity} />
           <div className="min-w-0">
@@ -221,7 +213,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
                 </span>
               ))}
             </div>
-            <h2 id={titleId} className="mt-1 font-display text-[0.95rem] font-bold leading-snug tracking-[-0.02em] text-ink">
+            <h2 id={titleId} className="mt-1 font-display text-[0.95rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
               {card.title}
             </h2>
           </div>
@@ -230,7 +222,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
           <button
             type="button"
             onClick={() => setIsOpen(!isOpen)}
-            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-line bg-white/80 px-2.5 text-[0.66rem] font-semibold text-ink-soft transition-colors hover:border-line-strong hover:text-ink"
+            className="inline-flex min-h-[44px] shrink-0 items-center gap-1 rounded-lg border border-line bg-white px-2.5 text-[0.66rem] font-semibold text-ink-soft transition-colors hover:border-line-strong hover:text-ink"
             aria-expanded={isOpen}
             aria-controls={panelId}
           >
@@ -245,7 +237,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
         )}
       </div>
 
-      <div className="px-4 pb-4 pl-5">
+      <div className="px-4 pb-4">
         <h3 className={SECTION_HEADING}>
           <Stethoscope className="h-3.5 w-3.5" aria-hidden="true" />
           What changed
@@ -255,7 +247,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
 
       {showDetails && (
         <div id={panelId} className="border-t border-line/80">
-          <section className="border-b border-line/80 bg-instrument-soft/25 px-4 py-3.5 pl-5">
+          <section className="border-b border-line/80 bg-instrument-soft/25 px-4 py-3.5">
             <div className="flex flex-wrap items-center justify-between gap-2">
               <h3 className={SECTION_HEADING.replace('mb-2', 'mb-0')}>
                 <Activity className="h-3.5 w-3.5" aria-hidden="true" />
@@ -266,8 +258,8 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
             <p className="mt-2 text-[0.66rem] leading-relaxed text-ink-soft">
               CMO Cognitive Load (display metric): {card.recommendedActions.length} guided action{card.recommendedActions.length === 1 ? '' : 's'} · {card.nextMeasurements.length} next-measurement item{card.nextMeasurements.length === 1 ? '' : 's'}. This is a count of on-screen steps, not a validated workload score.
             </p>
-            <div className="mt-3 rounded-xl border border-line/80 bg-white/75 p-3">
-              <h4 className="text-[0.66rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Consumable Resource Impact</h4>
+            <div className="mt-3 rounded-xl border border-line/80 bg-white p-3">
+              <h4 className="text-[0.66rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">Consumable Resource Impact</h4>
               {supplyActions.length > 0 ? (
                 <ul className="mt-1.5 space-y-1">
                   {supplyActions.map((action) => (
@@ -355,7 +347,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
                   />
                 ))}
               </div>
-              <span className="text-[0.62rem] font-bold capitalize text-ink">{card.uncertainty.tier}</span>
+              <span className="text-[0.62rem] font-semibold capitalize text-ink">{card.uncertainty.tier}</span>
             </div>
 
             {card.uncertainty.missingInfo.length > 0 && (
@@ -379,7 +371,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
               <ol className="space-y-2">
                 {card.recommendedActions.map((action, index) => (
                   <li key={`${card.id}-${action.id}-${index}`} className="flex gap-2.5 text-[0.76rem] leading-relaxed text-ink-2">
-                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-instrument-soft text-[0.56rem] font-bold text-instrument-deep tabular-nums">
+                    <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-instrument-soft text-[0.56rem] font-semibold text-instrument-deep tabular-nums">
                       {index + 1}
                     </span>
                     <span>
@@ -475,14 +467,14 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
     </article>
     {packetOpen && telemetry && setting && createPortal(
       <div
-        className="fixed inset-0 z-[120] flex items-center justify-center bg-[#06152b]/65 p-3 backdrop-blur-sm sm:p-6"
+        className="fixed inset-0 z-[120] flex items-center justify-center bg-black/40 p-3 sm:p-6"
         onMouseDown={(event) => { if (event.target === event.currentTarget) setPacketOpen(false); }}
       >
-        <section role="dialog" aria-modal="true" aria-labelledby={`downlink-title-${rawId}`} className="flex max-h-[92dvh] w-[min(820px,100%)] flex-col overflow-hidden rounded-2xl border border-white/70 bg-white shadow-float">
+        <section role="dialog" aria-modal="true" aria-labelledby={`downlink-title-${rawId}`} className="flex max-h-[92dvh] w-[min(820px,100%)] flex-col overflow-hidden rounded-[18px] border border-black/[0.07] bg-white shadow-float">
           <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
             <div>
               <p className="section-kicker">Draft · not transmitted</p>
-              <h2 id={`downlink-title-${rawId}`} className="font-display text-[0.95rem] font-extrabold text-ink">Flight Surgeon Telemetry Downlink Packet</h2>
+              <h2 id={`downlink-title-${rawId}`} className="font-display text-[0.95rem] font-semibold text-ink">Flight Surgeon Telemetry Downlink Packet</h2>
             </div>
             <button type="button" onClick={() => setPacketOpen(false)} className="icon-btn" aria-label="Close telemetry packet">
               <X className="h-4 w-4" aria-hidden="true" />
@@ -490,12 +482,12 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
           </header>
           <div className="scroll-thin space-y-3 overflow-y-auto p-4">
             <section className="rounded-xl border border-line p-3">
-              <h3 className="text-[0.7rem] font-bold text-ink">Vehicle &amp; OWLT (One-Way Light Time)</h3>
+              <h3 className="text-[0.7rem] font-semibold text-ink">Vehicle &amp; OWLT (One-Way Light Time)</h3>
               <p className="mt-1 text-[0.72rem] text-ink-2">{setting.label} · {setting.oneWayDelayMinutes === 0 ? '0 min (near-real-time link)' : setting.oneWayDelayMinutes < 1 ? `${(setting.oneWayDelayMinutes * 60).toFixed(1)} sec` : `${setting.oneWayDelayMinutes} min`} one way. Vehicle/habitat identifier is not configured.</p>
             </section>
 
             <section className="rounded-xl border border-line p-3">
-              <h3 className="text-[0.7rem] font-bold text-ink">Crew Baseline vs. 7-Day Adaptation-Adjusted Trajectory</h3>
+              <h3 className="text-[0.7rem] font-semibold text-ink">Crew Baseline vs. 7-Day Adaptation-Adjusted Trajectory</h3>
               <div className="mt-2 overflow-x-auto">
                 <table className="data-table min-w-[560px]">
                   <thead><tr><th>Measure</th><th>Pre-flight baseline</th><th>7-day expected adaptation</th><th>7-day observed mean</th></tr></thead>
@@ -509,7 +501,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
             </section>
 
             <section className="rounded-xl border border-line p-3">
-              <h3 className="text-[0.7rem] font-bold text-ink">CUSUM Onset &amp; Cross-Domain Syndrome Cluster</h3>
+              <h3 className="text-[0.7rem] font-semibold text-ink">CUSUM Onset &amp; Cross-Domain Syndrome Cluster</h3>
               <p className="mt-1 text-[0.68rem] text-ink-2">Domains: {card.domains.join(', ') || 'none recorded'} · Finding: {card.kind} · Alert day: {card.day}</p>
               <ul className="mt-2 grid gap-1 sm:grid-cols-2">
                 {card.indicators.map((id) => {
@@ -522,7 +514,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
             </section>
 
             <section className="rounded-xl border border-line p-3">
-              <h3 className="text-[0.7rem] font-bold text-ink">Onboard Consumables &amp; Hardware Status</h3>
+              <h3 className="text-[0.7rem] font-semibold text-ink">Onboard Consumables &amp; Hardware Status</h3>
               <ul className="mt-2 grid gap-1 sm:grid-cols-2">
                 {SUPPLIES.map((supply) => <li key={supply.id} className="text-[0.66rem] text-ink-soft">{supply.label}: {telemetry.supplies[supply.id] ? 'aboard' : 'not marked aboard'}</li>)}
               </ul>
@@ -530,7 +522,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, m
             </section>
 
             <section className="rounded-xl border border-line p-3">
-              <h3 className="text-[0.7rem] font-bold text-ink">CMO Actions Executed Prior to Ground Reply</h3>
+              <h3 className="text-[0.7rem] font-semibold text-ink">CMO Actions Executed Prior to Ground Reply</h3>
               <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">No completed action record is attached to this alert. The card&apos;s recommended actions are guidance and are not represented as executed.</p>
             </section>
           </div>

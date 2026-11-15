@@ -10,7 +10,7 @@ import {
   Stethoscope,
   Timer,
   X,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { AlertCard, DomainId, IndicatorId } from '@/contracts/types';
 import { DOMAIN_LABELS, DOMAIN_ORDER, INDICATORS } from '@/contracts/indicators';
 import { MISSION_DAYS } from '@/contracts/constants';
@@ -57,19 +57,19 @@ const ATTENTION_TONES: Record<
   { border: string; rail: string; chip: string; glow: string }
 > = {
   urgent: {
-    border: 'border-status-urgent/30 ring-1 ring-status-urgent/10',
+    border: 'border-status-urgent/25',
     rail: 'bg-status-urgent',
     chip: 'bg-status-urgent-soft text-status-urgent',
     glow: 'bg-status-urgent',
   },
   review: {
-    border: 'border-status-review/25',
+    border: 'border-status-review/20',
     rail: 'bg-status-review',
     chip: 'bg-status-review-soft text-status-review',
     glow: 'bg-status-review',
   },
   watch: {
-    border: 'border-status-watch/25',
+    border: 'border-status-watch/20',
     rail: 'bg-status-watch',
     chip: 'bg-status-watch-soft text-status-watch',
     glow: 'bg-status-watch',
@@ -189,7 +189,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
     return (
       <div className="page-wrap">
         <div className="panel mx-auto max-w-xl px-6 py-12 text-center">
-          <h1 className="font-display text-2xl font-extrabold text-ink">Mission health</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">Mission health</h1>
           <p className="mt-2 text-sm text-ink-soft">
             Could not load simulated crew data. Reload the page to try again.
           </p>
@@ -202,7 +202,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
     return (
       <div className="page-wrap">
         <div className="panel mx-auto max-w-xl px-6 py-12 text-center" role="status">
-          <h1 className="font-display text-2xl font-extrabold text-ink">Mission health</h1>
+          <h1 className="font-display text-2xl font-semibold text-ink">Mission health</h1>
           <p className="mt-2 text-sm text-ink-soft">
             {loading ? 'Loading simulated crew data…' : 'No crew data is available.'}
           </p>
@@ -332,16 +332,15 @@ export function TodayPage({ initialDay }: TodayPageProps) {
       <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1.12fr)_minmax(0,0.88fr)]">
         <section
           aria-label="Astronaut body map and domains"
-          className="relative overflow-hidden rounded-[24px] border border-white/85 bg-[linear-gradient(158deg,rgba(255,255,255,0.92)_0%,rgba(240,247,255,0.82)_58%,rgba(231,241,253,0.9)_100%)] shadow-float backdrop-blur-xl"
+          className="relative overflow-hidden rounded-[18px] border border-line bg-white shadow-card"
         >
-          <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(120%_90%_at_82%_-10%,rgba(79,141,235,0.18),transparent_58%)]" aria-hidden="true" />
           <div className="relative flex flex-wrap items-start justify-between gap-3 px-4 pb-0 pt-4">
             <div className="flex items-center gap-2.5">
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl border border-white bg-white/80 text-instrument shadow-xs">
-                <Activity className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-instrument-soft text-instrument">
+                <Activity className="h-[18px] w-[18px]" weight="fill" aria-hidden="true" />
               </span>
               <div>
-                <h2 className="font-display text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">Body health overview</h2>
+                <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.025em] text-ink">Body health overview</h2>
                 <p className="text-[0.66rem] text-ink-soft">Risk-tinted live scan · drag to rotate</p>
               </div>
             </div>
@@ -370,7 +369,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             />
 
             <div className="flex min-w-0 flex-col gap-1 px-3 pb-4 pt-1 md:order-1 md:pl-4">
-              <p className="mb-1 px-2.5 text-[0.6rem] font-bold uppercase tracking-[0.13em] text-ink-faint">
+              <p className="mb-1 px-2.5 text-[0.6rem] font-semibold uppercase tracking-[0.13em] text-ink-faint">
                 Health domains
               </p>
               <ul className="flex flex-col gap-0.5">
@@ -387,7 +386,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             </div>
           </div>
 
-          <div className="relative flex flex-wrap items-center justify-between gap-2 border-t border-white/70 px-4 py-2.5">
+          <div className="relative flex flex-wrap items-center justify-between gap-2 border-t border-line px-4 py-2.5">
             <span className="inline-flex items-center gap-1.5 text-[0.62rem] font-medium text-ink-soft">
               <span className="h-1.5 w-1.5 rounded-full bg-status-ok" aria-hidden="true" />
               Computed from {monitoredCount} indicators and {cards.length} guidance cards
@@ -408,29 +407,28 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             onPlayDemo={playDemoStory}
           />
 
-          <section className="relative overflow-hidden rounded-[20px] border border-white/15 bg-[linear-gradient(155deg,#17365f_0%,#0d2344_52%,#08182c_100%)] p-4 text-white shadow-float">
-            <div className="pointer-events-none absolute -right-12 -top-14 h-44 w-44 rounded-full border border-white/10" aria-hidden="true" />
-            <div className="pointer-events-none absolute -bottom-20 -left-16 h-48 w-48 rounded-full bg-[radial-gradient(circle,rgba(88,146,238,0.4),rgba(88,146,238,0)_70%)]" aria-hidden="true" />
+          <section className="relative overflow-hidden rounded-[16px] border border-white/10 bg-[linear-gradient(180deg,#2c2c2e_0%,#1c1c1e_100%)] p-4 text-white shadow-card">
+            <div className="pointer-events-none absolute inset-x-0 -top-16 h-32 bg-[radial-gradient(60%_100%_at_50%_100%,rgba(255,255,255,0.1),transparent_75%)]" aria-hidden="true" />
             <div className="relative flex items-start justify-between gap-3">
               <div>
-                <p className="text-[0.58rem] font-bold uppercase tracking-[0.15em] text-blue-200/80">
+                <p className="text-[0.58rem] font-medium uppercase tracking-[0.1em] text-white/50">
                   Ground-response window
                 </p>
-                <p className="mt-1 font-display text-[1.65rem] font-extrabold leading-none tracking-[-0.04em] tabular-nums">
+                <p className="mt-1 font-display text-[1.65rem] font-semibold leading-none tracking-[-0.035em] tabular-nums">
                   ≥ {replyWindow} min
                 </p>
-                <p className="mt-1.5 max-w-[26ch] text-[0.64rem] leading-relaxed text-blue-100/70">
+                <p className="mt-1.5 max-w-[26ch] text-[0.64rem] leading-relaxed text-white/55">
                   Estimated time before ground can reply in {setting.label.toLowerCase()}. Escalation
                   text adapts to this window.
                 </p>
               </div>
-              <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-white/10 text-blue-100">
-                <Timer className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+              <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-white/10 text-white/80">
+                <Timer className="h-[18px] w-[18px]" weight="fill" aria-hidden="true" />
               </span>
             </div>
             <div className="relative mt-3 flex items-center gap-1.5">
-              <span className="chip !border-white/15 !bg-white/10 !text-blue-50">2 × delay + 10</span>
-              <span className="chip !border-white/15 !bg-white/10 !text-blue-50">{setting.radiationRateMsvPerDay} mSv/day expected</span>
+              <span className="chip !border-white/10 !bg-white/10 !text-white/80">2 × delay + 10</span>
+              <span className="chip !border-white/10 !bg-white/10 !text-white/80">{setting.radiationRateMsvPerDay} mSv/day expected</span>
             </div>
           </section>
         </div>
@@ -451,7 +449,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
           />
           <div className="mt-3 flex flex-wrap items-end gap-3">
             <div>
-              <p className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Resting heart rate</p>
+              <p className="text-[0.58rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">Resting heart rate</p>
               <div className="flex items-baseline gap-1.5">
                 <span className="metric-number text-[1.6rem] leading-none">
                   {analysis.indicators.heart_rate.lastValue?.toFixed(0) ?? '—'}
@@ -489,13 +487,13 @@ export function TodayPage({ initialDay }: TodayPageProps) {
               <Link
                 key={action.to}
                 to={action.to}
-                className="group flex items-center gap-3 rounded-[16px] border border-white/80 bg-white/76 px-3.5 py-3 shadow-card backdrop-blur-sm transition-all hover:-translate-y-0.5 hover:bg-white hover:shadow-float"
+                className="group flex items-center gap-3 rounded-[14px] border border-line bg-white px-3.5 py-3 shadow-xs transition-all hover:-translate-y-px hover:shadow-card"
               >
-                <span className="flex h-9 w-9 items-center justify-center rounded-xl bg-instrument-soft text-instrument">
-                  <Icon className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+                <span className="flex h-9 w-9 items-center justify-center rounded-[10px] bg-instrument-soft text-instrument">
+                  <Icon className="h-[18px] w-[18px]" weight="fill" aria-hidden="true" />
                 </span>
                 <span className="min-w-0 flex-1">
-                  <span className="block text-[0.78rem] font-semibold text-ink">{action.label}</span>
+                  <span className="block text-[0.78rem] font-medium text-ink">{action.label}</span>
                   <span className="block text-[0.64rem] text-ink-soft">{action.hint}</span>
                 </span>
                 <ArrowRight className="h-4 w-4 text-ink-faint transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
@@ -503,9 +501,9 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             );
           })}
 
-          <div className="relative overflow-hidden rounded-[16px] border border-line bg-white/70 px-3.5 py-3">
+          <div className="relative overflow-hidden rounded-[16px] border border-line bg-surface2 px-3.5 py-3">
             <div className="flex items-center justify-between">
-              <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Monitored coverage</p>
+              <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">Monitored coverage</p>
               <span className="text-[0.6rem] font-semibold text-status-ok">{stableDomains} steady</span>
             </div>
             <div className="mt-2 flex h-1.5 overflow-hidden rounded-full bg-surface3">
@@ -553,11 +551,11 @@ export function TodayPage({ initialDay }: TodayPageProps) {
         />
 
         {attentionCards.length === 0 ? (
-          <div className="flex flex-col items-center gap-2 rounded-[20px] border border-dashed border-line bg-white/60 px-6 py-10 text-center">
-            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-status-ok-soft text-status-ok">
-              <ShieldCheck className="h-5 w-5" aria-hidden="true" />
+          <div className="flex flex-col items-center gap-2 rounded-[16px] border border-dashed border-line-strong bg-white px-6 py-10 text-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-[12px] bg-status-ok-soft text-status-ok">
+              <ShieldCheck className="h-5 w-5" weight="fill" aria-hidden="true" />
             </span>
-            <p className="text-sm font-semibold text-ink">
+            <p className="text-sm font-medium text-ink">
               Nothing needs attention on day {viewDay}. Keep logging your measurements.
             </p>
             <Link to="/log" className="btn btn-primary mt-2">
@@ -579,22 +577,17 @@ export function TodayPage({ initialDay }: TodayPageProps) {
                   data-attention-severity={card.severity}
                   onClick={(event) => openAttention(card, event.currentTarget)}
                   className={cn(
-                    'group relative flex min-h-[176px] w-full flex-col overflow-hidden rounded-[20px] border bg-white/82 p-4 text-left shadow-card backdrop-blur-sm transition-all duration-200 hover:-translate-y-0.5 hover:bg-white hover:shadow-float focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-instrument focus-visible:ring-offset-2',
+                    'group relative flex min-h-[176px] w-full flex-col overflow-hidden rounded-[16px] border bg-white p-4 text-left shadow-xs transition-all duration-200 hover:-translate-y-px hover:shadow-card focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-instrument focus-visible:ring-offset-2',
                     tone.border,
                   )}
                   aria-haspopup="dialog"
                   aria-label={`Open alert details: ${card.title}`}
                 >
-                  <span className={cn('absolute inset-x-0 top-0 h-[3px]', tone.rail)} aria-hidden="true" />
-                  <span
-                    className={cn('pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl', tone.glow)}
-                    aria-hidden="true"
-                  />
                   <span className="relative flex items-start justify-between gap-2">
                     <SeverityMark severity={card.severity} />
                     <span className={cn('chip capitalize', tone.chip)}>{severityLabel(card.severity)}</span>
                   </span>
-                  <span className="relative mt-3 line-clamp-2 font-display text-[0.92rem] font-bold leading-snug tracking-[-0.02em] text-ink">
+                  <span className="relative mt-3 line-clamp-2 font-display text-[0.92rem] font-semibold leading-snug tracking-[-0.02em] text-ink">
                     {card.title}
                   </span>
                   <span className="relative mt-1.5 line-clamp-2 text-[0.72rem] leading-relaxed text-ink-soft">
@@ -624,10 +617,10 @@ export function TodayPage({ initialDay }: TodayPageProps) {
         )}
 
         {infoCards.length > 0 && (
-          <details className="group overflow-hidden rounded-[18px] border border-line bg-white/62">
+          <details className="group overflow-hidden rounded-[14px] border border-line bg-white">
             <summary className="flex min-h-[44px] cursor-pointer list-none items-center justify-between gap-2 px-4 py-3">
-              <span className="flex items-center gap-2 text-[0.78rem] font-semibold text-ink-soft">
-                <Sparkles className="h-4 w-4 text-instrument/70" aria-hidden="true" />
+              <span className="flex items-center gap-2 text-[0.78rem] font-medium text-ink-soft">
+                <Sparkles className="h-4 w-4 text-instrument" weight="fill" aria-hidden="true" />
                 Expected changes ({infoCards.length})
               </span>
               <ArrowRight className="h-4 w-4 text-ink-faint transition-transform group-open:rotate-90" aria-hidden="true" />
@@ -656,7 +649,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
       {activeCard &&
         createPortal(
           <div
-            className="attention-overlay fixed inset-0 z-[80] flex items-center justify-center bg-[#06152b]/55 p-3 backdrop-blur-md sm:p-6"
+            className="attention-overlay fixed inset-0 z-[80] flex items-center justify-center bg-black/35 p-3 sm:p-6"
             onMouseDown={(event) => {
               if (event.target === event.currentTarget) setActiveCard(null);
             }}
@@ -667,15 +660,15 @@ export function TodayPage({ initialDay }: TodayPageProps) {
               aria-modal="true"
               aria-label={`Alert details: ${activeCard.title}`}
               tabIndex={-1}
-              className="attention-dialog flex max-h-[92dvh] w-[min(780px,100%)] flex-col overflow-hidden rounded-[26px] border border-white/70 bg-[linear-gradient(160deg,rgba(255,255,255,0.97),rgba(239,246,255,0.94))] shadow-[0_40px_120px_-30px_rgba(3,15,35,0.7)] backdrop-blur-2xl"
+              className="attention-dialog flex max-h-[92dvh] w-[min(780px,100%)] flex-col overflow-hidden rounded-[18px] border border-black/[0.08] bg-white shadow-[0_32px_100px_-32px_rgba(0,0,0,0.45)]"
             >
-              <div className="flex items-center justify-between gap-3 border-b border-white/80 px-4 py-3 sm:px-5">
+              <div className="flex items-center justify-between gap-3 border-b border-line px-4 py-2.5 sm:px-5">
                 <div className="flex items-center gap-2">
                   <span
                     className={cn('h-2 w-2 rounded-full', ATTENTION_TONES[activeCard.severity].rail)}
                     aria-hidden="true"
                   />
-                  <p className="text-[0.62rem] font-bold uppercase tracking-[0.14em] text-ink-soft">
+                  <p className="text-[0.62rem] font-semibold uppercase tracking-[0.14em] text-ink-soft">
                     Attention detail
                   </p>
                 </div>

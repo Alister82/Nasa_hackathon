@@ -1,5 +1,5 @@
 import React from 'react';
-import { Crosshair, Info, Radar } from 'lucide-react';
+import { Crosshair, Info, Radar } from '@/ui/components/icons';
 import type { CrewDataset, DailyFlag, SystemId } from '@/contracts/types';
 
 export interface SystemsComparisonProps {
@@ -59,14 +59,10 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
 
   return (
     <section className="panel overflow-hidden" aria-label="Detection system comparison">
-      <header className="relative overflow-hidden border-b border-line/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.96),rgba(240,247,255,0.9))] px-4 py-3.5">
-        <div
-          className="pointer-events-none absolute -right-10 -top-14 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(78,139,235,0.18),transparent_70%)]"
-          aria-hidden="true"
-        />
-        <div className="relative flex flex-wrap items-start justify-between gap-3">
+      <header className="border-b border-line/80 bg-surface2 px-4 py-3.5">
+        <div className="flex flex-wrap items-start justify-between gap-3">
           <div>
-            <h2 className="font-display text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">
+            <h2 className="font-display text-[1.05rem] font-semibold tracking-[-0.03em] text-ink">
               Who flags first
             </h2>
             <p className="mt-0.5 max-w-xl text-[0.68rem] leading-relaxed text-ink-soft">
@@ -92,7 +88,7 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
         {stats.map((system) => (
           <article
             key={system.systemId}
-            className="rounded-[14px] border border-line bg-white/75 px-3 py-2.5"
+            className="rounded-[12px] border border-line bg-surface2 px-3 py-2.5"
           >
             <div className="flex items-center gap-1.5">
               <span
@@ -100,7 +96,7 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
                 style={{ backgroundColor: SYSTEM_COLORS[system.systemId] }}
                 aria-hidden="true"
               />
-              <p className="text-[0.72rem] font-bold text-ink">{system.label}</p>
+              <p className="text-[0.72rem] font-semibold text-ink">{system.label}</p>
             </div>
             <p className="metric-number mt-1 text-[1.25rem] leading-none">{system.firstFlagDay}</p>
             <p className="mt-1 text-[0.6rem] text-ink-soft">
@@ -151,7 +147,7 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
             Flag timeline across mission days 1 to {dataset.missionDays}
           </span>
           {onsetDay !== null && (
-            <span className="font-bold text-status-urgent">Known onset: day {onsetDay}</span>
+            <span className="font-semibold text-status-urgent">Known onset: day {onsetDay}</span>
           )}
         </div>
 
@@ -168,7 +164,7 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
           <div className="flex flex-col gap-2.5">
             {stats.map((system) => (
               <div key={system.systemId} className="flex items-center gap-2.5">
-                <span className="w-24 shrink-0 truncate text-[0.64rem] font-bold text-ink sm:w-28">
+                <span className="w-24 shrink-0 truncate text-[0.64rem] font-semibold text-ink sm:w-28">
                   {system.label}
                 </span>
                 <div className="relative h-3 flex-1 overflow-hidden rounded-full border border-line bg-white">

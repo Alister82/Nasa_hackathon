@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, ExternalLink, Radio, Satellite, Stethoscope, Waves } from 'lucide-react';
+import { Activity, ExternalLink, Radio, Satellite, Stethoscope, Waves } from '@/ui/components/icons';
 import { MISSION_SETTINGS, SOURCES } from '@/guidance';
 
 const GROUNDING = [
@@ -33,7 +33,7 @@ export function ScientificGroundingPanel() {
   return (
     <section aria-labelledby="scientific-grounding-heading" className="panel overflow-hidden">
       <header className="border-b border-line/80 bg-surface2/50 px-4 py-3">
-        <h2 id="scientific-grounding-heading" className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+        <h2 id="scientific-grounding-heading" className="font-display text-[0.9rem] font-semibold tracking-[-0.02em] text-ink">
           Scientific Grounding &amp; NASA OSDR / ExMC Architecture
         </h2>
         <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-soft">
@@ -44,7 +44,7 @@ export function ScientificGroundingPanel() {
       <div className="grid gap-0 divide-y divide-line/70 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
         {GROUNDING.map(({ title, icon: Icon, body, sources }) => (
           <article key={title} className="p-4">
-            <h3 className="flex items-center gap-2 text-[0.74rem] font-bold text-ink">
+            <h3 className="flex items-center gap-2 text-[0.74rem] font-semibold text-ink">
               <Icon className="h-4 w-4 shrink-0 text-instrument" aria-hidden="true" />
               {title}
             </h3>
@@ -72,7 +72,7 @@ export function ScientificGroundingPanel() {
       </div>
 
       <div className="border-t border-line/80 bg-surface2/35 px-4 py-3">
-        <h3 className="flex items-center gap-2 text-[0.72rem] font-bold text-ink">
+        <h3 className="flex items-center gap-2 text-[0.72rem] font-semibold text-ink">
           <Radio className="h-3.5 w-3.5 text-instrument" aria-hidden="true" />
           Radiation setting references
         </h3>
@@ -80,8 +80,8 @@ export function ScientificGroundingPanel() {
           {Object.values(MISSION_SETTINGS).map((setting) => {
             const source = SOURCES[setting.radiationSourceId];
             return (
-              <li key={setting.id} className="rounded-lg border border-line/75 bg-white/55 p-2.5 text-[0.64rem] leading-relaxed text-ink-soft">
-                <span className="font-bold text-ink">{setting.label}: {setting.radiationRateMsvPerDay} mSv/day (simulator setting).</span>{' '}
+              <li key={setting.id} className="rounded-[10px] border border-line/75 bg-surface2 p-2.5 text-[0.64rem] leading-relaxed text-ink-soft">
+                <span className="font-semibold text-ink">{setting.label}: {setting.radiationRateMsvPerDay} mSv/day (simulator setting).</span>{' '}
                 {setting.radiationBenchmark}{' '}
                 {source?.url && <a href={source.url} target="_blank" rel="noopener noreferrer" className="font-semibold text-instrument hover:underline">Source</a>}
               </li>

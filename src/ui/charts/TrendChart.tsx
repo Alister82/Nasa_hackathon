@@ -60,8 +60,8 @@ function ChartTooltip({
 }) {
   if (!active || !payload || payload.length === 0) return null;
   return (
-    <div className="rounded-xl border border-white/90 bg-white/97 px-3 py-2 shadow-float backdrop-blur">
-      <p className="mb-1 text-[0.6rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+    <div className="rounded-[10px] border border-line bg-white px-3 py-2 shadow-float">
+      <p className="mb-1 text-[0.6rem] font-semibold uppercase tracking-[0.1em] text-ink-faint">
         Mission day {label}
       </p>
       <ul className="space-y-1">
@@ -77,7 +77,7 @@ function ChartTooltip({
                 aria-hidden="true"
               />
               <span className="font-medium text-ink-soft">{spec.label}</span>
-              <span className="ml-auto font-bold tabular-nums text-ink">
+              <span className="ml-auto font-semibold tabular-nums text-ink">
                 {Number.isFinite(numeric) ? numeric.toFixed(spec.decimals) : '—'}
                 {spec.unit.startsWith('score') ? '' : ` ${spec.unit}`}
               </span>

@@ -9,7 +9,7 @@ import {
   Save,
   Stethoscope,
   UserRound,
-} from 'lucide-react';
+} from '@/ui/components/icons';
 import type { AlertCard, LogEntry } from '@/contracts/types';
 import { addLogEntry, listLogEntries } from '@/storage';
 import { useAppState } from '@/app/AppState';
@@ -126,7 +126,7 @@ export function JournalPage() {
           <div className="flex items-start gap-2.5">
             <SeverityMark severity={card.severity} />
             <div className="min-w-0">
-              <p className="text-[0.6rem] font-bold uppercase tracking-[0.12em] text-instrument-deep">
+              <p className="text-[0.6rem] font-semibold uppercase tracking-[0.12em] text-instrument-deep">
                 From alert · day {card.day}
               </p>
               <p className="mt-0.5 text-[0.82rem] font-semibold text-ink">{card.title}</p>
@@ -145,7 +145,7 @@ export function JournalPage() {
               <NotebookPen className="h-4 w-4" aria-hidden="true" />
             </span>
             <div>
-              <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+              <h2 className="font-display text-[0.95rem] font-semibold tracking-[-0.02em] text-ink">
                 Record observation or action
               </h2>
               <p className="text-[0.64rem] text-ink-soft">Saved against mission day {viewDay}.</p>
@@ -231,7 +231,7 @@ export function JournalPage() {
                   ref={statusRef}
                   tabIndex={-1}
                   role="status"
-                  className="inline-flex items-center gap-1 text-[0.7rem] font-bold text-status-ok"
+                  className="inline-flex items-center gap-1 text-[0.7rem] font-semibold text-status-ok"
                 >
                   <CheckCircle2 className="h-3.5 w-3.5" aria-hidden="true" />
                   Saved for day {viewDay}.
@@ -259,7 +259,7 @@ export function JournalPage() {
             </dl>
           </section>
 
-          <section className="rounded-[18px] border border-line bg-white/65 p-3.5">
+          <section className="rounded-[16px] border border-line bg-surface2 p-3.5">
             <p className="inline-flex items-center gap-1.5 text-[0.68rem] font-semibold text-ink">
               <Stethoscope className="h-3.5 w-3.5 text-instrument" aria-hidden="true" />
               Why write it down?
@@ -274,7 +274,7 @@ export function JournalPage() {
           </section>
 
           <section className="rounded-[18px] border border-status-watch/25 bg-status-watch-soft/60 p-3.5">
-            <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-watch">
+            <p className="text-[0.62rem] font-semibold uppercase tracking-[0.1em] text-status-watch">
               Privacy
             </p>
             <p className="mt-1 text-[0.66rem] leading-relaxed text-ink-2">
@@ -327,7 +327,7 @@ export function JournalPage() {
                 </span>
                 <div className="min-w-0 flex-1">
                   <div className="flex flex-wrap items-center gap-x-2 gap-y-1">
-                    <span className="text-[0.74rem] font-bold text-ink">Day {entry.day}</span>
+                    <span className="text-[0.74rem] font-semibold text-ink">Day {entry.day}</span>
                     <span className="chip chip-neutral !py-0.5 !text-[0.56rem]">
                       {reviewerLabel(entry.reviewedBy)}
                     </span>

@@ -10,8 +10,16 @@ export default {
         surface: 'var(--surface)',
         surface2: 'var(--surface-2)',
         surface3: 'var(--surface-3)',
+        s2: 'var(--surface-2)',
+        s3: 'var(--surface-3)',
+        blue: {
+          DEFAULT: 'var(--instrument)',
+          deep: 'var(--instrument-deep)',
+          soft: 'var(--instrument-soft)',
+        },
         ink: {
           DEFAULT: 'var(--ink)',
+          2: 'var(--ink-2)',
           soft: 'var(--ink-soft)',
           faint: 'var(--ink-faint)',
         },
@@ -54,14 +62,14 @@ export default {
         },
       },
       fontFamily: {
-        sans: ['"Inter Variable"', 'Inter', 'system-ui', '-apple-system', 'Segoe UI', 'Roboto', 'sans-serif'],
-        display: ['"Manrope Variable"', 'Manrope', '"Inter Variable"', 'system-ui', 'sans-serif'],
+        sans: ['"SF Pro Text"', '"SF Pro Display"', '-apple-system', 'BlinkMacSystemFont', '"Inter Variable"', 'Inter', '"Segoe UI Variable Text"', '"Segoe UI"', 'system-ui', 'sans-serif'],
+        display: ['"SF Pro Display"', '"SF Pro Text"', '-apple-system', 'BlinkMacSystemFont', '"Inter Variable"', 'Inter', 'system-ui', 'sans-serif'],
       },
       borderRadius: {
         chip: '8px',
-        input: '12px',
-        sheet: '18px',
-        panel: '22px',
+        input: '10px',
+        sheet: '16px',
+        panel: '18px',
         pill: '9999px',
       },
       boxShadow: {
@@ -72,7 +80,7 @@ export default {
       },
       backgroundImage: {
         'app-wash':
-          'radial-gradient(1100px 600px at 78% -12%, rgba(255,255,255,0.96) 0%, rgba(255,255,255,0) 62%), radial-gradient(900px 700px at -8% 18%, rgba(198,222,255,0.42) 0%, rgba(198,222,255,0) 58%), linear-gradient(168deg, #fbfdff 0%, #eef5ff 44%, #e7f0fb 100%)',
+          'radial-gradient(1200px 680px at 50% -18%, #ffffff 0%, rgba(255,255,255,0) 62%), linear-gradient(180deg, #f7f7f9 0%, #f5f5f7 58%, #f2f2f5 100%)',
       },
       screens: {
         '3xl': '1680px',

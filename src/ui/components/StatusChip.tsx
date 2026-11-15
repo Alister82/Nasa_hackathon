@@ -1,6 +1,6 @@
 import React from 'react';
-import { Check, Eye, Flag, Info, TriangleAlert } from 'lucide-react';
-import type { LucideIcon } from 'lucide-react';
+import { Check, Eye, Flag, Info, TriangleAlert } from '@/ui/components/icons';
+import type { IconComponent } from '@/ui/components/icons';
 import { cn } from '@/ui/lib/format';
 
 export type StatusType = 'ok' | 'info' | 'watch' | 'review' | 'urgent';
@@ -16,7 +16,7 @@ const STATUS_CONFIG: Record<
   {
     word: string;
     className: string;
-    Icon: LucideIcon;
+    Icon: IconComponent;
   }
 > = {
   ok: { word: 'Steady', className: 'chip-ok', Icon: Check },
@@ -33,7 +33,7 @@ export function StatusChip({ status, label, className }: StatusChipProps) {
 
   return (
     <span className={cn('chip', config.className, className)} role="status">
-      <Icon className="h-3 w-3 shrink-0" strokeWidth={2.4} aria-hidden={true} />
+      <Icon className="h-3 w-3 shrink-0" weight="bold" aria-hidden={true} />
       <span>{displayText}</span>
     </span>
   );

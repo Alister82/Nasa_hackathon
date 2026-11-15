@@ -1,4 +1,17 @@
-<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64">
-  <rect width="64" height="64" rx="12" fill="#1D56B8"/>
-  <path d="M16 32h8l6-12 8 24 6-12h10" fill="none" stroke="#FFFFFF" stroke-width="4" stroke-linecap="round" stroke-linejoin="round"/>
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 48 48" width="64" height="64">
+  <defs>
+    <linearGradient id="base" x1="10" y1="2" x2="38" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#4A4A4D"/>
+      <stop offset="0.55" stop-color="#2C2C2E"/>
+      <stop offset="1" stop-color="#1C1C1E"/>
+    </linearGradient>
+    <linearGradient id="sheen" x1="24" y1="1" x2="24" y2="25" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#FFFFFF" stop-opacity="0.18"/>
+      <stop offset="1" stop-color="#FFFFFF" stop-opacity="0"/>
+    </linearGradient>
+  </defs>
+  <rect x="1" y="1" width="46" height="46" rx="11.5" fill="url(#base)"/>
+  <rect x="1" y="1" width="46" height="25" rx="11.5" fill="url(#sheen)"/>
+  <rect x="1.5" y="1.5" width="45" height="45" rx="11" fill="none" stroke="#FFFFFF" stroke-opacity="0.12"/>
+  <path d="M15.7 16.4 24 32.2l8.3-15.8" fill="none" stroke="#FFFFFF" stroke-width="3.3" stroke-linecap="round" stroke-linejoin="round"/>
 </svg>
