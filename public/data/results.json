@@ -20,22 +20,22 @@
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 124,
-          "falseAlarmsPer100Days": 0.6888888888888889
+          "falseEpisodes": 111,
+          "falseAlarmsPer100Days": 0.6166666666666667
         },
         "threshold": {
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 391,
-          "falseAlarmsPer100Days": 2.172222222222222
+          "falseEpisodes": 894,
+          "falseAlarmsPer100Days": 4.966666666666667
         },
         "zscore": {
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 1191,
-          "falseAlarmsPer100Days": 6.616666666666666
+          "falseEpisodes": 1173,
+          "falseAlarmsPer100Days": 6.516666666666667
         }
       }
     },
@@ -46,23 +46,23 @@
         "vigil": {
           "eventCount": 100,
           "detectedCount": 100,
-          "medianDelayDays": 16,
-          "falseEpisodes": 47,
-          "falseAlarmsPer100Days": 0.6811594202898551
+          "medianDelayDays": 17,
+          "falseEpisodes": 45,
+          "falseAlarmsPer100Days": 0.6521739130434783
         },
         "threshold": {
           "eventCount": 100,
-          "detectedCount": 99,
-          "medianDelayDays": 19,
-          "falseEpisodes": 164,
-          "falseAlarmsPer100Days": 2.3768115942028984
+          "detectedCount": 100,
+          "medianDelayDays": 8.5,
+          "falseEpisodes": 353,
+          "falseAlarmsPer100Days": 5.115942028985507
         },
         "zscore": {
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 5.5,
-          "falseEpisodes": 450,
-          "falseAlarmsPer100Days": 6.521739130434782
+          "falseEpisodes": 434,
+          "falseAlarmsPer100Days": 6.2898550724637685
         }
       }
     },
@@ -74,22 +74,22 @@
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 127,
-          "falseAlarmsPer100Days": 0.7055555555555556
+          "falseEpisodes": 113,
+          "falseAlarmsPer100Days": 0.6277777777777778
         },
         "threshold": {
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 465,
-          "falseAlarmsPer100Days": 2.5833333333333335
+          "falseEpisodes": 939,
+          "falseAlarmsPer100Days": 5.216666666666667
         },
         "zscore": {
           "eventCount": 0,
           "detectedCount": 0,
           "medianDelayDays": null,
-          "falseEpisodes": 1245,
-          "falseAlarmsPer100Days": 6.916666666666667
+          "falseEpisodes": 1227,
+          "falseAlarmsPer100Days": 6.816666666666666
         }
       }
     },
@@ -101,22 +101,22 @@
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 20,
-          "falseEpisodes": 69,
-          "falseAlarmsPer100Days": 0.7340425531914894
+          "falseEpisodes": 63,
+          "falseAlarmsPer100Days": 0.6702127659574468
         },
         "threshold": {
           "eventCount": 100,
-          "detectedCount": 97,
-          "medianDelayDays": 25,
-          "falseEpisodes": 215,
-          "falseAlarmsPer100Days": 2.2872340425531914
+          "detectedCount": 100,
+          "medianDelayDays": 14,
+          "falseEpisodes": 479,
+          "falseAlarmsPer100Days": 5.095744680851064
         },
         "zscore": {
           "eventCount": 100,
           "detectedCount": 100,
-          "medianDelayDays": 12,
-          "falseEpisodes": 615,
-          "falseAlarmsPer100Days": 6.542553191489362
+          "medianDelayDays": 4,
+          "falseEpisodes": 599,
+          "falseAlarmsPer100Days": 6.372340425531915
         }
       }
     },
@@ -128,22 +128,22 @@
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 0,
-          "falseEpisodes": 116,
-          "falseAlarmsPer100Days": 0.7160493827160493
+          "falseEpisodes": 104,
+          "falseAlarmsPer100Days": 0.6419753086419753
         },
         "threshold": {
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 0,
-          "falseEpisodes": 358,
-          "falseAlarmsPer100Days": 2.2098765432098766
+          "falseEpisodes": 799,
+          "falseAlarmsPer100Days": 4.932098765432099
         },
         "zscore": {
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 0,
-          "falseEpisodes": 1080,
-          "falseAlarmsPer100Days": 6.666666666666667
+          "falseEpisodes": 1062,
+          "falseAlarmsPer100Days": 6.555555555555555
         }
       }
     },
@@ -155,22 +155,22 @@
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 4,
-          "falseEpisodes": 135,
-          "falseAlarmsPer100Days": 0.8385093167701864
+          "falseEpisodes": 121,
+          "falseAlarmsPer100Days": 0.7515527950310559
         },
         "threshold": {
           "eventCount": 100,
-          "detectedCount": 99,
+          "detectedCount": 100,
           "medianDelayDays": 1,
-          "falseEpisodes": 363,
-          "falseAlarmsPer100Days": 2.2546583850931676
+          "falseEpisodes": 817,
+          "falseAlarmsPer100Days": 5.074534161490683
         },
         "zscore": {
           "eventCount": 100,
           "detectedCount": 100,
           "medianDelayDays": 1,
-          "falseEpisodes": 1069,
-          "falseAlarmsPer100Days": 6.6397515527950315
+          "falseEpisodes": 1052,
+          "falseAlarmsPer100Days": 6.53416149068323
         }
       }
     }
