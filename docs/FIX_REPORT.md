@@ -186,3 +186,4 @@ Before replying with `MERGE TO MAIN`, please complete the following human verifi
 - [ ] **3. Manual App Walkthrough:** Open `http://localhost:5173/` in your browser. Verify the Today dashboard, BodyMap 3D model, Scenario Lab, and Proof page.
 - [ ] **4. Final Merge Approval:** Reply with the exact words:  
   **`MERGE TO MAIN`**
+
