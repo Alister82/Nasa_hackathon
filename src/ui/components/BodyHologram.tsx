@@ -52,7 +52,7 @@ const RISK_THEMES: Record<BodyRiskTone, RiskTheme> = {
     label: 'Nominal',
     css: '#7dd3fc',
     baseCss: '#2563eb',
-    fill: 0.08,
+    fill: 0.04,
     rimCss: '#bae6fd',
     base: 0x1d4ed8,
     emissive: 0x0b2a55,
@@ -69,7 +69,7 @@ const RISK_THEMES: Record<BodyRiskTone, RiskTheme> = {
     label: 'Watch',
     css: '#fbbf24',
     baseCss: '#b45309',
-    fill: 0.38,
+    fill: 0.35,
     rimCss: '#fde68a',
     base: 0xb45309,
     emissive: 0x4a1d00,
@@ -103,7 +103,7 @@ const RISK_THEMES: Record<BodyRiskTone, RiskTheme> = {
     label: 'Urgent',
     css: '#ef4444',
     baseCss: '#dc2626',
-    fill: 0.92,
+    fill: 0.96,
     rimCss: '#ffb3b3',
     base: 0xdc2626,
     emissive: 0x450a0a,
@@ -307,26 +307,30 @@ export function BodyHologram({
         const fillUniforms = {
           uRiskFill: { value: risk.fill },
           uRiskTime: { value: 0 },
-          uBodyHeightScale: { value: 1 },
+          uBodyHeightMin: { value: 0 },
+          uBodyHeightInvRange: { value: 1 },
           uRiskColor: { value: new THREE.Color(0xff2020) },
         };
         bodyMaterial.onBeforeCompile = (shader) => {
           Object.assign(shader.uniforms, fillUniforms);
           shader.vertexShader = shader.vertexShader.replace(
             '#include <common>',
-            '#include <common>\nuniform float uBodyHeightScale;\nvarying float vBodyHeight;',
-          ).replace('#include <project_vertex>', 'vBodyHeight = transformed.y * uBodyHeightScale;\n#include <project_vertex>');
+            '#include <common>\nuniform float uBodyHeightMin;\nuniform float uBodyHeightInvRange;\nvarying float vBodyHeight;',
+          ).replace(
+            '#include <project_vertex>',
+            'vBodyHeight = (transformed.y - uBodyHeightMin) * uBodyHeightInvRange;\n#include <project_vertex>',
+          );
           shader.fragmentShader = shader.fragmentShader.replace(
             '#include <common>',
             '#include <common>\nuniform float uRiskFill;\nuniform float uRiskTime;\nuniform vec3 uRiskColor;\nvarying float vBodyHeight;',
           ).replace(
             '#include <color_fragment>',
             `#include <color_fragment>
-             float waterline = 0.12 + uRiskFill * 0.76 + sin(vBodyHeight * 34.0 + uRiskTime * 2.1) * 0.012;
-             float submerged = 1.0 - smoothstep(waterline - 0.018, waterline + 0.018, vBodyHeight);
-             float waterEdge = 1.0 - smoothstep(0.0, 0.035, abs(vBodyHeight - waterline));
-             diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.78);
-             diffuseColor.rgb += uRiskColor * waterEdge * 0.55;`,
+             float waterline = clamp(uRiskFill + sin(vBodyHeight * 34.0 + uRiskTime * 2.1) * 0.006, 0.02, 0.98);
+             float submerged = 1.0 - smoothstep(waterline - 0.012, waterline + 0.012, vBodyHeight);
+             float waterEdge = 1.0 - smoothstep(0.0, 0.025, abs(vBodyHeight - waterline));
+             diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.92);
+             diffuseColor.rgb += uRiskColor * waterEdge * 0.85;`,
           );
         };
 
@@ -369,6 +373,8 @@ export function BodyHologram({
         if (realisticScene) {
           const bodyRoot = realisticScene.getObjectByName('base_male_body');
           let visibleBodyParts = 0;
+          let bodyMinY = Infinity;
+          let bodyMaxY = -Infinity;
           realisticScene.traverse((object) => {
             if (!(object instanceof THREE.Mesh)) return;
             // GLTFLoader wraps the base mesh's six material primitives in a
@@ -377,6 +383,12 @@ export function BodyHologram({
             object.visible = bodyRoot ? belongsToBase : false;
             if (object.visible) {
               object.material = bodyMaterial;
+              object.geometry.computeBoundingBox();
+              const partBounds = object.geometry.boundingBox;
+              if (partBounds) {
+                bodyMinY = Math.min(bodyMinY, partBounds.min.y);
+                bodyMaxY = Math.max(bodyMaxY, partBounds.max.y);
+              }
               visibleBodyParts += 1;
             }
           });
@@ -386,7 +398,8 @@ export function BodyHologram({
             const size = bounds.getSize(new THREE.Vector3());
             const center = bounds.getCenter(new THREE.Vector3());
             const scale = 3.0 / Math.max(size.y, 0.001);
-            fillUniforms.uBodyHeightScale.value = 1 / Math.max(size.y, 0.001);
+            fillUniforms.uBodyHeightMin.value = bodyMinY;
+            fillUniforms.uBodyHeightInvRange.value = 1 / Math.max(bodyMaxY - bodyMinY, 0.001);
             realisticScene.scale.setScalar(scale);
             realisticScene.position.set(-center.x * scale, 0.08 - center.y * scale, -center.z * scale);
             realisticScene.updateMatrixWorld(true);
@@ -559,6 +572,12 @@ export function BodyHologram({
         }
 
         body.update();
+        body.geometry.computeBoundingBox();
+        if (!realisticScene && body.geometry.boundingBox) {
+          const bodyBounds = body.geometry.boundingBox;
+          fillUniforms.uBodyHeightMin.value = bodyBounds.min.y;
+          fillUniforms.uBodyHeightInvRange.value = 1 / Math.max(bodyBounds.max.y - bodyBounds.min.y, 0.001);
+        }
         body.scale.set(SCAN_HEIGHT, SCAN_HEIGHT, SCAN_HEIGHT * 0.78);
         body.position.y = 0.1;
         body.renderOrder = 1;
@@ -971,7 +990,7 @@ export function BodyHologram({
       <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-2 border-t border-white/10 bg-[#04111f]/75 px-3 py-2 backdrop-blur">
         <div className="min-w-0">
           <p className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-blue-100/50">
-            {hovered ? 'Domain selected' : selectedDomain ? 'Focused domain' : `Model tint · ${risk.label}`}
+            {hovered ? 'Domain selected' : selectedDomain ? 'Focused domain' : `Crew risk · ${risk.label} · ${Math.round(risk.fill * 100)}%`}
           </p>
           <p className="truncate text-[0.66rem] font-semibold text-blue-50">
             {hovered ? DOMAIN_LABELS[hovered] : selectedDomain ? DOMAIN_LABELS[selectedDomain] : 'Drag to rotate · click a signal'}
