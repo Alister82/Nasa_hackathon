@@ -8,20 +8,20 @@ export const MISSION_SETTINGS: Record<MissionSettingId, MissionSetting> = {
   station: {
     id: 'station',
     label: 'Space station',
-    description: 'Low Earth orbit with near-real-time ground support; the app rate is a rounded setting informed by historical PADLES measurements.',
+    description: 'Low Earth orbit with near-real-time ground support; the app rate is a rounded illustrative setting informed by historical PADLES measurements.',
     oneWayDelayMinutes: 0,
     radiationRateMsvPerDay: 0.5,
     radiationSourceId: 'src_iss_padles',
-    radiationBenchmark: 'ISS PADLES publication: 0.48 ± 0.08 mSv/day (reported measurement; not a universal ISS rate).',
+    radiationBenchmark: 'ISS PADLES literature reports ~0.48 ± 0.08 mSv/day depending on module location; the 0.5 mSv/day app rate is an illustrative mission planning value informed by literature, not a direct quote.',
   },
   lunar_base: {
     id: 'lunar_base',
     label: 'Lunar base',
-    description: 'Lunar scenario with seconds-scale light time; 1.0 mSv/day is a simulator setting compared with the Chang’E-4 LND surface benchmark.',
+    description: 'Lunar scenario with seconds-scale light time; 1.0 mSv/day is an illustrative simulator setting compared with the Chang’E-4 LND surface benchmark.',
     oneWayDelayMinutes: 0.02,
     radiationRateMsvPerDay: 1.0,
     radiationSourceId: 'src_lunar_lnd',
-    radiationBenchmark: 'Chang’E-4 LND measured 1.369 mSv/day dose equivalent at the lunar surface; this was not an Artemis measurement.',
+    radiationBenchmark: 'Chang’E-4 LND (Zhang et al. 2020) measured 1.369 mSv/day dose equivalent at the lunar surface; the 1.0 mSv/day app rate is an illustrative mission planning value, not an operational measurement.',
   },
   deep_space: {
     id: 'deep_space',
@@ -30,7 +30,7 @@ export const MISSION_SETTINGS: Record<MissionSettingId, MissionSetting> = {
     oneWayDelayMinutes: 12,
     radiationRateMsvPerDay: 1.8,
     radiationSourceId: 'src_nasa_msl_rad',
-    radiationBenchmark: 'MSL RAD measured 1.84 ± 0.33 mSv/day GCR dose equivalent during cruise, excluding solar particle events; app value is rounded.',
+    radiationBenchmark: 'MSL RAD (Zeitlin et al. 2013) measured 1.84 ± 0.33 mSv/day GCR dose equivalent during cruise, excluding solar particle events; app value is a rounded illustrative planning rate.',
   },
 };
 

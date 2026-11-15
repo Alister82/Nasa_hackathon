@@ -1,5 +1,5 @@
 {
-  "startedAt": "2026-11-15T06:04:33.234Z",
+  "startedAt": "2026-11-15T09:54:28.131Z",
   "checks": [
     {
       "name": "initial demo state is Crew 1, day 120",
@@ -17,62 +17,7 @@
         "innerWidth": 1024,
         "scrollWidth": 1024,
         "bodyWidth": 1024,
-        "offenders": [
-          {
-            "tag": "div",
-            "id": "",
-            "className": "pointer-events-none absolute -bottom-20 -left-14 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(84,144,238,0.45)",
-            "text": "",
-            "left": -43,
-            "right": 117,
-            "width": 160
-          },
-          {
-            "tag": "div",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-14 h-44 w-44 rounded-full border border-white/10",
-            "text": "",
-            "left": 863,
-            "right": 1039,
-            "width": 176
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-watch",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          }
-        ]
+        "offenders": []
       }
     },
     {
@@ -138,9 +83,7 @@
     {
       "name": "Scenario Lab sensor fault has no review card",
       "passed": true,
-      "detail": [
-        "Resting heart rate: one reading stands out"
-      ]
+      "detail": []
     },
     {
       "name": "Scenario Lab shows the three-system table",
@@ -178,7 +121,7 @@
     },
     {
       "name": "About page has no forbidden clinical language outside quoted risk names",
-      "passed": true
+      "passed": false
     },
     {
       "name": "Today has no forbidden clinical language",
@@ -195,8 +138,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -205,7 +148,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -214,10 +157,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -238,67 +181,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -314,8 +257,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -324,7 +267,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -333,10 +276,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -357,67 +300,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -433,8 +376,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -443,7 +386,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -452,10 +395,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -476,67 +419,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -552,8 +495,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -562,7 +505,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -571,10 +514,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -595,67 +538,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -671,8 +614,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -681,7 +624,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -690,10 +633,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -714,67 +657,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -790,8 +733,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -800,7 +743,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -809,10 +752,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -833,67 +776,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -909,8 +852,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -919,7 +862,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -928,10 +871,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -952,67 +895,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -1028,8 +971,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -1038,7 +981,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -1047,10 +990,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -1071,67 +1014,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -1147,8 +1090,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -1157,7 +1100,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -1166,10 +1109,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -1190,67 +1133,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -1266,8 +1209,8 @@
           {
             "tag": "aside",
             "id": "",
-            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-white/70 bg-[linear-gradient(165deg,rgba(255,255,255",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
+            "className": "fixed inset-y-0 left-0 z-50 flex w-[272px] flex-col border-r border-black/[0.06] bg-[rgba(250,250,252,0.86)] backdrop-bl",
+            "text": "Vigil\nAstronaut health monitor\n\nMONITORING\n\nDashboard\n8\nHealth Monitor\nScenario ",
             "left": -272,
             "right": 0,
             "width": 272
@@ -1276,7 +1219,7 @@
             "tag": "div",
             "id": "",
             "className": "flex items-center gap-3 px-4 pb-3 pt-5",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -272,
             "right": -1,
             "width": 271
@@ -1285,10 +1228,10 @@
             "tag": "a",
             "id": "",
             "className": "flex min-w-0 items-center gap-3",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -256,
-            "right": -64,
-            "width": 192
+            "right": -79,
+            "width": 177
           },
           {
             "tag": "svg",
@@ -1309,67 +1252,67 @@
             "width": 38
           },
           {
-            "tag": "path",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -253,
-            "right": -219,
-            "width": 33
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
-            "tag": "ellipse",
+            "tag": "rect",
             "id": "",
             "className": "",
             "text": "",
-            "left": -251,
-            "right": -221,
-            "width": 30
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -228,
-            "right": -225,
-            "width": 4
+            "left": -255,
+            "right": -217,
+            "width": 38
           },
           {
             "tag": "path",
             "id": "",
             "className": "",
             "text": "",
-            "left": -241,
-            "right": -231,
-            "width": 11
-          },
-          {
-            "tag": "circle",
-            "id": "",
-            "className": "",
-            "text": "",
-            "left": -246,
-            "right": -244,
-            "width": 2
+            "left": -243,
+            "right": -229,
+            "width": 14
           },
           {
             "tag": "span",
             "id": "",
             "className": "min-w-0 transition-opacity",
-            "text": "Vigil\nASTRONAUT HEALTH MONITOR",
+            "text": "Vigil\nAstronaut health monitor",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
           },
           {
             "tag": "span",
             "id": "",
-            "className": "block font-display text-[1.35rem] font-extrabold leading-none tracking-[-0.045em] text-ink",
+            "className": "block font-display text-[1.3rem] font-semibold leading-none tracking-[-0.03em] text-ink",
             "text": "Vigil",
             "left": -204,
-            "right": -64,
-            "width": 140
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "span",
+            "id": "",
+            "className": "mt-1 block text-[0.68rem] font-normal leading-tight text-ink-soft",
+            "text": "Astronaut health monitor",
+            "left": -204,
+            "right": -79,
+            "width": 125
+          },
+          {
+            "tag": "button",
+            "id": "",
+            "className": "ml-auto inline-flex h-11 w-11 items-center justify-center rounded-xl text-ink-soft hover:bg-white lg:hidden",
+            "text": "",
+            "left": -61,
+            "right": -17,
+            "width": 44
           }
         ]
       }
@@ -1381,62 +1324,7 @@
         "innerWidth": 1024,
         "scrollWidth": 1024,
         "bodyWidth": 1024,
-        "offenders": [
-          {
-            "tag": "div",
-            "id": "",
-            "className": "pointer-events-none absolute -bottom-20 -left-14 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(84,144,238,0.45)",
-            "text": "",
-            "left": -43,
-            "right": 117,
-            "width": 160
-          },
-          {
-            "tag": "div",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-14 h-44 w-44 rounded-full border border-white/10",
-            "text": "",
-            "left": 863,
-            "right": 1039,
-            "width": 176
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-review",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          },
-          {
-            "tag": "span",
-            "id": "",
-            "className": "pointer-events-none absolute -right-12 -top-16 h-36 w-36 rounded-full opacity-[0.13] blur-2xl bg-status-watch",
-            "text": "",
-            "left": 895,
-            "right": 1039,
-            "width": 144
-          }
-        ]
+        "offenders": []
       }
     },
     {
@@ -1453,8 +1341,69 @@
     },
     {
       "name": "visible controls meet the 44px touch-target rule",
-      "passed": true,
-      "detail": []
+      "passed": false,
+      "detail": [
+        {
+          "label": "Vigil\nAstronaut health monitor",
+          "width": 177,
+          "height": 40
+        },
+        {
+          "label": "Dashboard\n8",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Health Monitor",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Scenario Lab",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Verification",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Investigation Journal",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Mission Settings",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Help & Support",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "About Vigil",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Search metrics, alerts, or pro",
+          "width": 155,
+          "height": 36
+        },
+        {
+          "label": "Crew 1\nCrew 2\nCrew 3",
+          "width": 79,
+          "height": 36
+        },
+        {
+          "label": "Deep-space transit",
+          "width": 130,
+          "height": 36
+        }
+      ]
     },
     {
       "name": "no runtime exceptions",
@@ -1463,11 +1412,88 @@
     },
     {
       "name": "no browser console errors",
-      "passed": true,
-      "detail": []
+      "passed": false,
+      "detail": [
+        "Failed to load resource: net::ERR_INTERNET_DISCONNECTED"
+      ]
     }
   ],
-  "failures": [],
+  "failures": [
+    {
+      "name": "About page has no forbidden clinical language outside quoted risk names"
+    },
+    {
+      "name": "visible controls meet the 44px touch-target rule",
+      "detail": [
+        {
+          "label": "Vigil\nAstronaut health monitor",
+          "width": 177,
+          "height": 40
+        },
+        {
+          "label": "Dashboard\n8",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Health Monitor",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Scenario Lab",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Verification",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Investigation Journal",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Mission Settings",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Help & Support",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "About Vigil",
+          "width": 237,
+          "height": 38
+        },
+        {
+          "label": "Search metrics, alerts, or pro",
+          "width": 155,
+          "height": 36
+        },
+        {
+          "label": "Crew 1\nCrew 2\nCrew 3",
+          "width": 79,
+          "height": 36
+        },
+        {
+          "label": "Deep-space transit",
+          "width": 130,
+          "height": 36
+        }
+      ]
+    },
+    {
+      "name": "no browser console errors",
+      "detail": [
+        "Failed to load resource: net::ERR_INTERNET_DISCONNECTED"
+      ]
+    }
+  ],
   "consoleErrors": [],
   "screenshots": [
     "docs\\screenshots\\today-1024.png",
@@ -1475,7 +1501,9 @@
     "docs\\screenshots\\today-390.png",
     "docs\\screenshots\\today-1024-final.png"
   ],
-  "console": [],
+  "console": [
+    "Failed to load resource: net::ERR_INTERNET_DISCONNECTED"
+  ],
   "knownIssues": [
     {
       "id": "TASKS-8-2-crew-3-day-120",
@@ -1483,6 +1511,6 @@
       "day120Titles": []
     }
   ],
-  "finishedAt": "2026-11-15T06:04:58.328Z",
-  "passed": true
+  "finishedAt": "2026-11-15T09:54:57.887Z",
+  "passed": false
 }

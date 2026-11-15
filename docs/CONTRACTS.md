@@ -242,6 +242,8 @@ export interface MissionSetting {
   description: string;
   oneWayDelayMinutes: number;
   radiationRateMsvPerDay: number;
+  radiationSourceId: string;
+  radiationBenchmark: string;
 }
 
 export interface SupplyMeta { id: SupplyId; label: string; }
@@ -490,3 +492,9 @@ export function loadResults(): Promise<ResultsFile | null>;                     
 3. Every `AlertCard` has non-empty `observation`, `uncertainty.statement`, `escalation.text`, and at least 1 id in `sourceIds` that exists in `SOURCES`.
 4. `AlertCard.recommendedActions` never contains an action whose `supplyAvailable` is false without `alternativeText`.
 5. No string produced by `guidance` contains the words "diagnosis", "diagnose", "disease", "cancer", "depression", "anxiety disorder", or "you have".
+
+## 7. Backwards-compatible contract additions (v1 extensions)
+
+Per `RULES.md` section 6, additive fields that do not remove, rename, or break existing required types are permitted under Contract v1:
+- `MissionSetting`: added `radiationSourceId: string` and `radiationBenchmark: string` to link operational planning rates directly to peer-reviewed mission references (`src_iss_padles`, `src_lunar_lnd`, `src_nasa_msl_rad`).
+- Optional UI telemetry display properties (e.g. `evidenceCategory`, `evidenceAnchor`, `referenceValue`, `groundConferenceText`, `timelineEvent`, `clinicalRef`): auxiliary display properties used in avionics HUD and inspection panels; all core engine, analysis, and guidance contracts remain fully backwards-compatible.

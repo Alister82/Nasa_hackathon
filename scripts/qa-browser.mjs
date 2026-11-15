@@ -635,9 +635,9 @@ async function main() {
     record('Scenario Lab shows the three-system table', labTable.includes('Vigil') && labTable.includes('Fixed thresholds') && labTable.includes('Rolling z-score'));
 
     await go('#/proof', 'Algorithmic proof');
-    await waitFor(async () => (await bodyText()).includes('0.69'), 'Proof results');
+    await waitFor(async () => (await bodyText()).includes('0.62'), 'Proof results');
     const proofText = await bodyText();
-    record('Proof page renders harness numbers', proofText.includes('0.69') && proofText.includes('0.84'));
+    record('Proof page renders harness numbers', proofText.includes('0.62') && proofText.includes('0.75'));
 
     await go('#/journal', 'Record what happened');
     await setText('#journal-obs', 'QA reset check');

@@ -134,12 +134,17 @@ Plausible entry ranges (validation of manual input): heart_rate 30–220; bp_sys
 
 Radiation (mSv/day, illustrative): preflight 0.007 with 10 percent relative noise. In mission: station 0.5, lunar_base 1.0, deep_space 1.8, each with 8 percent relative noise. A human must verify these against the CSA and NASA radiation sources before the project page quotes them.
 
-Sleep is the only empirical aggregate calibration in this table. NASA OCHMO-TB-041 reports ISS actigraphy group means of 6.41 h at the baseline assessment, 5.86 h 11 days prelaunch, and 6.09 h in flight (in-flight aggregate SD 0.67 h). The simulator uses these as period anchors (baseline before day −11, prelaunch days −11..0, in flight days 1..180); the group SD is an approximate daily-noise calibration, not an individual-level estimate. Other population/spread values remain explicit synthetic assumptions. NASA's CIRCA summary reports HR/BP were generally not greatly changed in flight, with day/night-specific exceptions; this daily model applies no blanket HR/BP adaptation offset.
+**Evidence-based vs Illustrative simulator parameters:**
+- **Evidence-based (sleep only):** Sleep is the only empirically calibrated indicator in this model. NASA OCHMO-TB-041 and Barger et al. (2014) report ISS actigraphy group means of 6.41 h at baseline assessment, 5.86 h during prelaunch (11 days prior), and 6.09 h in flight (in-flight aggregate SD 0.67 h). The simulator applies a constant in-flight adaptation offset of −0.32 h relative to the 6.41 h baseline. The group SD (0.67 h) provides a realistic daily within-person noise scale.
+- **Cardiovascular parameters (HR and BP):** In earlier iterations, illustrative transient offsets were applied; however, empirical findings from NASA's CIRCA investigation documented that 24-hour ambulatory blood pressure and heart rate do not exhibit a generic long-term shift in microgravity (outside day/night circadian phase changes that daily-average telemetry cannot capture). Therefore, the simulator applies NO generic adaptation offset to heart rate or blood pressure (offset 0). They vary strictly according to baseline noise and scenario effect ramps.
+- **Illustrative modeling assumptions:** All other population means, between-person standard deviations (`betweenSD`), within-person day-to-day standard deviations (`withinSD`), autocorrelation coefficients ($\phi$), and scenario progression ramps are synthetic illustrative modeling assumptions designed for testing and demo purposes, not clinical or epidemiological predictions.
 
-| Indicator | In-flight mean shift relative to baseline |
-|---|---|
-| sleep_hours | −0.32 in flight relative to the 6.41 h baseline mean |
-| all others | 0 |
+| Indicator | In-flight mean shift relative to baseline | Evidence base |
+|---|---|---|
+| sleep_hours | −0.32 in flight relative to the 6.41 h baseline mean | Empirical (NASA OCHMO-TB-041 / Barger et al. 2014) |
+| heart_rate | 0 (no generic offset; scenario-driven) | Literature-informed (NASA CIRCA) |
+| bp_sys / bp_dia | 0 (no generic offset; scenario-driven) | Literature-informed (NASA CIRCA) |
+| all others | 0 | Illustrative assumption |
 
 ### 6.3 Randomness (exact)
 
@@ -219,7 +224,7 @@ Steps:
 6. **Isolated spike**: the latest observed day in the last 2 mission days has `|z| > SPIKE_Z` (unclamped), none of the 3 observed days before it has `|z| > 2`, and the indicator is not persistent.
 7. **Data quality**: `missingFractionLast7` = missing days of last 7 mission days / 7; `poor` if `> 0.4`.
 8. **Radiation rule**: ratio = value / expectedRate(setting). Status `flagged` if any of the last 3 mission days has ratio > 2.5; `watch` if > 1.5; else `ok`. Cumulative dose is computed by UI/guidance as the sum of non-null values from day 1 to the viewed day (not by the detector).
-9. **Adaptation note**: latest observed day ≤ 21, indicator has a nonzero max offset, `|(value − median)/sigma| ≥ 1.5`, and `|z| < 1.5`. Meaning: differs from preflight but matches expected early adaptation.
+9. **Adaptation note**: latest observed day ≤ 21, indicator has a nonzero max offset (`PHASE_MAX_OFFSET`, currently only `sleep_hours` with −0.32 h; HR and BP have no generic offset), `|(value − median)/sigma| ≥ 1.5`, and `|z| < 1.5`. Meaning: differs from preflight baseline due to expected operational shift, but matches expected in-flight adaptation offset.
 10. **Domain status**: worst status among the domain's indicators (flagged > watch > ok).
 11. **Findings** (scan days 1..upToDay in order so `firstFlaggedDay` is the first day of the current uninterrupted run):
     - `persistent_change`: one per indicator with status `flagged` on `upToDay`.
