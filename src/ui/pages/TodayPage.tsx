@@ -341,7 +341,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
               </span>
               <div>
                 <h2 className="font-display text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">Body health overview</h2>
-                <p className="text-[0.66rem] text-ink-soft">Live domain status · drag to rotate</p>
+                <p className="text-[0.66rem] text-ink-soft">Risk-tinted live scan · drag to rotate</p>
               </div>
             </div>
             <div className="flex items-center gap-2">
@@ -363,6 +363,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             <BodyHologram
               domains={analysis.domains}
               summaries={summaries}
+              riskTone={overall.tone}
               onSelect={openDomain}
               className="md:order-2"
             />

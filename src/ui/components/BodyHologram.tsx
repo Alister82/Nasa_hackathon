@@ -5,9 +5,12 @@ import { DOMAIN_LABELS, DOMAIN_ORDER } from '@/contracts/indicators';
 import { cn } from '@/ui/lib/format';
 import { DOMAIN_VISUALS } from './MetricTile';
 
+export type BodyRiskTone = 'ok' | 'watch' | 'review' | 'urgent';
+
 export interface BodyHologramProps {
   domains: Record<DomainId, DomainAnalysis>;
   summaries: Record<DomainId, string>;
+  riskTone: BodyRiskTone;
   selected?: DomainId;
   onSelect: (domain: DomainId) => void;
   className?: string;
@@ -19,6 +22,99 @@ const STATUS_COLORS: Record<DomainAnalysis['status'], { hex: number; css: string
   ok: { hex: 0x2dd4bf, css: '#2dd4bf' },
   watch: { hex: 0xf4b740, css: '#f4b740' },
   flagged: { hex: 0xfb7185, css: '#fb7185' },
+};
+
+interface RiskTheme {
+  label: string;
+  css: string;
+  baseCss: string;
+  fill: number;
+  rimCss: string;
+  base: number;
+  emissive: number;
+  rim: number;
+  star: number;
+  ring: number;
+  ambient: number;
+  key: number;
+  warm: number;
+  under: number;
+  glow: string;
+}
+
+/**
+ * Overall crew risk drives the body tint. The body moves from a cool
+ * nominal scan to amber watch and then a clearly red review/urgent state.
+ */
+const RISK_THEMES: Record<BodyRiskTone, RiskTheme> = {
+  ok: {
+    label: 'Nominal',
+    css: '#7dd3fc',
+    baseCss: '#2563eb',
+    fill: 0.08,
+    rimCss: '#bae6fd',
+    base: 0x1d4ed8,
+    emissive: 0x0b2a55,
+    rim: 0x9bd9ff,
+    star: 0xbfdbfe,
+    ring: 0x4d8ee8,
+    ambient: 0x86b4ff,
+    key: 0xdcecff,
+    warm: 0x8ad4ff,
+    under: 0x2a6fe0,
+    glow: 'rgba(59,130,246,0.24)',
+  },
+  watch: {
+    label: 'Watch',
+    css: '#fbbf24',
+    baseCss: '#b45309',
+    fill: 0.38,
+    rimCss: '#fde68a',
+    base: 0xb45309,
+    emissive: 0x4a1d00,
+    rim: 0xfde68a,
+    star: 0xfff1c2,
+    ring: 0xf59e0b,
+    ambient: 0xffd08a,
+    key: 0xfff4d6,
+    warm: 0xffd166,
+    under: 0xd97706,
+    glow: 'rgba(245,158,11,0.24)',
+  },
+  review: {
+    label: 'Review',
+    css: '#fb7185',
+    baseCss: '#be123c',
+    fill: 0.68,
+    rimCss: '#fecdd3',
+    base: 0xbe123c,
+    emissive: 0x4c0519,
+    rim: 0xfecdd3,
+    star: 0xffd6dc,
+    ring: 0xfb7185,
+    ambient: 0xffb3b3,
+    key: 0xffe4e4,
+    warm: 0xff8a8a,
+    under: 0xbe123c,
+    glow: 'rgba(244,63,94,0.28)',
+  },
+  urgent: {
+    label: 'Urgent',
+    css: '#ef4444',
+    baseCss: '#dc2626',
+    fill: 0.92,
+    rimCss: '#ffb3b3',
+    base: 0xdc2626,
+    emissive: 0x450a0a,
+    rim: 0xffb3b3,
+    star: 0xffc2c2,
+    ring: 0xef4444,
+    ambient: 0xffb4b4,
+    key: 0xfff0f0,
+    warm: 0xff6b6b,
+    under: 0xdc2626,
+    glow: 'rgba(239,68,68,0.34)',
+  },
 };
 
 /** Positions of the body hotspots in the 3D scene (body-local coordinates). */
@@ -39,9 +135,11 @@ function statusWord(status: DomainAnalysis['status']): string {
 
 function HologramFallback({
   domains,
+  riskTone,
   selected,
   onSelect,
-}: Pick<BodyHologramProps, 'domains' | 'selected' | 'onSelect'>) {
+}: Pick<BodyHologramProps, 'domains' | 'riskTone' | 'selected' | 'onSelect'>) {
+  const risk = RISK_THEMES[riskTone];
   const region = (domain: DomainId, children: React.ReactNode, labelPos: { x: number; y: number }) => {
     const status = domains[domain]?.status ?? 'ok';
     const colors = STATUS_COLORS[status];
@@ -73,9 +171,9 @@ function HologramFallback({
       <svg viewBox="0 0 220 380" className="h-full max-h-[360px] w-auto" aria-hidden="false">
         <defs>
           <linearGradient id="body-fallback-fill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor="#7eb5ff" stopOpacity="0.42" />
-            <stop offset="55%" stopColor="#2f6fd0" stopOpacity="0.3" />
-            <stop offset="100%" stopColor="#1a4587" stopOpacity="0.22" />
+            <stop offset="0%" stopColor={risk.rimCss} stopOpacity="0.56" />
+            <stop offset="55%" stopColor={risk.baseCss} stopOpacity="0.34" />
+            <stop offset="100%" stopColor={risk.baseCss} stopOpacity="0.2" />
           </linearGradient>
           <filter id="body-fallback-glow">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -85,8 +183,8 @@ function HologramFallback({
             </feMerge>
           </filter>
         </defs>
-        <ellipse cx="110" cy="350" rx="64" ry="12" fill="#2869d8" opacity="0.09" />
-        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke="#5b95e8" strokeWidth="1.1">
+        <ellipse cx="110" cy="350" rx="64" ry="12" fill={risk.baseCss} opacity="0.16" />
+        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke={risk.rimCss} strokeWidth="1.1">
           {region('behavioral', <ellipse cx="110" cy="54" rx="24" ry="28" />, { x: 110, y: 54 })}
           {region('cardiovascular', <path d="M88 88c0-8 8-14 22-14s22 6 22 14l-4 38c-1 7-9 11-18 11s-17-4-18-11z" />, { x: 110, y: 102 })}
           {region('metabolic_general', <path d="M91 130h38l-3 48c-1 8-7 12-16 12s-15-4-16-12z" />, { x: 110, y: 152 })}
@@ -94,8 +192,8 @@ function HologramFallback({
           {region('physical_performance', <path d="M84 190c-7 4-9 11-9 20l2 64c0 8 4 12 9 12s8-4 8-12l1-62 2-12 4 12 3 62c1 8 4 12 9 12s8-4 8-12l-1-64c0-9-3-16-10-20z" />, { x: 90, y: 244 })}
           {region('radiation', <path d="M148 92c7 2 11 8 12 16l6 66c1 8-2 13-7 14-6 1-10-3-11-11l-7-66c-1-9 1-17 7-19z" />, { x: 154, y: 104 })}
         </g>
-        <path d="M110 28v-15M101 18h18" stroke="#5b95e8" strokeWidth="1" opacity="0.5" />
-        <circle cx="110" cy="14" r="3" fill="#7eb5ff" opacity="0.8" />
+        <path d="M110 28v-15M101 18h18" stroke={risk.rimCss} strokeWidth="1" opacity="0.5" />
+        <circle cx="110" cy="14" r="3" fill={risk.rimCss} opacity="0.8" />
       </svg>
     </div>
   );
@@ -104,10 +202,12 @@ function HologramFallback({
 export function BodyHologram({
   domains,
   summaries,
+  riskTone,
   selected,
   onSelect,
   className,
 }: BodyHologramProps) {
+  const risk = RISK_THEMES[riskTone];
   const mountRef = useRef<HTMLDivElement>(null);
   const onSelectRef = useRef(onSelect);
   const selectedRef = useRef(selected);
@@ -153,7 +253,7 @@ export function BodyHologram({
         renderer.setSize(width, height);
         renderer.outputColorSpace = THREE.SRGBColorSpace;
         renderer.toneMapping = THREE.ACESFilmicToneMapping;
-        renderer.toneMappingExposure = 1.12;
+        renderer.toneMappingExposure = 1.2;
         renderer.domElement.style.width = '100%';
         renderer.domElement.style.height = '100%';
         renderer.domElement.style.display = 'block';
@@ -166,39 +266,63 @@ export function BodyHologram({
         camera.lookAt(0, 0.1, 0);
 
         /* Lights -------------------------------------------------- */
-        scene.add(new THREE.AmbientLight(0x86b4ff, 1.35));
-        const key = new THREE.DirectionalLight(0xdcecff, 2.6);
+        scene.add(new THREE.AmbientLight(risk.ambient, 0.72));
+        const key = new THREE.DirectionalLight(risk.key, 2.2);
         key.position.set(2.4, 3.4, 4);
         scene.add(key);
-        const rim = new THREE.DirectionalLight(0x5b9dff, 3.4);
+        const rim = new THREE.DirectionalLight(risk.rim, 4.2);
         rim.position.set(-3.4, 1.4, -2.4);
         scene.add(rim);
-        const warm = new THREE.PointLight(0x8ad4ff, 9, 7);
+        const warm = new THREE.PointLight(risk.warm, 5, 7);
         warm.position.set(0.5, 0.8, 2.2);
         scene.add(warm);
-        const under = new THREE.PointLight(0x2a6fe0, 7, 6);
+        const under = new THREE.PointLight(risk.under, 4, 6);
         under.position.set(0, -1.4, 1.2);
         scene.add(under);
 
         /* Materials ----------------------------------------------- */
         const bodyMaterial = new THREE.MeshStandardMaterial({
-          color: 0x2c5f9f,
-          emissive: 0x0a2a55,
-          emissiveIntensity: 0.85,
-          roughness: 0.58,
-          metalness: 0.12,
+          color: risk.base,
+          emissive: risk.emissive,
+          emissiveIntensity: 0.62,
+          roughness: 0.38,
+          metalness: 0.16,
           transparent: true,
-          opacity: 0.94,
+          opacity: 0.88,
           side: THREE.FrontSide,
           depthWrite: true,
         });
+        const fillUniforms = {
+          uRiskFill: { value: risk.fill },
+          uRiskTime: { value: 0 },
+          uRiskColor: { value: new THREE.Color(0xff2020) },
+        };
+        bodyMaterial.onBeforeCompile = (shader) => {
+          Object.assign(shader.uniforms, fillUniforms);
+          shader.vertexShader = shader.vertexShader.replace(
+            '#include <common>',
+            '#include <common>\nvarying float vBodyHeight;',
+          ).replace('#include <begin_vertex>', '#include <begin_vertex>\nvBodyHeight = position.y;');
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <common>',
+            '#include <common>\nuniform float uRiskFill;\nuniform float uRiskTime;\nuniform vec3 uRiskColor;\nvarying float vBodyHeight;',
+          ).replace(
+            '#include <color_fragment>',
+            `#include <color_fragment>
+             float waterline = 0.12 + uRiskFill * 0.76 + sin(vBodyHeight * 34.0 + uRiskTime * 2.1) * 0.012;
+             float submerged = 1.0 - smoothstep(waterline - 0.018, waterline + 0.018, vBodyHeight);
+             float waterEdge = 1.0 - smoothstep(0.0, 0.035, abs(vBodyHeight - waterline));
+             diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.78);
+             diffuseColor.rgb += uRiskColor * waterEdge * 0.55;`,
+          );
+        };
 
         // Fresnel halo: a second pass over the same geometry gives the body
         // a luminous glass edge without flattening the lit surface.
         const glowMaterial = new THREE.ShaderMaterial({
           uniforms: {
-            uColor: { value: new THREE.Color(0x9bd9ff) },
-            uStrength: { value: 0.9 },
+            uColor: { value: new THREE.Color(risk.rim) },
+            uStrength: { value: 1.35 },
           },
           vertexShader: `
             varying vec3 vNormal;
@@ -257,6 +381,28 @@ export function BodyHologram({
           );
         };
 
+        /* Interpolate along limb paths so the metaball surface stays
+           continuous instead of reading as a chain of beads. */
+        const addPath = (path: Array<[number, number, number]>) => {
+          for (let i = 0; i < path.length - 1; i += 1) {
+            const [x1, y1, r1] = path[i]!;
+            const [x2, y2, r2] = path[i + 1]!;
+            const distance = Math.hypot(x2 - x1, y2 - y1);
+            const steps = Math.max(2, Math.ceil(distance / 0.024));
+            for (let step = 0; step < steps; step += 1) {
+              const t = step / steps;
+              addBall(
+                x1 + (x2 - x1) * t,
+                y1 + (y2 - y1) * t,
+                0,
+                r1 + (r2 - r1) * t,
+              );
+            }
+          }
+          const last = path[path.length - 1]!;
+          addBall(last[0], last[1], 0, last[2]);
+        };
+
         /* Torso, pelvis, and neck — dense overlapping bands keep the
            surface continuous instead of reading as stacked spheres. */
         const torsoBands: Array<[number, number, number]> = [
@@ -279,6 +425,24 @@ export function BodyHologram({
         addBall(0.16, 0.82, 0.02, 0.11);
         addBall(0, 0.96, 0, 0.075);
         addBall(0, 1.05, 0, 0.078);
+        addBall(0, 1.08, 0, 0.07);
+
+        /* Chest, shoulder, and abdominal relief. These extra metaballs
+           give the smooth surface readable pectorals, lats, and obliques. */
+        addBall(-0.085, 0.79, 0.115, 0.066);
+        addBall(0.085, 0.79, 0.115, 0.066);
+        addBall(-0.155, 0.7, 0.055, 0.06);
+        addBall(0.155, 0.7, 0.055, 0.06);
+        addBall(-0.255, 0.83, 0.02, 0.095);
+        addBall(0.255, 0.83, 0.02, 0.095);
+        for (const y of [0.5, 0.4, 0.3]) {
+          addBall(-0.048, y, 0.12, 0.042);
+          addBall(0.048, y, 0.12, 0.042);
+        }
+        addBall(-0.135, 0.34, 0.075, 0.045);
+        addBall(0.135, 0.34, 0.075, 0.045);
+        addBall(-0.11, 0.18, 0.095, 0.05);
+        addBall(0.11, 0.18, 0.095, 0.05);
 
         /* Head and jaw */
         addBall(0, 1.16, 0.01, 0.11);
@@ -287,6 +451,13 @@ export function BodyHologram({
         addBall(0.04, 1.33, 0, 0.105);
         addBall(0, 1.22, 0.075, 0.1);
         addBall(0, 1.3, -0.04, 0.1);
+        addBall(0, 1.36, -0.01, 0.085);
+        addBall(-0.065, 1.32, 0, 0.055);
+        addBall(0.065, 1.32, 0, 0.055);
+        addBall(0, 1.28, 0.115, 0.028);
+        addBall(-0.11, 1.3, 0.005, 0.025);
+        addBall(0.11, 1.3, 0.005, 0.025);
+        addBall(0, 1.19, 0.085, 0.05);
 
         /* Shoulders and arms in a relaxed A-pose */
         addBall(-0.24, 0.88, 0, 0.125);
@@ -305,9 +476,16 @@ export function BodyHologram({
           [0.482, 0.03, 0.045],
           [0.487, -0.04, 0.051],
           [0.487, -0.1, 0.041],
+          [0.492, -0.2, 0.039],
+          [0.496, -0.3, 0.038],
+          [0.499, -0.4, 0.037],
+          [0.5, -0.47, 0.044],
         ];
         for (const side of [-1, 1]) {
-          for (const [x, y, radius] of armPath) addBall(side * x, y, 0, radius);
+          addPath(armPath.map(([x, y, radius]) => [side * x, y, radius]));
+          addBall(side * 0.5, -0.5, 0.01, 0.05);
+          addBall(side * 0.5, -0.55, 0.025, 0.04);
+          addBall(side * 0.48, -0.58, 0.035, 0.025);
         }
 
         /* Hips and legs */
@@ -328,9 +506,13 @@ export function BodyHologram({
           [0.17, -1.24, 0.05],
         ];
         for (const side of [-1, 1]) {
-          for (const [x, y, radius] of legPath) addBall(side * x, y, 0, radius);
+          addPath(legPath.map(([x, y, radius]) => [side * x, y, radius]));
+          addBall(side * 0.09, -0.17, -0.09, 0.09);
+          addBall(side * 0.14, -0.36, 0.07, 0.075);
+          addBall(side * 0.16, -0.78, 0.0, 0.065);
           addBall(side * 0.17, -1.27, 0.02, 0.05);
-          addBall(side * 0.17, -1.27, 0.1, 0.044);
+          addBall(side * 0.17, -1.27, 0.08, 0.045);
+          addBall(side * 0.17, -1.27, 0.14, 0.03);
         }
 
         body.update();
@@ -346,9 +528,45 @@ export function BodyHologram({
         bodyGlow.renderOrder = 2;
         bodyGroup.add(bodyGlow);
 
+        /* Internal constellation ---------------------------------
+           Sample the generated body surface for tiny additive points.
+           Read through the translucent body like a medical hologram. */
+        const surface = body.geometry.getAttribute('position');
+        const starCount = Math.min(900, Math.max(280, Math.floor(surface.count / 120)));
+        const starPositions = new Float32Array(starCount * 3);
+        const random = (seed: number) => {
+          const value = Math.sin(seed * 12.9898) * 43758.5453;
+          return value - Math.floor(value);
+        };
+        for (let i = 0; i < starCount; i += 1) {
+          const sourceIndex = (i * 7919) % surface.count;
+          starPositions[i * 3] = surface.getX(sourceIndex) + (random(i + 1) - 0.5) * 0.016;
+          starPositions[i * 3 + 1] = surface.getY(sourceIndex) + (random(i + 7) - 0.5) * 0.016;
+          starPositions[i * 3 + 2] = surface.getZ(sourceIndex) + (random(i + 13) - 0.5) * 0.016;
+        }
+        const starGeometry = new THREE.BufferGeometry();
+        starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
+        geometries.push(starGeometry);
+        const starMaterial = new THREE.PointsMaterial({
+          color: risk.star,
+          size: 0.018,
+          transparent: true,
+          opacity: 1,
+          blending: THREE.AdditiveBlending,
+          depthWrite: false,
+          depthTest: false,
+          sizeAttenuation: true,
+        });
+        materials.push(starMaterial);
+        const starPoints = new THREE.Points(starGeometry, starMaterial);
+        starPoints.scale.copy(body.scale);
+        starPoints.position.copy(body.position);
+        starPoints.renderOrder = 3;
+        bodyGroup.add(starPoints);
+
         /* Holographic floor rings -------------------------------- */
         const ringMaterial = new THREE.MeshBasicMaterial({
-          color: 0x4d8ee8,
+          color: risk.ring,
           transparent: true,
           opacity: 0.28,
           side: THREE.DoubleSide,
@@ -381,7 +599,7 @@ export function BodyHologram({
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
         geometries.push(particleGeometry);
         const particleMaterial = new THREE.PointsMaterial({
-          color: 0x7ab7ff,
+          color: risk.star,
           size: 0.018,
           transparent: true,
           opacity: 0.55,
@@ -395,7 +613,7 @@ export function BodyHologram({
 
         /* Scanning band ------------------------------------------ */
         const scanMaterial = new THREE.MeshBasicMaterial({
-          color: 0x8ed4ff,
+          color: risk.rim,
           transparent: true,
           opacity: 0.16,
           blending: THREE.AdditiveBlending,
@@ -429,9 +647,9 @@ export function BodyHologram({
           if (context) {
             const gradient = context.createRadialGradient(64, 64, 2, 64, 64, 62);
             gradient.addColorStop(0, 'rgba(255,255,255,0.95)');
-            gradient.addColorStop(0.25, 'rgba(140,195,255,0.72)');
-            gradient.addColorStop(0.65, 'rgba(70,140,235,0.24)');
-            gradient.addColorStop(1, 'rgba(70,140,235,0)');
+            gradient.addColorStop(0.25, 'rgba(255,255,255,0.68)');
+            gradient.addColorStop(0.65, 'rgba(255,255,255,0.18)');
+            gradient.addColorStop(1, 'rgba(255,255,255,0)');
             context.fillStyle = gradient;
             context.fillRect(0, 0, 128, 128);
           }
@@ -574,6 +792,7 @@ export function BodyHologram({
         const animate = (time: number) => {
           const delta = Math.min(0.05, (time - lastTime) / 1000);
           lastTime = time;
+          fillUniforms.uRiskTime.value = time * 0.001;
           if (!dragging) {
             rotationVelocity *= 0.94;
             const auto = reducedMotion ? 0 : 0.12;
@@ -639,49 +858,76 @@ export function BodyHologram({
       disposed = true;
       cleanup?.();
     };
-  }, [statusKey, domains]);
+  }, [statusKey, domains, riskTone]);
 
   const selectedDomain = selected;
   const hovered = hoveredRef.current;
 
   return (
     <div
-      className={cn('relative flex min-h-[390px] w-full flex-col overflow-hidden rounded-[20px]', className)}
+      className={cn(
+        'relative flex min-h-[430px] w-full flex-col overflow-hidden rounded-[20px] border border-white/10 bg-[linear-gradient(165deg,#061a33_0%,#0a2649_48%,#061321_100%)] shadow-[inset_0_1px_0_rgba(255,255,255,0.08)]',
+        className,
+      )}
       role="group"
       aria-label="Body map"
     >
-      <div className="pointer-events-none absolute inset-0 bg-[radial-gradient(75%_80%_at_50%_38%,rgba(78,142,232,0.16)_0%,rgba(78,142,232,0.03)_48%,transparent_72%)]" aria-hidden="true" />
-      <div className="pointer-events-none absolute inset-x-6 top-1/2 h-px bg-gradient-to-r from-transparent via-white/70 to-transparent" aria-hidden="true" />
+      <div
+        className="pointer-events-none absolute inset-0"
+        style={{ background: `radial-gradient(75% 80% at 50% 36%, ${risk.glow} 0%, transparent 72%)` }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-x-6 top-1/2 h-px"
+        style={{ background: `linear-gradient(90deg, transparent, ${risk.rimCss}66, transparent)` }}
+        aria-hidden="true"
+      />
+      <div
+        className="pointer-events-none absolute inset-0 opacity-[0.22] [background-image:linear-gradient(rgba(255,255,255,0.045)_1px,transparent_1px)] [background-size:100%_30px]"
+        aria-hidden="true"
+      />
 
-      <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/80 bg-white/75 px-2 py-1 text-[0.58rem] font-semibold text-ink-soft shadow-xs backdrop-blur">
+      <div className="absolute left-3 top-3 z-10 flex items-center gap-1.5 rounded-full border border-white/15 bg-white/10 px-2 py-1 text-[0.58rem] font-semibold text-blue-50 shadow-[0_4px_18px_rgba(0,0,0,0.22)] backdrop-blur">
         <span className="relative flex h-1.5 w-1.5">
-          <span className="absolute inline-flex h-full w-full animate-ping rounded-full bg-status-ok/60" />
-          <span className="relative inline-flex h-1.5 w-1.5 rounded-full bg-status-ok" />
+          <span
+            className="absolute inline-flex h-full w-full animate-ping rounded-full opacity-70"
+            style={{ backgroundColor: risk.css }}
+          />
+          <span className="relative inline-flex h-1.5 w-1.5 rounded-full" style={{ backgroundColor: risk.css }} />
         </span>
         Live body map
       </div>
-      <div className="absolute right-3 top-3 z-10 rounded-full border border-white/80 bg-white/70 px-2 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.1em] text-ink-faint backdrop-blur">
+      <div className="absolute right-3 top-3 z-10 rounded-full border border-white/15 bg-black/20 px-2 py-1 text-[0.55rem] font-semibold uppercase tracking-[0.1em] text-blue-100/60 backdrop-blur">
         3D scan
       </div>
 
-      <div ref={mountRef} className="relative z-0 h-[330px] w-full sm:h-[360px]" aria-hidden="true" />
+      <div
+        ref={mountRef}
+        className="relative z-0 h-[360px] w-full sm:h-[400px]"
+        style={{ filter: `drop-shadow(0 0 16px ${risk.css}55)` }}
+        aria-hidden="true"
+      />
 
       {!ready && !webglFailed && (
-        <div className="absolute inset-x-8 top-16 bottom-14 animate-pulse rounded-[40%] bg-[radial-gradient(circle,rgba(75,141,232,0.16),transparent_68%)]" aria-hidden="true" />
+        <div
+          className="absolute inset-x-8 top-16 bottom-14 animate-pulse rounded-[40%]"
+          style={{ background: `radial-gradient(circle, ${risk.glow}, transparent 68%)` }}
+          aria-hidden="true"
+        />
       )}
 
       {webglFailed && (
         <div className="absolute inset-0 z-10 pt-8">
-          <HologramFallback domains={domains} selected={selected} onSelect={onSelect} />
+          <HologramFallback domains={domains} riskTone={riskTone} selected={selected} onSelect={onSelect} />
         </div>
       )}
 
-      <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-2 border-t border-white/60 bg-white/55 px-3 py-2 backdrop-blur">
+      <div className="absolute inset-x-0 bottom-0 z-10 flex items-center justify-between gap-2 border-t border-white/10 bg-[#04111f]/75 px-3 py-2 backdrop-blur">
         <div className="min-w-0">
-          <p className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
-            {hovered ? 'Domain selected' : selectedDomain ? 'Focused domain' : 'Interactive anatomy'}
+          <p className="text-[0.58rem] font-bold uppercase tracking-[0.1em] text-blue-100/50">
+            {hovered ? 'Domain selected' : selectedDomain ? 'Focused domain' : `Model tint · ${risk.label}`}
           </p>
-          <p className="truncate text-[0.66rem] font-semibold text-ink">
+          <p className="truncate text-[0.66rem] font-semibold text-blue-50">
             {hovered ? DOMAIN_LABELS[hovered] : selectedDomain ? DOMAIN_LABELS[selectedDomain] : 'Drag to rotate · click a signal'}
           </p>
         </div>
