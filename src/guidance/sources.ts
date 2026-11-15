@@ -41,7 +41,7 @@ export const SOURCES: Record<string, SourceRef> = {
   },
   src_ada_glucose: {
     id: 'src_ada_glucose',
-    title: 'American Diabetes Association (ADA) Standards of Care: Diagnosis and Classification of Diabetes',
+    title: 'American Diabetes Association (ADA) Standards of Care in Diabetes—2024: Classification and Diagnosis of Diabetes',
     url: 'https://diabetesjournals.org/care/issue/47/Supplement_1',
     status: 'verified',
   },
@@ -53,9 +53,9 @@ export const SOURCES: Record<string, SourceRef> = {
   },
   src_general_clinical: {
     id: 'src_general_clinical',
-    title: 'NASA-STD-3001 Space Flight Human-System Standard Vol 1 (Crew Health) & ExMC Evidence Library (HRP-48036)',
-    url: 'https://www.nasa.gov/reference/nasa-std-3001v1/',
-    status: 'verified',
+    title: 'General adult clinical reference ranges (heart rate, temperature)',
+    url: null,
+    status: 'unverified',
   },
   src_nasa_msl_rad: {
     id: 'src_nasa_msl_rad',
@@ -65,15 +65,15 @@ export const SOURCES: Record<string, SourceRef> = {
   },
   src_lunar_lnd: {
     id: 'src_lunar_lnd',
-    title: 'Wimmer-Schweingruber et al., First measurements of the radiation dose on the lunar surface (LND)',
+    title: 'Zhang et al., First measurements of the radiation dose on the lunar surface (LND)',
     url: 'https://doi.org/10.1126/sciadv.aaz1334',
     status: 'verified',
   },
   src_iss_padles: {
     id: 'src_iss_padles',
-    title: 'NASA ISS Technical Publication: PADLES space radiation measurements',
-    url: 'https://www.nasa.gov/sites/default/files/atoms/files/iss_technical_publication_030116.pdf',
-    status: 'verified',
+    title: 'JAXA Area Radiation Monitoring on ISS with PADLES',
+    url: null,
+    status: 'unverified',
   },
   src_nasa_osdr: {
     id: 'src_nasa_osdr',
@@ -89,9 +89,9 @@ export const SOURCES: Record<string, SourceRef> = {
   },
   src_nasa_circa: {
     id: 'src_nasa_circa',
-    title: 'NASA ISS Technical Publication: 24-Hour Pattern of Blood Pressure and Heart Rate in Weightlessness (CIRCA)',
-    url: 'https://www.nasa.gov/wp-content/uploads/2022/03/iss_technical_publication_030116.pdf',
-    status: 'verified',
+    title: 'NASA Circadian Rhythm and Sleep Disruption Risk Summary',
+    url: null,
+    status: 'unverified',
   },
   src_osd_530: {
     id: 'src_osd_530',

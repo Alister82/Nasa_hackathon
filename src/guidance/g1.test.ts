@@ -37,14 +37,13 @@ describe('G1: sources', () => {
     );
   });
 
-  it('clinical and NASA references have verified source links', () => {
-    const nonOrganizer = [
+  it('verified clinical references have valid source links', () => {
+    const verifiedSources = [
       'src_aha_acc_bp',
       'src_ada_glucose',
       'src_aasm_sleep',
-      'src_general_clinical',
     ];
-    for (const id of nonOrganizer) {
+    for (const id of verifiedSources) {
       expect(SOURCES[id]).toBeDefined();
       expect(SOURCES[id]!.url).toMatch(/^https:\/\//);
       expect(SOURCES[id]!.status).toBe('verified');
@@ -53,15 +52,37 @@ describe('G1: sources', () => {
       'AHA/ACC Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults (Whelton et al.)',
     );
     expect(SOURCES['src_aasm_sleep']!.url).toBe('https://doi.org/10.5664/jcsm.4758');
+    expect(SOURCES['src_ada_glucose']!.title).toContain('2024');
+    expect(SOURCES['src_lunar_lnd']!.title).toContain('Zhang et al.');
   });
 
-  it('every source entry has id, title, url, status fields', () => {
+  it('unverified references maintain url: null and status: unverified', () => {
+    const unverifiedSources = [
+      'src_general_clinical',
+      'src_iss_padles',
+      'src_nasa_circa',
+    ];
+    for (const id of unverifiedSources) {
+      expect(SOURCES[id]).toBeDefined();
+      expect(SOURCES[id]!.url).toBeNull();
+      expect(SOURCES[id]!.status).toBe('unverified');
+    }
+    expect(SOURCES['src_general_clinical']!.title).toBe(
+      'General adult clinical reference ranges (heart rate, temperature)',
+    );
+  });
+
+  it('every source entry conforms to SourceRef contract', () => {
     for (const [key, src] of Object.entries(SOURCES)) {
       expect(src.id).toBe(key);
       expect(typeof src.title).toBe('string');
       expect(src.title.length).toBeGreaterThan(0);
-      expect(src.url).toMatch(/^https:\/\//);
-      expect(src.status).toBe('verified');
+      if (src.status === 'verified') {
+        expect(src.url).toMatch(/^https:\/\//);
+      } else {
+        expect(src.status).toBe('unverified');
+        expect(src.url).toBeNull();
+      }
     }
   });
 });
