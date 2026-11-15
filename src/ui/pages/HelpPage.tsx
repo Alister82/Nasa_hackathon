@@ -385,9 +385,7 @@ export function HelpPage() {
                       Source link
                       <ExternalLink className="h-3 w-3" aria-hidden="true" />
                     </a>
-                  ) : (
-                    <span className="text-[0.64rem] italic text-ink-soft">(source link pending)</span>
-                  )}
+                  ) : null}
                 </li>
               ))}
             </ul>

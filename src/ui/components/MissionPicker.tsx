@@ -1,8 +1,8 @@
 import React from 'react';
-import { Check, Radio, Satellite, Telescope } from 'lucide-react';
+import { Check, ExternalLink, Radio, Satellite, Telescope } from 'lucide-react';
 import type { LucideIcon } from 'lucide-react';
 import type { MissionSetting, MissionSettingId } from '@/contracts/types';
-import { MISSION_SETTINGS, expectedReplyMinutes } from '@/guidance';
+import { MISSION_SETTINGS, SOURCES, expectedReplyMinutes } from '@/guidance';
 import { cn } from '@/ui/lib/format';
 
 export interface MissionPickerProps {
@@ -90,6 +90,20 @@ export function MissionPicker({ value, onChange }: MissionPickerProps) {
                 <span className="mt-0.5 block text-[0.66rem] leading-relaxed text-ink-soft">
                   {setting.description}
                 </span>
+                <span className="mt-1 block text-[0.62rem] leading-relaxed text-ink-faint">
+                  {setting.radiationBenchmark}
+                </span>
+                {SOURCES[setting.radiationSourceId]?.url && (
+                  <a
+                    href={SOURCES[setting.radiationSourceId]!.url!}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    onClick={(event) => event.stopPropagation()}
+                    className="mt-1 inline-flex min-h-[30px] items-center gap-1 text-[0.6rem] font-semibold text-instrument hover:underline"
+                  >
+                    Radiation source <ExternalLink className="h-3 w-3" aria-hidden="true" />
+                  </a>
+                )}
               </span>
 
               <span className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">

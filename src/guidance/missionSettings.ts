@@ -1,30 +1,36 @@
 import type { MissionSetting, MissionSettingId } from '@/contracts/types';
 
-// Mission settings per ARCHITECTURE.md 7.3.
-// All numbers are illustrative; a human must verify before the project page quotes them.
+// Fixed simulator settings. Rates remain illustrative rounded values; the linked
+// measurements below are context and are not presented as mission-specific predictions.
 // expectedReplyMinutes = 2 × oneWayDelayMinutes + 10 (fixed ground-response time, illustrative).
 
 export const MISSION_SETTINGS: Record<MissionSettingId, MissionSetting> = {
   station: {
     id: 'station',
     label: 'Space station',
-    description: 'Ground contact within minutes',
+    description: 'Low Earth orbit with near-real-time ground support; the app rate is a rounded setting informed by historical PADLES measurements.',
     oneWayDelayMinutes: 0,
     radiationRateMsvPerDay: 0.5,
+    radiationSourceId: 'src_iss_padles',
+    radiationBenchmark: 'ISS PADLES publication: 0.48 ± 0.08 mSv/day (reported measurement; not a universal ISS rate).',
   },
   lunar_base: {
     id: 'lunar_base',
     label: 'Lunar base',
-    description: 'Short delay',
+    description: 'Lunar scenario with seconds-scale light time; 1.0 mSv/day is a simulator setting compared with the Chang’E-4 LND surface benchmark.',
     oneWayDelayMinutes: 0.02,
     radiationRateMsvPerDay: 1.0,
+    radiationSourceId: 'src_lunar_lnd',
+    radiationBenchmark: 'Chang’E-4 LND measured 1.369 mSv/day dose equivalent at the lunar surface; this was not an Artemis measurement.',
   },
   deep_space: {
     id: 'deep_space',
     label: 'Deep-space transit',
-    description: 'Reply may take many minutes',
+    description: 'Mars-transit scenario; NASA reports Earth–Mars one-way light time can vary from about 4 to 22 minutes.',
     oneWayDelayMinutes: 12,
     radiationRateMsvPerDay: 1.8,
+    radiationSourceId: 'src_nasa_msl_rad',
+    radiationBenchmark: 'MSL RAD measured 1.84 ± 0.33 mSv/day GCR dose equivalent during cruise, excluding solar particle events; app value is rounded.',
   },
 };
 

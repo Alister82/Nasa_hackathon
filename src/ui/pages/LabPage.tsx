@@ -18,6 +18,7 @@ import { AlertCardView } from '@/ui/components/AlertCardView';
 import { EmptyState, PageHeader, SectionHeading, TextLink } from '@/ui/components/ui';
 import { SOURCES, MISSION_SETTINGS } from '@/guidance';
 import { cn } from '@/ui/lib/format';
+import { ScientificGroundingPanel } from '@/ui/components/ScientificGroundingPanel';
 
 const INJECTIONS: Array<{ id: ScenarioId; label: string }> = [
   { id: 'slow_drift', label: 'Inject: slow drift' },
@@ -109,6 +110,8 @@ export function LabPage() {
         }
         actions={<TextLink to="/proof">Verification results</TextLink>}
       />
+
+      <ScientificGroundingPanel />
 
       <section className="panel overflow-hidden">
         <header className="flex items-center gap-2 border-b border-line/80 bg-surface2/55 px-4 py-3">

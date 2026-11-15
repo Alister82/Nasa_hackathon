@@ -6,8 +6,8 @@ import { SUPPLIES, DEFAULT_SUPPLIES } from './supplies';
 // G1 acceptance: exports match CONTRACTS.md; all 3 settings present, delays 0, 0.02, 12.
 
 describe('G1: sources', () => {
-  it('has 9 source entries', () => {
-    expect(Object.keys(SOURCES)).toHaveLength(9);
+  it('has 20 source entries', () => {
+    expect(Object.keys(SOURCES)).toHaveLength(20);
   });
 
   it('organizer sources have verified status and non-null URLs', () => {
@@ -37,7 +37,7 @@ describe('G1: sources', () => {
     );
   });
 
-  it('non-organizer sources have url: null and status: unverified', () => {
+  it('clinical and NASA references have verified source links', () => {
     const nonOrganizer = [
       'src_aha_acc_bp',
       'src_ada_glucose',
@@ -46,9 +46,13 @@ describe('G1: sources', () => {
     ];
     for (const id of nonOrganizer) {
       expect(SOURCES[id]).toBeDefined();
-      expect(SOURCES[id]!.url).toBeNull();
-      expect(SOURCES[id]!.status).toBe('unverified');
+      expect(SOURCES[id]!.url).toMatch(/^https:\/\//);
+      expect(SOURCES[id]!.status).toBe('verified');
     }
+    expect(SOURCES['src_aha_acc_bp']!.title).toBe(
+      'AHA/ACC Guideline for the Prevention, Detection, Evaluation, and Management of High Blood Pressure in Adults (Whelton et al.)',
+    );
+    expect(SOURCES['src_aasm_sleep']!.url).toBe('https://doi.org/10.5664/jcsm.4758');
   });
 
   it('every source entry has id, title, url, status fields', () => {
@@ -56,6 +60,8 @@ describe('G1: sources', () => {
       expect(src.id).toBe(key);
       expect(typeof src.title).toBe('string');
       expect(src.title.length).toBeGreaterThan(0);
+      expect(src.url).toMatch(/^https:\/\//);
+      expect(src.status).toBe('verified');
     }
   });
 });

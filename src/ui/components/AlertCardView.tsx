@@ -1,5 +1,7 @@
 import React, { useId, useState } from 'react';
+import { createPortal } from 'react-dom';
 import {
+  Activity,
   AlertOctagon,
   Bookmark,
   ChevronDown,
@@ -9,9 +11,12 @@ import {
   FlaskConical,
   Stethoscope,
   Pill,
+  Radio,
+  X,
 } from 'lucide-react';
-import type { AlertCard, EvidenceStrength, SeverityLevel, SourceRef } from '@/contracts/types';
-import { SUPPLIES } from '@/guidance';
+import type { AlertCard, AnalysisResult, EvidenceStrength, MissionSettingId, SeverityLevel, SourceRef, SupplyId } from '@/contracts/types';
+import { INDICATORS } from '@/contracts/indicators';
+import { MISSION_SETTINGS, SUPPLIES } from '@/guidance';
 import { SeverityMark } from './SeverityMark';
 import { cn } from '@/ui/lib/format';
 
@@ -21,6 +26,11 @@ export interface AlertCardViewProps {
   onLog?: (card: AlertCard) => void;
   defaultOpen?: boolean;
   detailMode?: boolean;
+  telemetry?: {
+    missionSetting: MissionSettingId;
+    analysis: AnalysisResult;
+    supplies: Record<SupplyId, boolean>;
+  };
 }
 
 const SEVERITY_STYLES: Record<
@@ -40,9 +50,14 @@ function supplyLabel(id: string): string {
   return SUPPLIES.find((supply) => supply.id === id)?.label ?? id.replace(/_/g, ' ');
 }
 
-export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode }: AlertCardViewProps) {
+function mean(values: number[]): number | null {
+  return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
+}
+
+export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, telemetry }: AlertCardViewProps) {
   const isDefaultOpen = defaultOpen ?? (card.severity === 'review' || card.severity === 'urgent');
   const [isOpen, setIsOpen] = useState(isDefaultOpen);
+  const [packetOpen, setPacketOpen] = useState(false);
   const showDetails = detailMode || isOpen;
   const [expandedEvidence, setExpandedEvidence] = useState<Record<number, boolean>>({});
   const tierSegments: Record<EvidenceStrength, number> = { low: 1, moderate: 2, high: 3 };
@@ -51,12 +66,28 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode }:
   const panelId = `card-panel-${card.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
   const titleId = `card-title-${card.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
   const rawId = useId().replace(/:/g, '');
+  const setting = telemetry ? MISSION_SETTINGS[telemetry.missionSetting] : null;
+  const supplyActions = card.recommendedActions.filter((action) => action.requiresSupply);
+  const trajectoryRows = telemetry
+    ? card.indicators.map((indicatorId) => {
+        const meta = INDICATORS.find((candidate) => candidate.id === indicatorId);
+        const baseline = telemetry.analysis.baselines[indicatorId];
+        const indicator = telemetry.analysis.indicators[indicatorId];
+        const points = (indicator?.points ?? []).filter((point) => point.day <= card.day).slice(-7);
+        if (!meta) return null;
+        const observed = mean(points.flatMap((point) => point.value === null ? [] : [point.value]));
+        const expected = mean(points.map((point) => point.expected));
+        const format = (value: number | null | undefined) => value == null ? '—' : `${value.toFixed(meta.decimals)} ${meta.unit}`;
+        return { indicatorId, label: meta.label, baseline: format(baseline?.median), observed: format(observed), expected: format(expected) };
+      }).filter((row): row is NonNullable<typeof row> => row !== null)
+    : [];
 
   const toggleEvidenceDays = (index: number) => {
     setExpandedEvidence((previous) => ({ ...previous, [index]: !previous[index] }));
   };
 
   return (
+    <>
     <article
       className={cn(
         'group relative overflow-hidden rounded-[20px] border bg-white/86 shadow-card backdrop-blur-sm transition-shadow hover:shadow-float',
@@ -120,6 +151,53 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode }:
 
       {showDetails && (
         <div id={panelId} className="border-t border-line/80">
+          <section className="border-b border-line/80 bg-instrument-soft/25 px-4 py-3.5 pl-5">
+            <div className="flex flex-wrap items-center justify-between gap-2">
+              <h3 className={SECTION_HEADING.replace('mb-2', 'mb-0')}>
+                <Activity className="h-3.5 w-3.5" aria-hidden="true" />
+                Flight Procedure / Syndrome Console
+              </h3>
+              <span className="chip chip-primary">CMO Procedure Mode: Guided Non-Physician Protocol</span>
+            </div>
+            <p className="mt-2 text-[0.66rem] leading-relaxed text-ink-soft">
+              CMO Cognitive Load (display metric): {card.recommendedActions.length} guided action{card.recommendedActions.length === 1 ? '' : 's'} · {card.nextMeasurements.length} next-measurement item{card.nextMeasurements.length === 1 ? '' : 's'}. This is a count of on-screen steps, not a validated workload score.
+            </p>
+            <div className="mt-3 rounded-xl border border-line/80 bg-white/75 p-3">
+              <h4 className="text-[0.66rem] font-bold uppercase tracking-[0.1em] text-ink-faint">Consumable Resource Impact</h4>
+              {supplyActions.length > 0 ? (
+                <ul className="mt-1.5 space-y-1">
+                  {supplyActions.map((action) => (
+                    <li key={action.id} className="text-[0.7rem] leading-relaxed text-ink-2">
+                      {action.supplyAvailable ? 'Required by listed action: ' : 'Not listed aboard: '}
+                      <span className="font-semibold">{supplyLabel(action.requiresSupply!)}</span>
+                      {!action.supplyAvailable && action.alternativeText ? ` · ${action.alternativeText}` : ''}
+                    </li>
+                  ))}
+                </ul>
+              ) : (
+                <p className="mt-1.5 text-[0.7rem] leading-relaxed text-ink-2">
+                  No supply in the onboard inventory is explicitly required by this card&apos;s actions.
+                </p>
+              )}
+              {card.kind === 'isolated_spike' && (
+                <p className="mt-1.5 text-[0.66rem] leading-relaxed text-ink-soft">
+                  An isolated spike is not classified as a motion artifact by this prototype. It does not automatically spend a test strip; follow the listed confirmation step. Disposable strip counts are not modeled.
+                </p>
+              )}
+              <p className="mt-1.5 text-[0.62rem] text-ink-faint">Device inventory is shown; hardware health and remaining consumable quantities are not instrumented.</p>
+            </div>
+            {telemetry && (
+              <button
+                type="button"
+                onClick={() => setPacketOpen(true)}
+                className="btn btn-secondary mt-3 !min-h-[40px] !px-3 !text-[0.68rem]"
+              >
+                <Radio className="h-3.5 w-3.5" aria-hidden="true" />
+                Build Flight Surgeon Telemetry Downlink Packet
+              </button>
+            )}
+          </section>
+
           {card.evidence.length > 0 && (
             <section className="px-4 py-3.5 pl-5">
               <h3 className={SECTION_HEADING}>
@@ -271,7 +349,7 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode }:
                         <ExternalLink className="h-2.5 w-2.5" aria-hidden="true" />
                       </a>
                     ) : (
-                      <span>{title} (source link pending)</span>
+                      <span>{title}</span>
                     )}
                   </span>
                 );
@@ -291,5 +369,71 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode }:
         </div>
       )}
     </article>
+    {packetOpen && telemetry && setting && createPortal(
+      <div
+        className="fixed inset-0 z-[120] flex items-center justify-center bg-[#06152b]/65 p-3 backdrop-blur-sm sm:p-6"
+        onMouseDown={(event) => { if (event.target === event.currentTarget) setPacketOpen(false); }}
+      >
+        <section role="dialog" aria-modal="true" aria-labelledby={`downlink-title-${rawId}`} className="flex max-h-[92dvh] w-[min(820px,100%)] flex-col overflow-hidden rounded-2xl border border-white/70 bg-white shadow-float">
+          <header className="flex items-center justify-between gap-3 border-b border-line px-4 py-3">
+            <div>
+              <p className="section-kicker">Draft · not transmitted</p>
+              <h2 id={`downlink-title-${rawId}`} className="font-display text-[0.95rem] font-extrabold text-ink">Flight Surgeon Telemetry Downlink Packet</h2>
+            </div>
+            <button type="button" onClick={() => setPacketOpen(false)} className="icon-btn" aria-label="Close telemetry packet">
+              <X className="h-4 w-4" aria-hidden="true" />
+            </button>
+          </header>
+          <div className="scroll-thin space-y-3 overflow-y-auto p-4">
+            <section className="rounded-xl border border-line p-3">
+              <h3 className="text-[0.7rem] font-bold text-ink">Vehicle &amp; OWLT (One-Way Light Time)</h3>
+              <p className="mt-1 text-[0.72rem] text-ink-2">{setting.label} · {setting.oneWayDelayMinutes === 0 ? '0 min (near-real-time link)' : setting.oneWayDelayMinutes < 1 ? `${(setting.oneWayDelayMinutes * 60).toFixed(1)} sec` : `${setting.oneWayDelayMinutes} min`} one way. Vehicle/habitat identifier is not configured.</p>
+            </section>
+
+            <section className="rounded-xl border border-line p-3">
+              <h3 className="text-[0.7rem] font-bold text-ink">Crew Baseline vs. 7-Day Adaptation-Adjusted Trajectory</h3>
+              <div className="mt-2 overflow-x-auto">
+                <table className="data-table min-w-[560px]">
+                  <thead><tr><th>Measure</th><th>Pre-flight baseline</th><th>7-day expected adaptation</th><th>7-day observed mean</th></tr></thead>
+                  <tbody>{trajectoryRows.map((row) => (
+                    <tr key={row.indicatorId}><td>{row.label}</td><td>{row.baseline}</td><td>{row.expected}</td><td>{row.observed}</td></tr>
+                  ))}</tbody>
+                </table>
+              </div>
+              {trajectoryRows.length === 0 && <p className="mt-1 text-[0.68rem] text-ink-soft">No indicator trajectory is attached to this card.</p>}
+              <p className="mt-1 text-[0.62rem] text-ink-faint">Expected values are simulator adaptation curves, not validated clinical forecasts.</p>
+            </section>
+
+            <section className="rounded-xl border border-line p-3">
+              <h3 className="text-[0.7rem] font-bold text-ink">CUSUM Onset &amp; Cross-Domain Syndrome Cluster</h3>
+              <p className="mt-1 text-[0.68rem] text-ink-2">Domains: {card.domains.join(', ') || 'none recorded'} · Finding: {card.kind} · Alert day: {card.day}</p>
+              <ul className="mt-2 grid gap-1 sm:grid-cols-2">
+                {card.indicators.map((id) => {
+                  const meta = INDICATORS.find((candidate) => candidate.id === id);
+                  const result = telemetry.analysis.indicators[id];
+                  if (!meta || !result) return null;
+                  return <li key={id} className="text-[0.66rem] text-ink-soft">{meta.label}: onset {result.onsetDay ?? 'none'} · CUSUM ↑ {result.cusumUp.toFixed(2)} / ↓ {result.cusumDown.toFixed(2)}</li>;
+                })}
+              </ul>
+            </section>
+
+            <section className="rounded-xl border border-line p-3">
+              <h3 className="text-[0.7rem] font-bold text-ink">Onboard Consumables &amp; Hardware Status</h3>
+              <ul className="mt-2 grid gap-1 sm:grid-cols-2">
+                {SUPPLIES.map((supply) => <li key={supply.id} className="text-[0.66rem] text-ink-soft">{supply.label}: {telemetry.supplies[supply.id] ? 'aboard' : 'not marked aboard'}</li>)}
+              </ul>
+              <p className="mt-1 text-[0.62rem] text-ink-faint">Consumable quantities and hardware diagnostics are not available in this prototype.</p>
+            </section>
+
+            <section className="rounded-xl border border-line p-3">
+              <h3 className="text-[0.7rem] font-bold text-ink">CMO Actions Executed Prior to Ground Reply</h3>
+              <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">No completed action record is attached to this alert. The card&apos;s recommended actions are guidance and are not represented as executed.</p>
+            </section>
+          </div>
+        </section>
+      </div>,
+      document.body,
+    )}
+    </>
   );
 }

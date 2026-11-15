@@ -102,6 +102,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
     crewName,
     crewId,
     missionSetting,
+    supplies,
   } = useAppState();
 
   React.useEffect(() => {
@@ -633,7 +634,12 @@ export function TodayPage({ initialDay }: TodayPageProps) {
             </summary>
             <div className="flex flex-col gap-3 border-t border-line px-3 py-3">
               {infoCards.map((card) => (
-                <AlertCardView key={card.id} card={card} sources={SOURCES} />
+                <AlertCardView
+                  key={card.id}
+                  card={card}
+                  sources={SOURCES}
+                  telemetry={{ missionSetting, analysis, supplies }}
+                />
               ))}
             </div>
           </details>
@@ -689,6 +695,7 @@ export function TodayPage({ initialDay }: TodayPageProps) {
                   sources={SOURCES}
                   onLog={handleAttentionLog}
                   detailMode
+                  telemetry={{ missionSetting, analysis, supplies }}
                 />
               </div>
             </div>

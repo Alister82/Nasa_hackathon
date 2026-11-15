@@ -233,6 +233,8 @@ export interface MissionSetting {
   description: string;
   oneWayDelayMinutes: number;
   radiationRateMsvPerDay: number;
+  radiationSourceId: string;
+  radiationBenchmark: string;
 }
 
 export interface SupplyMeta { id: SupplyId; label: string; }

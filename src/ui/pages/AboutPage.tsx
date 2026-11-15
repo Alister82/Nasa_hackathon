@@ -13,6 +13,7 @@ import { SOURCES } from '@/guidance';
 import { APP_NAME, DISCLAIMER_BANNER } from '@/contracts/constants';
 import { PageHeader, SectionHeading } from '@/ui/components/ui';
 import { cn } from '@/ui/lib/format';
+import { ScientificGroundingPanel } from '@/ui/components/ScientificGroundingPanel';
 
 type Coverage =
   | 'Covered'
@@ -143,6 +144,8 @@ export function AboutPage() {
         </div>
       </section>
 
+      <ScientificGroundingPanel />
+
       <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
         <section className="panel overflow-hidden">
           <header className="flex items-center gap-2 border-b border-line/80 bg-status-ok-soft/40 px-4 py-3">
@@ -225,7 +228,7 @@ export function AboutPage() {
         <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line/80 bg-surface2/50 px-4 py-3">
           <SectionHeading
             title="Sources"
-            subtitle="The five organizer pages are linked with verified URLs. The four external clinical references stay marked pending until a human verifies them."
+            subtitle="NASA, clinical, and research records are linked to their source pages."
           />
           <span className="chip chip-neutral tabular-nums">{verifiedCount}/{sourcesList.length} linked</span>
         </header>
@@ -256,9 +259,7 @@ export function AboutPage() {
                   Source link
                   <ExternalLink className="h-3 w-3" aria-hidden="true" />
                 </a>
-              ) : (
-                <span className="text-[0.66rem] italic text-ink-soft">(source link pending)</span>
-              )}
+              ) : null}
             </li>
           ))}
         </ul>

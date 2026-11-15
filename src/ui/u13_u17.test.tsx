@@ -98,7 +98,7 @@ describe('U15: Journal and About Screens', () => {
     });
   });
 
-  it('About page renders NASA risk coverage map and sources with (source link pending) where appropriate', () => {
+  it('About page renders NASA risk coverage, scientific grounding, and verified source links', () => {
     render(
       <MemoryRouter>
         <AboutPage />
@@ -107,12 +107,13 @@ describe('U15: Journal and About Screens', () => {
 
     expect(screen.getByRole('heading', { name: /About Vigil/i })).toBeInTheDocument();
     expect(screen.getByRole('heading', { name: /NASA Human Research Program/i })).toBeInTheDocument();
+    expect(screen.getByRole('heading', { name: /Scientific Grounding & NASA OSDR \/ ExMC Architecture/i })).toBeInTheDocument();
     expect(screen.getByText('Risk of Cardiovascular Adaptations')).toBeInTheDocument();
     expect(screen.getByText('Risk of Radiation-Induced Cancers')).toBeInTheDocument();
 
-    // Check for source links and pending status
+    // Every displayed source now has a link.
     expect(screen.getAllByText('Source link').length).toBeGreaterThan(0);
-    expect(screen.getAllByText('(source link pending)').length).toBeGreaterThan(0);
+    expect(document.body.textContent).not.toContain('(source link pending)');
   });
 });
 
