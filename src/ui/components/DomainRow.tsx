@@ -1,62 +1,74 @@
 import React from 'react';
-import type { DomainId, DomainAnalysis, IndicatorStatus } from '@/contracts/types';
+import { AlertTriangle, CheckCircle2, ChevronRight } from 'lucide-react';
+import type { DomainId, DomainAnalysis } from '@/contracts/types';
 import { DOMAIN_LABELS } from '@/contracts/indicators';
-import { StatusChip, type StatusType } from './StatusChip';
+import { DomainIcon, DOMAIN_VISUALS } from './MetricTile';
+import { cn } from '@/ui/lib/format';
 
 export interface DomainRowProps {
   domain: DomainId;
   analysis: DomainAnalysis;
   summary: string;
   onOpen: (d: DomainId) => void;
+  selected?: boolean;
 }
 
-const STATUS_BAR_COLOR: Record<IndicatorStatus, string> = {
-  ok: 'bg-status-ok',
-  watch: 'bg-status-watch',
-  flagged: 'bg-status-review',
-};
+const STATUS_MARK = {
+  ok: { Icon: CheckCircle2, tone: 'text-status-ok', label: 'Steady' },
+  watch: { Icon: AlertTriangle, tone: 'text-status-watch', label: 'Watch' },
+  flagged: { Icon: AlertTriangle, tone: 'text-status-review', label: 'Review' },
+} as const;
 
-function mapStatusToType(status: IndicatorStatus): StatusType {
-  if (status === 'flagged') return 'review';
-  return status as StatusType;
-}
-
-export function DomainRow({ domain, analysis, summary, onOpen }: DomainRowProps) {
+export function DomainRow({ domain, analysis, summary, onOpen, selected = false }: DomainRowProps) {
   const status = analysis?.status ?? 'ok';
-  const barColor = STATUS_BAR_COLOR[status] ?? 'bg-status-ok';
-  const statusType = mapStatusToType(status);
+  const statusMeta = STATUS_MARK[status];
+  const StatusIcon = statusMeta.Icon;
+  const visual = DOMAIN_VISUALS[domain];
 
   return (
-    <li
-      onClick={() => onOpen(domain)}
-      onKeyDown={(e) => {
-        if (e.key === 'Enter' || e.key === ' ') {
-          e.preventDefault();
-          onOpen(domain);
-        }
-      }}
-      tabIndex={0}
-      role="button"
-      className="flex items-center justify-between p-3.5 bg-panel hover:bg-ceramic/60 border-b border-line cursor-pointer transition-colors relative overflow-hidden min-h-[44px]"
-      aria-label={`${DOMAIN_LABELS[domain]}, ${statusType}. ${summary}`}
-    >
-      {/* Left 6px status bar in strong color */}
-      <div className={`absolute left-0 top-0 bottom-0 w-1.5 ${barColor}`} aria-hidden="true" />
-
-      {/* Content */}
-      <div className="pl-3 flex flex-col flex-1 min-w-0 pr-3">
-        <span className="font-bold text-sm sm:text-base text-ink truncate">
-          {DOMAIN_LABELS[domain]}
+    <li>
+      <button
+        type="button"
+        onClick={() => onOpen(domain)}
+        onKeyDown={(e) => {
+          if (e.key === 'Enter' || e.key === ' ') {
+            e.preventDefault();
+            onOpen(domain);
+          }
+        }}
+        aria-label={`${DOMAIN_LABELS[domain]}, ${statusMeta.label}: ${summary}. Open details.`}
+        aria-current={selected ? 'true' : undefined}
+        className={cn(
+          'group flex w-full items-center gap-3 rounded-xl border px-2.5 py-2.5 text-left transition-all',
+          selected
+            ? 'border-instrument/25 bg-instrument-soft/70 shadow-xs'
+            : 'border-transparent hover:border-line hover:bg-white/80',
+        )}
+      >
+        <span
+          className="flex h-9 w-9 shrink-0 items-center justify-center rounded-[11px]"
+          style={{ backgroundColor: visual.soft, color: visual.color }}
+          aria-hidden="true"
+        >
+          <DomainIcon domain={domain} className="h-4 w-4" />
         </span>
-        <span className="text-xs sm:text-sm text-ink-soft truncate">
-          {summary || 'Measurements within typical adaptation range.'}
-        </span>
-      </div>
 
-      {/* Status Chip */}
-      <div className="flex-shrink-0">
-        <StatusChip status={statusType} />
-      </div>
+        <span className="min-w-0 flex-1">
+          <span className="block truncate text-[0.78rem] font-semibold text-ink" title={DOMAIN_LABELS[domain]}>
+            {visual.short}
+          </span>
+          <span className="mt-0.5 block truncate text-[0.65rem] text-ink-soft">{summary}</span>
+        </span>
+
+        <span
+          className={cn('hidden shrink-0 sm:block', statusMeta.tone)}
+          title={statusMeta.label}
+          aria-label={statusMeta.label}
+        >
+          <StatusIcon className="h-4 w-4" strokeWidth={2} aria-hidden="true" />
+        </span>
+        <ChevronRight className="h-4 w-4 shrink-0 text-ink-faint transition-transform group-hover:translate-x-0.5" aria-hidden="true" />
+      </button>
     </li>
   );
 }

@@ -1,4 +1,5 @@
 import React from 'react';
+import { Crosshair, Info, Radar } from 'lucide-react';
 import type { CrewDataset, DailyFlag, SystemId } from '@/contracts/types';
 
 export interface SystemsComparisonProps {
@@ -13,9 +14,9 @@ const SYSTEM_LABELS: Record<SystemId, string> = {
 };
 
 const SYSTEM_COLORS: Record<SystemId, string> = {
-  vigil: 'bg-instrument',
-  threshold: 'bg-status-watch',
-  zscore: 'bg-status-review',
+  vigil: 'var(--instrument)',
+  threshold: 'var(--status-watch)',
+  zscore: 'var(--status-review)',
 };
 
 const SYSTEMS: SystemId[] = ['vigil', 'threshold', 'zscore'];
@@ -52,83 +53,157 @@ export function SystemsComparison({ dataset, flags }: SystemsComparisonProps) {
     };
   });
 
+  const leader = [...stats]
+    .filter((system) => system.firstFlagDay !== 'None')
+    .sort((a, b) => a.flaggedDays[0]! - b.flaggedDays[0]!)[0];
+
   return (
-    <div className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-6">
-      <div>
-        <h2 className="text-lg font-bold text-ink mb-1">Who flags first</h2>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          Detection timing and pre-onset flags for this scenario. The ground-truth onset comes
-          from the simulator.
-        </p>
+    <section className="panel overflow-hidden" aria-label="Detection system comparison">
+      <header className="relative overflow-hidden border-b border-line/80 bg-[linear-gradient(160deg,rgba(255,255,255,0.96),rgba(240,247,255,0.9))] px-4 py-3.5">
+        <div
+          className="pointer-events-none absolute -right-10 -top-14 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(78,139,235,0.18),transparent_70%)]"
+          aria-hidden="true"
+        />
+        <div className="relative flex flex-wrap items-start justify-between gap-3">
+          <div>
+            <h2 className="font-display text-[1.05rem] font-extrabold tracking-[-0.03em] text-ink">
+              Who flags first
+            </h2>
+            <p className="mt-0.5 max-w-xl text-[0.68rem] leading-relaxed text-ink-soft">
+              Detection timing and pre-onset flags for this scenario. The ground-truth onset comes
+              from the simulator, so a negative “days after onset” means a flag before onset.
+            </p>
+          </div>
+          <div className="flex flex-wrap items-center gap-1.5">
+            {leader && (
+              <span className="chip chip-primary">
+                <Crosshair className="h-3 w-3" aria-hidden="true" />
+                Earliest: {leader.label}
+              </span>
+            )}
+            {onsetDay !== null && (
+              <span className="chip chip-review">Onset day {onsetDay}</span>
+            )}
+          </div>
+        </div>
+      </header>
+
+      <div className="grid grid-cols-1 gap-2.5 p-3.5 sm:grid-cols-3">
+        {stats.map((system) => (
+          <article
+            key={system.systemId}
+            className="rounded-[14px] border border-line bg-white/75 px-3 py-2.5"
+          >
+            <div className="flex items-center gap-1.5">
+              <span
+                className="h-2 w-2 rounded-full"
+                style={{ backgroundColor: SYSTEM_COLORS[system.systemId] }}
+                aria-hidden="true"
+              />
+              <p className="text-[0.72rem] font-bold text-ink">{system.label}</p>
+            </div>
+            <p className="metric-number mt-1 text-[1.25rem] leading-none">{system.firstFlagDay}</p>
+            <p className="mt-1 text-[0.6rem] text-ink-soft">
+              {system.daysAfterOnset === '-' ? 'No onset reference' : `${system.daysAfterOnset} days from onset`}
+              {' · '}
+              {system.flagsBeforeOnset} pre-onset
+            </p>
+          </article>
+        ))}
       </div>
 
-      <div className="overflow-x-auto">
-        <table className="w-full text-left border-collapse text-xs sm:text-sm">
+      <div className="overflow-x-auto border-t border-line/80">
+        <table className="data-table">
           <thead>
-            <tr className="border-b border-line text-ink-soft font-bold">
-              <th className="py-2.5 pr-4">System</th>
-              <th className="py-2.5 px-4 text-center">First flag day</th>
-              <th className="py-2.5 px-4 text-center">Days after onset</th>
-              <th className="py-2.5 pl-4 text-center">Flags before onset</th>
+            <tr>
+              <th scope="col">System</th>
+              <th scope="col" className="text-center">First flag day</th>
+              <th scope="col" className="text-center">Days after onset</th>
+              <th scope="col" className="text-center">Flags before onset</th>
             </tr>
           </thead>
-          <tbody className="divide-y divide-line tabular-nums font-medium text-ink">
+          <tbody className="tabular-nums">
             {stats.map((system) => (
               <tr key={system.systemId}>
-                <td className="py-3 pr-4">
-                  <span className="inline-flex items-center gap-2">
+                <td>
+                  <span className="inline-flex items-center gap-2 font-semibold text-ink">
                     <span
-                      className={`w-2.5 h-2.5 rounded-full ${SYSTEM_COLORS[system.systemId]}`}
+                      className="h-2.5 w-2.5 rounded-full"
+                      style={{ backgroundColor: SYSTEM_COLORS[system.systemId] }}
                       aria-hidden="true"
                     />
                     {system.label}
                   </span>
                 </td>
-                <td className="py-3 px-4 text-center">{system.firstFlagDay}</td>
-                <td className="py-3 px-4 text-center">{system.daysAfterOnset}</td>
-                <td className="py-3 pl-4 text-center">{system.flagsBeforeOnset}</td>
+                <td className="text-center">{system.firstFlagDay}</td>
+                <td className="text-center">{system.daysAfterOnset}</td>
+                <td className="text-center">{system.flagsBeforeOnset}</td>
               </tr>
             ))}
           </tbody>
         </table>
       </div>
 
-      <div className="flex flex-col gap-2 pt-2 border-t border-line">
-        <div className="flex justify-between items-center text-xs font-semibold text-ink-soft gap-2 flex-wrap">
-          <span>Flag timeline across mission days 1 to {dataset.missionDays}</span>
+      <div className="flex flex-col gap-2.5 border-t border-line/80 px-3.5 py-3.5">
+        <div className="flex flex-wrap items-center justify-between gap-2 text-[0.66rem] font-semibold text-ink-soft">
+          <span className="inline-flex items-center gap-1.5">
+            <Radar className="h-3.5 w-3.5 text-instrument" aria-hidden="true" />
+            Flag timeline across mission days 1 to {dataset.missionDays}
+          </span>
           {onsetDay !== null && (
-            <span className="text-status-urgent font-bold">Known onset: day {onsetDay}</span>
+            <span className="font-bold text-status-urgent">Known onset: day {onsetDay}</span>
           )}
         </div>
 
-        <div className="relative bg-ceramic rounded-sheet p-3 flex flex-col gap-3">
+        <div className="relative overflow-hidden rounded-[14px] border border-line bg-surface2/70 px-3 py-3">
           {onsetDay !== null && (
             <div
-              className="absolute top-0 bottom-0 w-0.5 bg-status-urgent z-10 pointer-events-none"
-              style={{ left: `${positionPercent(onsetDay, dataset.missionDays)}%` }}
+              className="absolute bottom-2 top-2 z-10 w-0.5 bg-status-urgent"
+              style={{ left: `calc(${positionPercent(onsetDay, dataset.missionDays)}% + 0.75rem)` }}
               title={`Ground-truth onset: day ${onsetDay}`}
+              aria-hidden="true"
             />
           )}
 
-          {stats.map((system) => (
-            <div key={system.systemId} className="flex items-center gap-3">
-              <span className="w-28 text-xs font-bold text-ink truncate flex-shrink-0">
-                {system.label}
-              </span>
-              <div className="relative flex-1 h-3 bg-panel rounded border border-line">
-                {system.flaggedDays.map((day) => (
-                  <span
-                    key={day}
-                    className={`absolute top-0.5 bottom-0.5 w-1 rounded-sm ${SYSTEM_COLORS[system.systemId]}`}
-                    style={{ left: `${positionPercent(day, dataset.missionDays)}%` }}
-                    title={`${system.label} flagged on day ${day}`}
-                  />
-                ))}
+          <div className="flex flex-col gap-2.5">
+            {stats.map((system) => (
+              <div key={system.systemId} className="flex items-center gap-2.5">
+                <span className="w-24 shrink-0 truncate text-[0.64rem] font-bold text-ink sm:w-28">
+                  {system.label}
+                </span>
+                <div className="relative h-3 flex-1 overflow-hidden rounded-full border border-line bg-white">
+                  {system.flaggedDays.map((day) => (
+                    <span
+                      key={day}
+                      className="absolute bottom-0.5 top-0.5 w-[3px] rounded-sm"
+                      style={{
+                        left: `${positionPercent(day, dataset.missionDays)}%`,
+                        backgroundColor: SYSTEM_COLORS[system.systemId],
+                      }}
+                      title={`${system.label} flagged on day ${day}`}
+                    />
+                  ))}
+                </div>
+                <span className="w-10 shrink-0 text-right text-[0.6rem] font-semibold tabular-nums text-ink-soft">
+                  {system.flaggedDays.length}
+                </span>
               </div>
-            </div>
-          ))}
+            ))}
+          </div>
+
+          <div className="mt-2 flex items-center justify-between text-[0.55rem] font-semibold tabular-nums text-ink-faint">
+            <span>Day 1</span>
+            <span>Day {Math.round(dataset.missionDays / 2)}</span>
+            <span>Day {dataset.missionDays}</span>
+          </div>
         </div>
+
+        <p className="inline-flex items-start gap-1.5 text-[0.6rem] leading-relaxed text-ink-faint">
+          <Info className="mt-0.5 h-3 w-3 shrink-0" aria-hidden="true" />
+          Simulated scenario output. Earlier flags are not automatically better: pre-onset flags
+          and false episodes are shown so the trade-off stays visible.
+        </p>
       </div>
-    </div>
+    </section>
   );
 }

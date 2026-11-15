@@ -1,49 +1,115 @@
+/* ------------------------------------------------------------------
+   Vigil design tokens — premium aerospace health system
+   A calm, icy-blue clinical palette with deep navy typography.
+   ------------------------------------------------------------------ */
+
 :root {
-  --ceramic: #E8EDF1;
-  --panel: #F6F8FA;
-  --ink: #0F1A2B;
-  --ink-soft: #46566B;
-  --line: #C4CFDA;
-  --instrument: #1D56B8;
-  --instrument-soft: #D9E5F7;
+  /* Canvas */
+  --bg-0: #f8fbff;
+  --bg-1: #edf4ff;
+  --bg-2: #e2ecfa;
+  --bg-3: #d8e6f8;
 
-  /* Status strong colors */
-  --status-ok: #1F6F52;
-  --status-info: #2B5D8A;
-  --status-watch: #8A5A00;
-  --status-review: #B4380B;
-  --status-urgent: #A61B1B;
+  /* Surfaces */
+  --surface: #ffffff;
+  --surface-2: #f5f8fd;
+  --surface-3: #edf3fb;
+  --glass: rgba(255, 255, 255, 0.74);
+  --glass-strong: rgba(255, 255, 255, 0.9);
+  --glass-border: rgba(255, 255, 255, 0.82);
 
-  /* Status soft colors */
-  --status-ok-soft: #D5EFE4;
-  --status-info-soft: #DCE9F5;
-  --status-watch-soft: #FCE9C0;
-  --status-review-soft: #FADBC9;
-  --status-urgent-soft: #F7D0D0;
+  /* Text */
+  --ink: #0f2442;
+  --ink-2: #243856;
+  --ink-soft: #66758c;
+  --ink-faint: #93a2b6;
 
-  /* Focus and shadows */
+  /* Lines */
+  --line: #dce6f2;
+  --line-strong: #c7d7ea;
+
+  /* Brand */
+  --instrument: #2869d8;
+  --instrument-deep: #1a4fae;
+  --instrument-soft: #e3eeff;
+
+  /* Semantic */
+  --status-ok: #128a77;
+  --status-ok-soft: #e2f6f1;
+  --status-info: #2563c9;
+  --status-info-soft: #e7f0ff;
+  --status-watch: #b57712;
+  --status-watch-soft: #fff5df;
+  --status-review: #c4562e;
+  --status-review-soft: #ffefe7;
+  --status-urgent: #cf3f49;
+  --status-urgent-soft: #ffecee;
+
+  /* Scientific accents */
+  --violet: #7462e8;
+  --violet-soft: #f0edff;
+  --teal: #159b87;
+  --coral: #d94b52;
+  --amber: #e0a03a;
+
+  /* Legacy aliases used across the app */
+  --ceramic: var(--bg-1);
+  --panel: var(--surface);
+
+  /* Charts */
+  --chart-hr: #2869d8;
+  --chart-bp: #7462e8;
+  --chart-temp: #e0a03a;
+  --chart-sleep: #159b87;
+  --chart-stress: #d94b52;
+  --chart-grid: #e6eef8;
+
+  /* Radii */
+  --r-xs: 8px;
+  --r-sm: 12px;
+  --r-md: 16px;
+  --r-lg: 22px;
+  --r-xl: 28px;
+  --r-pill: 999px;
+
+  /* Elevation */
+  --shadow-xs: 0 1px 2px rgba(16, 37, 68, 0.04);
+  --shadow-sm: 0 2px 8px rgba(16, 37, 68, 0.05);
+  --shadow-card: 0 10px 30px -18px rgba(22, 48, 87, 0.2), 0 2px 6px rgba(22, 48, 87, 0.04);
+  --shadow-float: 0 24px 60px -28px rgba(18, 46, 88, 0.32), 0 8px 20px -12px rgba(18, 46, 88, 0.14);
+  --shadow-ring: 0 0 0 1px rgba(40, 105, 216, 0.08);
+  --glow-blue: 0 0 42px rgba(40, 105, 216, 0.24);
+
+  /* Focus */
   --focus-ring: 2px solid var(--instrument);
-  --focus-offset: 2px;
-  --card-shadow: 0 1px 2px rgba(15, 26, 43, 0.08);
+  --focus-offset: 3px;
 }
 
 body {
-  background-color: var(--ceramic);
+  background-color: var(--bg-1);
   color: var(--ink);
-  font-family: 'Atkinson Hyperlegible', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
+  font-family: 'Inter Variable', 'Inter', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   margin: 0;
   padding: 0;
   -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+::selection {
+  background: rgba(40, 105, 216, 0.18);
+  color: var(--ink);
 }
 
 .tabular-nums {
   font-variant-numeric: tabular-nums;
+  font-feature-settings: 'tnum';
 }
 
 /* Global focus ring */
 :focus-visible {
   outline: var(--instrument) solid 2px;
-  outline-offset: 2px;
+  outline-offset: 3px;
 }
 
 /* Reduced motion guards */
@@ -55,4 +121,3 @@ body {
     scroll-behavior: auto !important;
   }
 }
-

@@ -1,6 +1,18 @@
 import React from 'react';
+import { Link } from 'react-router-dom';
+import {
+  BookOpen,
+  CheckCircle2,
+  CircleSlash,
+  ExternalLink,
+  Info,
+  ShieldCheck,
+  Sparkles,
+} from 'lucide-react';
 import { SOURCES } from '@/guidance';
 import { APP_NAME, DISCLAIMER_BANNER } from '@/contracts/constants';
+import { PageHeader, SectionHeading } from '@/ui/components/ui';
+import { cn } from '@/ui/lib/format';
 
 type Coverage =
   | 'Covered'
@@ -74,70 +86,132 @@ const NOT_DONE = [
   'It does not use an AI model or a chatbot; guidance comes from a fixed library.',
 ];
 
+const DOES = [
+  'Records health indicators and wellbeing check-ins on the device.',
+  "Compares each reading with the astronaut's own pre-flight baseline and the expected early adaptation to spaceflight.",
+  'Shows changes on a body map, on charts, and in evidence-linked alert cards.',
+  'Uses a fixed guidance library and mission-aware escalation advice.',
+  'Works without a network after the first load.',
+];
+
+function coverageTone(coverage: Coverage): string {
+  if (coverage === 'Covered') return 'chip-ok';
+  if (coverage === 'Not covered') return 'chip-urgent';
+  if (coverage === 'Partly') return 'chip-watch';
+  return 'chip-primary';
+}
+
 export function AboutPage() {
   const sourcesList = Object.values(SOURCES);
+  const verifiedCount = sourcesList.filter((source) => source.url !== null).length;
 
   return (
-    <div className="max-w-3xl mx-auto px-4 py-6 flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink mb-1">
-          About {APP_NAME}
-        </h1>
-        <p className="text-sm text-ink-soft">
-          An offline-first health monitoring prototype for astronauts on long missions. Every
-          crew reading is simulated.
-        </p>
-      </div>
+    <div className="page-wrap flex flex-col gap-5">
+      <PageHeader
+        kicker="About"
+        title={`About ${APP_NAME}`}
+        description={
+          <>
+            An offline-first health monitoring prototype for astronauts on long missions. Every
+            crew reading is simulated.
+          </>
+        }
+        meta={
+          <>
+            <span className="chip chip-primary">
+              <ShieldCheck className="h-3 w-3" aria-hidden="true" />
+              Decision support only
+            </span>
+            <span className="chip chip-neutral">Local-first</span>
+            <span className="chip chip-neutral">{sourcesList.length} sources</span>
+          </>
+        }
+        actions={<Link to="/help" className="btn btn-secondary">Help &amp; Support</Link>}
+      />
 
-      <div className="bg-instrument-soft border border-instrument p-4 rounded-sheet text-ink text-sm font-medium">
-        {DISCLAIMER_BANNER} Reference ranges, adaptation offsets, scenarios, and radiation
-        rates are illustrative and have not been verified for clinical use.
-      </div>
-
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
-        <div className="bg-panel border border-line rounded-sheet p-5">
-          <h2 className="font-bold text-base text-ink mb-2">What the app does</h2>
-          <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-ink leading-relaxed">
-            <li>Records health indicators and wellbeing check-ins on the device.</li>
-            <li>Compares each reading with the astronaut&apos;s own pre-flight baseline and the expected early adaptation to spaceflight.</li>
-            <li>Shows changes on a body map, on charts, and in evidence-linked alert cards.</li>
-            <li>Uses a fixed guidance library and mission-aware escalation advice.</li>
-            <li>Works without a network after the first load.</li>
-          </ul>
+      <section className="relative overflow-hidden rounded-[20px] border border-instrument/20 bg-instrument-soft/55 px-4 py-3.5">
+        <div
+          className="pointer-events-none absolute -right-12 -top-16 h-40 w-40 rounded-full bg-[radial-gradient(circle,rgba(78,139,235,0.18),transparent_70%)]"
+          aria-hidden="true"
+        />
+        <div className="relative flex items-start gap-2.5">
+          <Info className="mt-0.5 h-4 w-4 shrink-0 text-instrument" aria-hidden="true" />
+          <p className="text-[0.76rem] font-medium leading-relaxed text-ink-2">
+            {DISCLAIMER_BANNER} Reference ranges, adaptation offsets, scenarios, and radiation
+            rates are illustrative and have not been verified for clinical use.
+          </p>
         </div>
+      </section>
 
-        <div className="bg-panel border border-line rounded-sheet p-5">
-          <h2 className="font-bold text-base text-ink mb-2">What the app does not do</h2>
-          <ul className="list-disc pl-5 space-y-1.5 text-xs sm:text-sm text-ink leading-relaxed">
-            {NOT_DONE.map((item) => (
-              <li key={item}>{item}</li>
+      <div className="grid grid-cols-1 gap-3 lg:grid-cols-2">
+        <section className="panel overflow-hidden">
+          <header className="flex items-center gap-2 border-b border-line/80 bg-status-ok-soft/40 px-4 py-3">
+            <CheckCircle2 className="h-4 w-4 text-status-ok" aria-hidden="true" />
+            <h2 className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+              What the app does
+            </h2>
+          </header>
+          <ul className="space-y-2 p-4">
+            {DOES.map((item) => (
+              <li key={item} className="flex gap-2 text-[0.74rem] leading-relaxed text-ink-2">
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-status-ok" aria-hidden="true" />
+                {item}
+              </li>
             ))}
           </ul>
-        </div>
+        </section>
+
+        <section className="panel overflow-hidden">
+          <header className="flex items-center gap-2 border-b border-line/80 bg-surface2/60 px-4 py-3">
+            <CircleSlash className="h-4 w-4 text-ink-soft" aria-hidden="true" />
+            <h2 className="font-display text-[0.9rem] font-extrabold tracking-[-0.02em] text-ink">
+              What the app does not do
+            </h2>
+          </header>
+          <ul className="space-y-2 p-4">
+            {NOT_DONE.map((item) => (
+              <li key={item} className="flex gap-2 text-[0.74rem] leading-relaxed text-ink-2">
+                <span className="mt-1.5 h-1 w-1 shrink-0 rounded-full bg-ink-faint" aria-hidden="true" />
+                {item}
+              </li>
+            ))}
+          </ul>
+        </section>
       </div>
 
-      <section aria-label="NASA risk coverage map" className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-3">
-        <h2 className="font-bold text-lg text-ink">NASA Human Research Program risk coverage</h2>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          NASA risk names are quoted verbatim from the organizer&apos;s Risks of Human
-          Spaceflight page. This table shows what v1 covers and what it does not.
-        </p>
+      <section aria-label="NASA risk coverage map" className="panel overflow-hidden">
+        <header className="border-b border-line/80 bg-surface2/50 px-4 py-3">
+          <SectionHeading
+            title="NASA Human Research Program risk coverage"
+            subtitle="NASA risk names are quoted verbatim from the organizer's Risks of Human Spaceflight page. This table shows what v1 covers and what it does not."
+            action={
+              <span className="chip chip-neutral">
+                <BookOpen className="h-3 w-3" aria-hidden="true" />
+                {RISK_COVERAGE.length} risks
+              </span>
+            }
+          />
+        </header>
 
-        <div className="overflow-x-auto mt-2">
-          <table className="w-full text-left border-collapse text-xs sm:text-sm">
+        <div className="overflow-x-auto">
+          <table className="data-table">
             <thead>
-              <tr className="border-b border-line text-ink-soft font-bold">
-                <th className="py-2.5 pr-4">NASA HRP risk</th>
-                <th className="py-2.5 px-4 text-center">Coverage in v1</th>
-                <th className="py-2.5 pl-4">How</th>
+              <tr>
+                <th scope="col">NASA HRP risk</th>
+                <th scope="col" className="text-center">Coverage in v1</th>
+                <th scope="col">How</th>
               </tr>
             </thead>
-            <tbody className="divide-y divide-line font-medium text-ink">
+            <tbody>
               {RISK_COVERAGE.map((item) => (
                 <tr key={item.risk}>
-                  <td className="py-3 pr-4 font-bold">{item.risk}</td>
-                  <td className="py-3 px-4 text-center whitespace-nowrap">{item.coverage}</td>
-                  <td className="py-3 pl-4 text-xs sm:text-sm text-ink-soft leading-relaxed">
+                  <td className="font-semibold text-ink">{item.risk}</td>
+                  <td className="text-center">
+                    <span className={cn('chip !py-0.5 !text-[0.58rem]', coverageTone(item.coverage))}>
+                      {item.coverage}
+                    </span>
+                  </td>
+                  <td className="max-w-[34rem] text-[0.72rem] leading-relaxed text-ink-soft">
                     {item.how}
                   </td>
                 </tr>
@@ -147,45 +221,52 @@ export function AboutPage() {
         </div>
       </section>
 
-      <section aria-label="Sources" className="bg-panel border border-line rounded-sheet p-5 flex flex-col gap-3">
-        <h2 className="font-bold text-lg text-ink">Sources</h2>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          The five organizer pages are linked with verified URLs. The four external clinical
-          references stay marked pending until a human verifies them.
-        </p>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          Longer Moon and Mars missions bring more time in weightlessness, more radiation
-          exposure, longer isolation, increased delays in communication with Earth, and less
-          ability to rely on Earth for emergency medical assistance. That is why escalation
-          advice changes with the mission setting and the app works offline.
-        </p>
+      <section aria-label="Sources" className="panel overflow-hidden">
+        <header className="flex flex-wrap items-center justify-between gap-2 border-b border-line/80 bg-surface2/50 px-4 py-3">
+          <SectionHeading
+            title="Sources"
+            subtitle="The five organizer pages are linked with verified URLs. The four external clinical references stay marked pending until a human verifies them."
+          />
+          <span className="chip chip-neutral tabular-nums">{verifiedCount}/{sourcesList.length} linked</span>
+        </header>
 
-        <ul className="divide-y divide-line mt-2">
+        <div className="px-4 py-3">
+          <p className="max-w-3xl text-[0.7rem] leading-relaxed text-ink-soft">
+            Longer Moon and Mars missions bring more time in weightlessness, more radiation
+            exposure, longer isolation, increased delays in communication with Earth, and less
+            ability to rely on Earth for emergency medical assistance. That is why escalation
+            advice changes with the mission setting and the app works offline.
+          </p>
+        </div>
+
+        <ul className="divide-y divide-line/70 border-t border-line/80">
           {sourcesList.map((source) => (
-            <li key={source.id} className="py-2.5 flex items-start justify-between gap-3 text-xs sm:text-sm">
-              <span className="font-medium text-ink">{source.title}</span>
+            <li key={source.id} className="flex flex-wrap items-center justify-between gap-2 px-4 py-2.5">
+              <span className="inline-flex items-center gap-2 text-[0.72rem] font-medium text-ink">
+                <Sparkles className="h-3 w-3 text-ink-faint" aria-hidden="true" />
+                {source.title}
+              </span>
               {source.url !== null ? (
                 <a
                   href={source.url}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="text-instrument font-semibold underline hover:opacity-80 flex-shrink-0 inline-flex items-center min-h-[44px]"
+                  className="inline-flex min-h-[32px] items-center gap-1 text-[0.68rem] font-semibold text-instrument hover:underline"
                 >
                   Source link
+                  <ExternalLink className="h-3 w-3" aria-hidden="true" />
                 </a>
               ) : (
-                <span className="text-ink-soft italic flex-shrink-0">
-                  (source link pending)
-                </span>
+                <span className="text-[0.66rem] italic text-ink-soft">(source link pending)</span>
               )}
             </li>
           ))}
         </ul>
 
-        <p className="text-xs text-ink-soft">
-          NASA does not endorse non-U.S. Government entities. Follow each website&apos;s data
-          use terms.
-        </p>
+        <footer className="border-t border-line/80 bg-surface2/45 px-4 py-2.5 text-[0.62rem] text-ink-soft">
+          NASA does not endorse non-U.S. Government entities. Follow each website&apos;s data use
+          terms.
+        </footer>
       </section>
     </div>
   );

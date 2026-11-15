@@ -1,6 +1,8 @@
 import React from 'react';
+import { BriefcaseMedical, Check } from 'lucide-react';
 import type { SupplyId } from '@/contracts/types';
 import { SUPPLIES } from '@/guidance';
+import { cn } from '@/ui/lib/format';
 
 export interface SupplyChecklistProps {
   supplies: Record<SupplyId, boolean>;
@@ -12,36 +14,74 @@ export function SupplyChecklist({ supplies, onChange }: SupplyChecklistProps) {
     onChange({ ...supplies, [id]: !supplies[id] });
   };
 
-  return (
-    <fieldset className="bg-panel border border-line rounded-sheet p-5">
-      <legend className="text-base sm:text-lg font-bold text-ink mb-1 px-1">
-        Medical supplies aboard
-      </legend>
-      <p className="text-xs sm:text-sm text-ink-soft mb-4">
-        Actions only name equipment marked as aboard.
-      </p>
+  const aboardCount = SUPPLIES.filter((item) => supplies[item.id] ?? true).length;
 
-      <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
+  return (
+    <fieldset className="panel overflow-hidden">
+      <legend className="sr-only">Medical supplies aboard</legend>
+      <header className="flex items-center justify-between gap-2 border-b border-line/80 bg-surface2/55 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-instrument-soft text-instrument">
+            <BriefcaseMedical className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+              Medical supplies aboard
+            </h2>
+            <p className="text-[0.64rem] text-ink-soft">
+              Actions only name equipment marked as aboard.
+            </p>
+          </div>
+        </div>
+        <span className="chip chip-neutral tabular-nums">
+          {aboardCount}/{SUPPLIES.length} aboard
+        </span>
+      </header>
+
+      <div className="grid grid-cols-1 gap-2 p-3.5 sm:grid-cols-2">
         {SUPPLIES.map((item) => {
           const isAboard = supplies[item.id] ?? true;
           return (
             <label
               key={item.id}
-              className={`flex items-center justify-between p-3 rounded-sheet border cursor-pointer select-none min-h-[44px] ${
+              className={cn(
+                'flex min-h-[44px] cursor-pointer select-none items-center justify-between gap-3 rounded-xl border px-3 py-2.5 transition-all',
                 isAboard
-                  ? 'border-line bg-panel hover:bg-ceramic/40'
-                  : 'border-line bg-ceramic/50 text-ink-soft'
-              }`}
+                  ? 'border-line bg-white/75 hover:border-line-strong'
+                  : 'border-dashed border-line bg-surface2/55',
+              )}
             >
-              <span className={`text-sm font-medium ${isAboard ? 'text-ink' : 'text-ink-soft'}`}>
-                {item.label}
+              <span className="flex min-w-0 items-center gap-2">
+                <span
+                  className={cn(
+                    'flex h-5 w-5 shrink-0 items-center justify-center rounded-md border transition-colors',
+                    isAboard
+                      ? 'border-status-ok/30 bg-status-ok-soft text-status-ok'
+                      : 'border-line-strong bg-white text-transparent',
+                  )}
+                  aria-hidden="true"
+                >
+                  <Check className="h-3 w-3" strokeWidth={3} />
+                </span>
+                <span className={cn('text-[0.74rem] font-medium', isAboard ? 'text-ink' : 'text-ink-soft')}>
+                  {item.label}
+                </span>
               </span>
               <input
                 type="checkbox"
                 checked={isAboard}
                 onChange={() => handleToggle(item.id)}
-                className="h-4 w-4 rounded accent-instrument cursor-pointer"
+                className="sr-only"
               />
+              <span
+                className={cn(
+                  'rounded-full px-1.5 py-0.5 text-[0.54rem] font-bold uppercase tracking-wide',
+                  isAboard ? 'bg-status-ok-soft text-status-ok' : 'bg-surface3 text-ink-faint',
+                )}
+                aria-hidden="true"
+              >
+                {isAboard ? 'Aboard' : 'Not aboard'}
+              </span>
             </label>
           );
         })}

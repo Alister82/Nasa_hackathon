@@ -69,9 +69,10 @@ describe('U4: DomainRow', () => {
       />,
     );
 
-    expect(screen.getByText('Heart and blood pressure')).toBeInTheDocument();
+    expect(screen.getByText('Cardiovascular')).toBeInTheDocument();
+    expect(screen.getByTitle('Heart and blood pressure')).toBeInTheDocument();
     expect(screen.getByText('Heart rate 73 bpm, systolic BP 124 mmHg')).toBeInTheDocument();
-    expect(screen.getByText('Review')).toBeInTheDocument();
+    expect(screen.getByTitle('Review')).toBeInTheDocument();
 
     const row = screen.getByRole('button');
     fireEvent.click(row);
@@ -184,11 +185,20 @@ describe('U7: TodayPage Assembly', () => {
     expect(screen.getByRole('group', { name: 'Body map' })).toBeInTheDocument();
 
     // Domains
-    expect(screen.getByText('Body systems and domains')).toBeInTheDocument();
-    expect(screen.getByText('Heart and blood pressure')).toBeInTheDocument();
+    expect(screen.getByText('Body health overview')).toBeInTheDocument();
+    expect(screen.getByText('Cardiovascular')).toBeInTheDocument();
+    expect(screen.getByTitle('Heart and blood pressure')).toBeInTheDocument();
 
     // Cards
     expect(screen.getByText('What needs attention')).toBeInTheDocument();
     expect(screen.getAllByText(/Resting heart rate|Multiple measures/i).length).toBeGreaterThan(0);
+
+    const attentionTiles = screen.getAllByRole('button', { name: /Open alert details:/i });
+    expect(attentionTiles.length).toBeGreaterThan(0);
+    fireEvent.click(attentionTiles[0]!);
+    expect(screen.getByRole('dialog', { name: /Alert details:/i })).toBeInTheDocument();
+    expect(screen.getByText('What changed')).toBeInTheDocument();
+    fireEvent.click(screen.getByRole('button', { name: 'Close alert details' }));
+    expect(screen.queryByRole('dialog')).not.toBeInTheDocument();
   });
 });

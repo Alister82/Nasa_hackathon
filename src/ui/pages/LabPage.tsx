@@ -1,12 +1,29 @@
-import React, { useState, useMemo } from 'react';
-import type { ScenarioId, MissionSettingId, DailyFlag, SystemId } from '@/contracts/types';
-import { SCENARIO_IDS, SCENARIO_LABELS } from '@/contracts/constants';
+import React, { useMemo, useState } from 'react';
+import { Link } from 'react-router-dom';
+import {
+  FlaskConical,
+  Info,
+  Play,
+  SlidersHorizontal,
+  Sparkles,
+  TestTube2,
+} from 'lucide-react';
+import type { DailyFlag, MissionSettingId, ScenarioId, SystemId } from '@/contracts/types';
+import { MISSION_DAYS, SCENARIO_IDS, SCENARIO_LABELS } from '@/contracts/constants';
 import { generateScenario, SYSTEMS } from '@/engine';
 import { getAnalysis, getCards } from '@/app/services';
 import { SystemsComparison } from '@/ui/components/SystemsComparison';
 import { TimelineScrubber } from '@/ui/components/TimelineScrubber';
 import { AlertCardView } from '@/ui/components/AlertCardView';
-import { SOURCES } from '@/guidance';
+import { EmptyState, PageHeader, SectionHeading, TextLink } from '@/ui/components/ui';
+import { SOURCES, MISSION_SETTINGS } from '@/guidance';
+import { cn } from '@/ui/lib/format';
+
+const INJECTIONS: Array<{ id: ScenarioId; label: string }> = [
+  { id: 'slow_drift', label: 'Inject: slow drift' },
+  { id: 'sensor_fault', label: 'Inject: sensor fault' },
+  { id: 'acute_fever', label: 'Inject: fever' },
+];
 
 export function LabPage() {
   const [scenarioId, setScenarioId] = useState<ScenarioId>('slow_drift');
@@ -65,29 +82,59 @@ export function LabPage() {
     }
   };
 
-  return (
-    <div className="max-w-4xl mx-auto px-4 py-6 flex flex-col gap-6">
-      {/* Screen Title */}
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Scenario Lab</h1>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          Test and compare detection algorithms against simulated mission events with custom seeds.
-        </p>
-      </div>
+  const setting = MISSION_SETTINGS[missionSetting];
+  const vigilFlags = (flags.vigil ?? []).filter((flag) => flag.flagged).length;
 
-      {/* Control Panel & Quick Injection Buttons */}
-      <div className="bg-panel border border-line rounded-sheet p-4 sm:p-5 shadow-sm flex flex-col gap-4">
-        <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
-          {/* Scenario Select */}
+  return (
+    <div className="page-wrap flex flex-col gap-5">
+      <PageHeader
+        kicker="Detection lab"
+        title="Scenario Lab"
+        description={
+          <>
+            Test and compare detection algorithms against simulated mission events with custom
+            seeds. The lab runs entirely on this device and never overwrites crew records.
+          </>
+        }
+        meta={
+          <>
+            <span className="chip chip-primary">
+              <FlaskConical className="h-3 w-3" aria-hidden="true" />
+              {SCENARIO_LABELS[scenarioId]}
+            </span>
+            <span className="chip chip-neutral">Seed {seed}</span>
+            <span className="chip chip-neutral">{setting.label}</span>
+            <span className="chip chip-neutral">{vigilFlags} Vigil flag days</span>
+          </>
+        }
+        actions={<TextLink to="/proof">Verification results</TextLink>}
+      />
+
+      <section className="panel overflow-hidden">
+        <header className="flex items-center gap-2 border-b border-line/80 bg-surface2/55 px-4 py-3">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-instrument-soft text-instrument">
+            <SlidersHorizontal className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+              Scenario controls
+            </h2>
+            <p className="text-[0.64rem] text-ink-soft">
+              Changing any control regenerates the simulated dataset deterministically.
+            </p>
+          </div>
+        </header>
+
+        <div className="grid grid-cols-1 gap-3 p-3.5 sm:grid-cols-3">
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="scenario-select" className="text-xs font-bold text-ink-soft">
+            <label htmlFor="scenario-select" className="field-label">
               Scenario
             </label>
             <select
               id="scenario-select"
               value={scenarioId}
               onChange={(e) => setScenarioId(e.target.value as ScenarioId)}
-              className="bg-ceramic text-ink text-sm border border-line rounded-input px-3 py-2 font-medium min-h-[44px]"
+              className="field"
             >
               {SCENARIO_IDS.map((id) => (
                 <option key={id} value={id}>
@@ -97,9 +144,8 @@ export function LabPage() {
             </select>
           </div>
 
-          {/* Seed Input */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="seed-input" className="text-xs font-bold text-ink-soft">
+            <label htmlFor="seed-input" className="field-label">
               Seed
             </label>
             <input
@@ -107,20 +153,19 @@ export function LabPage() {
               type="number"
               value={seed}
               onChange={(e) => setSeed(Number(e.target.value))}
-              className="bg-ceramic text-ink text-sm border border-line rounded-input px-3 py-2 font-medium tabular-nums min-h-[44px]"
+              className="field tabular-nums"
             />
           </div>
 
-          {/* Setting Select */}
           <div className="flex flex-col gap-1.5">
-            <label htmlFor="setting-select" className="text-xs font-bold text-ink-soft">
+            <label htmlFor="setting-select" className="field-label">
               Mission setting
             </label>
             <select
               id="setting-select"
               value={missionSetting}
               onChange={(e) => setMissionSetting(e.target.value as MissionSettingId)}
-              className="bg-ceramic text-ink text-sm border border-line rounded-input px-3 py-2 font-medium min-h-[44px]"
+              className="field"
             >
               <option value="station">Space station</option>
               <option value="lunar_base">Lunar base</option>
@@ -129,59 +174,84 @@ export function LabPage() {
           </div>
         </div>
 
-        {/* Shortcut injection buttons */}
-        <div className="flex items-center gap-2 pt-2 border-t border-line flex-wrap">
-          <span className="text-xs font-bold text-ink-soft mr-1">Inject scenarios:</span>
-          <button
-            type="button"
-            onClick={() => handleInject('slow_drift')}
-            className="px-3 py-1.5 bg-ceramic border border-line hover:border-instrument rounded-input text-xs font-bold text-ink min-h-[44px]"
-          >
-            Inject: slow drift
-          </button>
-          <button
-            type="button"
-            onClick={() => handleInject('sensor_fault')}
-            className="px-3 py-1.5 bg-ceramic border border-line hover:border-instrument rounded-input text-xs font-bold text-ink min-h-[44px]"
-          >
-            Inject: sensor fault
-          </button>
-          <button
-            type="button"
-            onClick={() => handleInject('acute_fever')}
-            className="px-3 py-1.5 bg-ceramic border border-line hover:border-instrument rounded-input text-xs font-bold text-ink min-h-[44px]"
-          >
-            Inject: fever
-          </button>
+        <div className="flex flex-wrap items-center gap-2 border-t border-line/80 bg-white/45 px-3.5 py-3">
+          <span className="inline-flex items-center gap-1.5 text-[0.64rem] font-bold uppercase tracking-[0.1em] text-ink-faint">
+            <TestTube2 className="h-3.5 w-3.5" aria-hidden="true" />
+            Inject scenarios
+          </span>
+          {INJECTIONS.map((injection) => (
+            <button
+              key={injection.id}
+              type="button"
+              onClick={() => handleInject(injection.id)}
+              className={cn(
+                'inline-flex min-h-[36px] items-center gap-1.5 rounded-lg border px-2.5 text-[0.68rem] font-semibold transition-all',
+                scenarioId === injection.id
+                  ? 'border-instrument/30 bg-instrument-soft text-instrument-deep shadow-xs'
+                  : 'border-line bg-white/75 text-ink-soft hover:border-line-strong hover:text-ink',
+              )}
+            >
+              {injection.label}
+            </button>
+          ))}
+          <span className="ml-auto inline-flex items-center gap-1.5 text-[0.62rem] text-ink-soft">
+            <Info className="h-3 w-3" aria-hidden="true" />
+            {dataset.missionDays}-day simulated mission
+          </span>
         </div>
-      </div>
+      </section>
 
-      {/* Systems Comparison Table and Timeline */}
-      <SystemsComparison dataset={dataset} flags={flags} />
+      {analysis ? (
+        <SystemsComparison dataset={dataset} flags={flags} />
+      ) : (
+        <EmptyState
+          icon={<Sparkles className="h-5 w-5" />}
+          title="Scenario not evaluated"
+          description="Adjust the controls to generate a simulated dataset and run the detector comparison."
+        />
+      )}
 
-      {/* Timeline scrubber for Lab */}
       <TimelineScrubber
         day={viewDay}
-        maxDay={180}
+        maxDay={MISSION_DAYS}
         markers={[]}
         onChange={setViewDay}
         onToday={() => setViewDay(120)}
         onPlayDemo={() => handleInject('slow_drift')}
       />
 
-      {/* Vigil Alert Cards for View Day */}
       <section aria-label="Vigil Alert Cards for Selected Day" className="flex flex-col gap-3">
-        <h2 className="text-lg font-bold text-ink">
-          Vigil alert cards for Day {viewDay}
-        </h2>
+        <SectionHeading
+          title={`Vigil alert cards for Day ${viewDay}`}
+          subtitle={`Generated from the lab dataset at seed ${seed}. These cards do not affect crew records.`}
+          action={
+            <Link
+              to="/"
+              className="inline-flex min-h-[32px] items-center gap-1.5 text-[0.72rem] font-semibold text-instrument hover:text-instrument-deep"
+            >
+              <Play className="h-3.5 w-3.5" aria-hidden="true" />
+              Back to live dashboard
+            </Link>
+          }
+        />
         {cards.length === 0 ? (
-          <div className="bg-panel border border-line rounded-sheet p-6 text-center text-ink-soft">
-            Vigil detects no anomaly on Day {viewDay} for this scenario.
+          <div className="flex flex-col items-center gap-2 rounded-[20px] border border-dashed border-line bg-white/60 px-6 py-10 text-center">
+            <span className="flex h-11 w-11 items-center justify-center rounded-2xl bg-status-ok-soft text-status-ok">
+              <Sparkles className="h-5 w-5" aria-hidden="true" />
+            </span>
+            <p className="text-sm font-semibold text-ink">
+              Vigil detects no anomaly on Day {viewDay} for this scenario.
+            </p>
+            <p className="text-xs text-ink-soft">
+              Try another scenario, seed, or mission day to see how guidance changes.
+            </p>
           </div>
         ) : (
-          cards.map((card) => (
-            <AlertCardView key={card.id} card={card} sources={SOURCES} />
-          ))
+          <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
+            {cards.map((card) => (
+              <AlertCardView key={card.id} card={card} sources={SOURCES} />
+            ))}
+          </div>
         )}
       </section>
     </div>

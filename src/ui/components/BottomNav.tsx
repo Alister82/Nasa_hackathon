@@ -1,119 +1,171 @@
-import React, { useState } from 'react';
-import { NavLink, Link, useNavigate } from 'react-router-dom';
+import React, { useEffect, useState } from 'react';
+import { Link, NavLink } from 'react-router-dom';
+import {
+  Activity,
+  FlaskConical,
+  Info,
+  LayoutDashboard,
+  LifeBuoy,
+  MoreHorizontal,
+  NotebookPen,
+  Settings2,
+  ShieldCheck,
+  TriangleAlert,
+  X,
+} from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
+import { MISSION_SETTINGS } from '@/guidance';
+import { MISSION_DAYS } from '@/contracts/constants';
+import { useAppState } from '@/app/AppState';
+import { cn } from '@/ui/lib/format';
 
 interface BottomNavProps {
   onResetData: () => void;
 }
 
+const PRIMARY = [
+  { to: '/', label: 'Dashboard', icon: LayoutDashboard, end: true },
+  { to: '/log', label: 'Monitor', icon: Activity },
+  { to: '/checkin', label: 'Check-in', icon: Activity },
+  { to: '/lab', label: 'Lab', icon: FlaskConical },
+];
+
+const MORE_LINKS: Array<{ to: string; label: string; icon: LucideIcon; hint: string }> = [
+  { to: '/proof', label: 'Verification', icon: ShieldCheck, hint: 'Algorithm evidence and evaluation results' },
+  { to: '/journal', label: 'Investigation Journal', icon: NotebookPen, hint: 'Observations, actions, and reviews' },
+  { to: '/mission', label: 'Mission Settings', icon: Settings2, hint: 'Mission context, communications, supplies' },
+  { to: '/help', label: 'Help & Support', icon: LifeBuoy, hint: 'Guidance and emergency routes' },
+  { to: '/about', label: 'About Vigil', icon: Info, hint: 'Scope, limits, and NASA risk coverage' },
+];
+
 export function BottomNav({ onResetData }: BottomNavProps) {
   const [moreOpen, setMoreOpen] = useState(false);
-  const navigate = useNavigate();
+  const { crewName, viewDay, missionSetting, cards } = useAppState();
+  const setting = MISSION_SETTINGS[missionSetting];
+  const attention = cards.filter((card) => card.severity !== 'info').length;
 
-  const handleReset = () => {
-    setMoreOpen(false);
-    if (window.confirm('This clears measurements, check-ins, and the journal on this device. Reset?')) {
-      onResetData();
-    }
-  };
+  useEffect(() => {
+    if (!moreOpen) return;
+    const handler = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') setMoreOpen(false);
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, [moreOpen]);
 
   const navClass = ({ isActive }: { isActive: boolean }) =>
-    `flex flex-col items-center justify-center flex-1 py-1 text-xs font-medium min-h-[44px] ${
-      isActive ? 'text-instrument font-bold' : 'text-ink-soft hover:text-ink'
-    }`;
+    cn(
+      'relative flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 rounded-xl px-1 py-1.5 text-[0.58rem] font-semibold transition-colors',
+      isActive ? 'text-instrument' : 'text-ink-soft hover:text-ink',
+    );
 
   return (
     <>
-      {/* Desktop/Tablet Header Navigation tabs if screen >= lg */}
       <nav
-        aria-label="Main Navigation"
-        className="lg:hidden fixed bottom-0 left-0 right-0 h-14 bg-panel border-t border-line flex items-center justify-around z-40"
+        aria-label="Mobile navigation"
+        className="fixed inset-x-0 bottom-0 z-40 border-t border-white/80 bg-[linear-gradient(180deg,rgba(255,255,255,0.9),rgba(247,251,255,0.96))] px-2 pb-[max(0.5rem,env(safe-area-inset-bottom))] pt-1 shadow-[0_-10px_30px_-20px_rgba(16,40,72,0.28)] backdrop-blur-2xl lg:hidden"
       >
-        <NavLink to="/" end className={navClass}>
-          Today
-        </NavLink>
-        <NavLink to="/log" className={navClass}>
-          Log
-        </NavLink>
-        <NavLink to="/checkin" className={navClass}>
-          Check-in
-        </NavLink>
-        <NavLink to="/lab" className={navClass}>
-          Lab
-        </NavLink>
-        <button
-          type="button"
-          onClick={() => setMoreOpen(!moreOpen)}
-          className={`flex flex-col items-center justify-center flex-1 py-1 text-xs font-medium min-h-[44px] ${
-            moreOpen ? 'text-instrument font-bold' : 'text-ink-soft hover:text-ink'
-          }`}
-          aria-expanded={moreOpen}
-          aria-label="More navigation options"
-        >
-          More
-        </button>
+        <div className="mx-auto flex max-w-md items-stretch">
+          {PRIMARY.map((item) => {
+            const Icon = item.icon;
+            return (
+              <NavLink key={item.to} to={item.to} end={item.end} className={navClass}>
+                {({ isActive }) => (
+                  <>
+                    <span className={cn('flex h-7 w-9 items-center justify-center rounded-lg transition-colors', isActive && 'bg-instrument-soft')}>
+                      <Icon className="h-[18px] w-[18px]" strokeWidth={isActive ? 2.1 : 1.8} aria-hidden="true" />
+                    </span>
+                    <span>{item.label}</span>
+                  </>
+                )}
+              </NavLink>
+            );
+          })}
+          <button type="button" onClick={() => setMoreOpen(true)} className="relative flex min-h-[48px] flex-1 flex-col items-center justify-center gap-1 rounded-xl text-[0.58rem] font-semibold text-ink-soft">
+            <span className="relative flex h-7 w-9 items-center justify-center rounded-lg">
+              <MoreHorizontal className="h-[18px] w-[18px]" strokeWidth={1.8} aria-hidden="true" />
+              {attention > 0 && <span className="absolute right-0 top-0 h-1.5 w-1.5 rounded-full bg-status-review" />}
+            </span>
+            More
+          </button>
+        </div>
       </nav>
 
-      {/* More overlay sheet on mobile */}
       {moreOpen && (
         <div
-          className="lg:hidden fixed inset-0 z-50 bg-ink/30 flex flex-col justify-end"
+          className="fixed inset-0 z-[70] flex flex-col justify-end bg-[#0a1a31]/35 backdrop-blur-[2px] lg:hidden"
           onClick={() => setMoreOpen(false)}
+          role="presentation"
         >
           <div
-            className="bg-panel border-t border-line rounded-t-sheet p-4 shadow-card flex flex-col gap-2 max-w-lg mx-auto w-full"
-            onClick={(e) => e.stopPropagation()}
+            className="mx-auto w-full max-w-lg rounded-t-[24px] border border-white/80 bg-[linear-gradient(170deg,#ffffff_0%,#f4f9ff_100%)] p-4 pb-[max(1rem,env(safe-area-inset-bottom))] shadow-[0_-30px_80px_-20px_rgba(9,28,56,0.4)]"
+            onClick={(event) => event.stopPropagation()}
             role="dialog"
-            aria-label="Additional Navigation"
+            aria-modal="true"
+            aria-label="More navigation options"
           >
-            <div className="flex justify-between items-center mb-2 pb-2 border-b border-line">
-              <span className="font-bold text-ink">More screens</span>
-              <button
-                type="button"
-                onClick={() => setMoreOpen(false)}
-                className="text-ink-soft p-2 min-h-[44px] min-w-[44px] text-sm"
-              >
-                Close
+            <div className="mx-auto mb-3 h-1 w-10 rounded-full bg-line-strong/60" aria-hidden="true" />
+            <div className="mb-3 flex items-center justify-between">
+              <div>
+                <p className="font-display text-base font-extrabold tracking-tight text-ink">Mission controls</p>
+                <p className="text-[0.66rem] text-ink-soft">{crewName} · {setting.label} · Day {viewDay} of {MISSION_DAYS}</p>
+              </div>
+              <button type="button" onClick={() => setMoreOpen(false)} className="icon-btn" aria-label="Close menu">
+                <X className="h-4 w-4" />
               </button>
             </div>
-            <Link
-              to="/proof"
-              onClick={() => setMoreOpen(false)}
-              className="py-2.5 px-3 rounded-input text-ink hover:bg-ceramic font-medium flex items-center min-h-[44px]"
-            >
-              Proof
-            </Link>
-            <Link
-              to="/journal"
-              onClick={() => setMoreOpen(false)}
-              className="py-2.5 px-3 rounded-input text-ink hover:bg-ceramic font-medium flex items-center min-h-[44px]"
-            >
-              Investigation journal
-            </Link>
-            <Link
-              to="/mission"
-              onClick={() => setMoreOpen(false)}
-              className="py-2.5 px-3 rounded-input text-ink hover:bg-ceramic font-medium flex items-center min-h-[44px]"
-            >
-              Mission setting & supplies
-            </Link>
-            <Link
-              to="/about"
-              onClick={() => setMoreOpen(false)}
-              className="py-2.5 px-3 rounded-input text-ink hover:bg-ceramic font-medium flex items-center min-h-[44px]"
-            >
-              About & limits
-            </Link>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="py-2.5 px-3 rounded-input text-left text-status-urgent hover:bg-status-urgent-soft font-medium flex items-center min-h-[44px]"
-            >
-              Reset demo data
-            </button>
+
+            <div className="mb-3 rounded-xl border border-line bg-white/80 p-2.5">
+              <div className="flex items-center justify-between text-[0.64rem]">
+                <span className="inline-flex items-center gap-1.5 font-semibold text-status-urgent">
+                  <TriangleAlert className="h-3.5 w-3.5" /> Emergency support
+                </span>
+                <Link to="/urgent" onClick={() => setMoreOpen(false)} className="font-bold text-status-urgent underline">
+                  Open
+                </Link>
+              </div>
+              <p className="mt-1 text-[0.6rem] leading-relaxed text-ink-soft">Contact your crew medical officer and ground now. Do not wait for a reply.</p>
+            </div>
+
+            <div className="grid grid-cols-1 gap-1">
+              {MORE_LINKS.map((item) => {
+                const Icon = item.icon;
+                return (
+                  <Link
+                    key={item.to}
+                    to={item.to}
+                    onClick={() => setMoreOpen(false)}
+                    className="flex items-center gap-3 rounded-xl px-2.5 py-2.5 text-left transition-colors hover:bg-white"
+                  >
+                    <span className="flex h-8 w-8 shrink-0 items-center justify-center rounded-[10px] border border-line bg-white text-ink-soft">
+                      <Icon className="h-4 w-4" strokeWidth={1.8} />
+                    </span>
+                    <span className="min-w-0">
+                      <span className="block text-[0.76rem] font-semibold text-ink">{item.label}</span>
+                      <span className="block truncate text-[0.62rem] text-ink-soft">{item.hint}</span>
+                    </span>
+                  </Link>
+                );
+              })}
+            </div>
+
+            <div className="mt-3 border-t border-line pt-3">
+              <button
+                type="button"
+                onClick={() => {
+                  setMoreOpen(false);
+                  if (window.confirm('This clears measurements, check-ins, and the journal on this device. Reset?')) {
+                    onResetData();
+                  }
+                }}
+                className="w-full rounded-lg px-3 py-2 text-left text-[0.7rem] font-semibold text-status-urgent hover:bg-status-urgent-soft"
+              >
+                Reset demo data
+              </button>
+            </div>
           </div>
         </div>
       )}
     </>
   );
 }
-

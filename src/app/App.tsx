@@ -1,68 +1,102 @@
-import React, { useEffect } from 'react';
-import { HashRouter, NavLink, useNavigate, useLocation } from 'react-router-dom';
-import { TopBar } from '@/ui/components/TopBar';
-import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
+import React, { useEffect, useState } from 'react';
+import { HashRouter, useLocation, useNavigate } from 'react-router-dom';
 import { BottomNav } from '@/ui/components/BottomNav';
+import { CommandPalette } from '@/ui/components/CommandPalette';
+import { DisclaimerBanner } from '@/ui/components/DisclaimerBanner';
+import { Sidebar } from '@/ui/components/Sidebar';
+import { TopBar } from '@/ui/components/TopBar';
 import { AppRoutes } from './routes';
 import { AppStateProvider, useAppState } from './AppState';
+import { cn } from '@/ui/lib/format';
 
-const navLinkClass = ({ isActive }: { isActive: boolean }) =>
-  `px-3 py-2 text-sm font-medium border-b-2 min-h-[44px] inline-flex items-center ${
-    isActive
-      ? 'border-instrument text-instrument font-bold'
-      : 'border-transparent text-ink-soft hover:text-ink hover:border-line'
-  }`;
+function FooterStatus() {
+  return (
+    <footer className="mx-auto mt-6 w-full max-w-[1480px] px-4 pb-5 sm:px-6 lg:px-8">
+      <div className="flex flex-col gap-2 border-t border-line/80 pt-3 sm:flex-row sm:items-center sm:justify-between">
+        <DisclaimerBanner />
+        <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-[0.6rem] font-medium text-ink-faint">
+          <span className="inline-flex items-center gap-1.5">
+            <span className="h-1.5 w-1.5 rounded-full bg-status-ok" aria-hidden="true" />
+            Local-first · IndexedDB
+          </span>
+          <span className="hidden sm:inline">No accounts · no network calls</span>
+          <span className="tabular-nums">Vigil 0.1 · Prototype</span>
+        </div>
+      </div>
+    </footer>
+  );
+}
 
 function AppShell() {
   const navigate = useNavigate();
   const location = useLocation();
-  const {
-    crewId,
-    setCrewId,
-    missionSetting,
-    resetDemoData,
-  } = useAppState();
+  const { resetDemoData } = useAppState();
+  const [sidebarCollapsed, setSidebarCollapsed] = useState(false);
+  const [mobileNavOpen, setMobileNavOpen] = useState(false);
+  const [searchOpen, setSearchOpen] = useState(false);
 
   useEffect(() => {
-    const heading = document.querySelector<HTMLElement>('main h1');
-    if (heading) {
-      heading.setAttribute('tabindex', '-1');
-      heading.focus();
-    }
+    const frame = window.requestAnimationFrame(() => {
+      const heading = document.querySelector<HTMLElement>('main h1');
+      if (heading) {
+        heading.setAttribute('tabindex', '-1');
+        heading.focus({ preventScroll: true });
+      }
+    });
+    return () => window.cancelAnimationFrame(frame);
   }, [location.pathname]);
+
+  useEffect(() => {
+    const handler = (event: KeyboardEvent) => {
+      if ((event.metaKey || event.ctrlKey) && event.key.toLowerCase() === 'k') {
+        event.preventDefault();
+        setSearchOpen(true);
+      }
+    };
+    window.addEventListener('keydown', handler);
+    return () => window.removeEventListener('keydown', handler);
+  }, []);
 
   const handleResetData = () => {
     void resetDemoData().then(() => navigate('/'));
   };
 
   return (
-    <div className="min-h-screen bg-ceramic text-ink flex flex-col font-sans">
-      <TopBar
-        selectedCrewId={crewId}
-        onCrewChange={setCrewId}
-        missionSetting={missionSetting}
-      />
-      <DisclaimerBanner />
-
-      <nav
-        aria-label="Main sections"
-        className="hidden lg:flex items-center gap-2 px-6 bg-panel border-b border-line overflow-x-auto select-none"
+    <div className="min-h-screen text-ink">
+      <a
+        href="#main-content"
+        className="sr-only-focusable fixed left-3 top-3 z-[100] rounded-lg bg-instrument px-3 py-2 text-xs font-semibold text-white shadow-lg"
       >
-        <NavLink to="/" end className={navLinkClass}>Today</NavLink>
-        <NavLink to="/log" className={navLinkClass}>Log</NavLink>
-        <NavLink to="/checkin" className={navLinkClass}>Check-in</NavLink>
-        <NavLink to="/lab" className={navLinkClass}>Scenario Lab</NavLink>
-        <NavLink to="/proof" className={navLinkClass}>Proof</NavLink>
-        <NavLink to="/journal" className={navLinkClass}>Journal</NavLink>
-        <NavLink to="/mission" className={navLinkClass}>Mission</NavLink>
-        <NavLink to="/about" className={navLinkClass}>About</NavLink>
-      </nav>
+        Skip to main content
+      </a>
 
-      <main className="flex-1 pb-20 lg:pb-8">
-        <AppRoutes />
-      </main>
+      <Sidebar
+        collapsed={sidebarCollapsed}
+        onToggleCollapsed={() => setSidebarCollapsed((collapsed) => !collapsed)}
+        mobileOpen={mobileNavOpen}
+        onCloseMobile={() => setMobileNavOpen(false)}
+      />
+
+      <div
+        className={cn(
+          'flex min-h-screen flex-col transition-[padding] duration-300',
+          sidebarCollapsed ? 'lg:pl-[88px]' : 'lg:pl-[272px]',
+        )}
+      >
+        <TopBar
+          onOpenMobileNav={() => setMobileNavOpen(true)}
+          onOpenSearch={() => setSearchOpen(true)}
+        />
+
+        <main id="main-content" className="flex-1 pb-[76px] lg:pb-0">
+          <AppRoutes />
+        </main>
+
+        <FooterStatus />
+      </div>
 
       <BottomNav onResetData={handleResetData} />
+      <CommandPalette open={searchOpen} onClose={() => setSearchOpen(false)} />
     </div>
   );
 }

@@ -11,6 +11,7 @@ import { ProofPage } from '@/ui/pages/ProofPage';
 import { MissionPage } from '@/ui/pages/MissionPage';
 import { JournalPage } from '@/ui/pages/JournalPage';
 import { AboutPage } from '@/ui/pages/AboutPage';
+import { HelpPage } from '@/ui/pages/HelpPage';
 
 export function AppRoutes() {
   return (
@@ -25,6 +26,7 @@ export function AppRoutes() {
       <Route path="/mission" element={<ErrorBoundary><MissionPage /></ErrorBoundary>} />
       <Route path="/journal" element={<ErrorBoundary><JournalPage /></ErrorBoundary>} />
       <Route path="/about" element={<ErrorBoundary><AboutPage /></ErrorBoundary>} />
+      <Route path="/help" element={<ErrorBoundary><HelpPage /></ErrorBoundary>} />
     </Routes>
   );
 }

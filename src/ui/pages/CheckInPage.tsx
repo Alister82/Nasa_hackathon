@@ -1,14 +1,27 @@
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
+import {
+  ArrowRight,
+  CalendarDays,
+  ClipboardCheck,
+  HeartPulse,
+  LifeBuoy,
+  MoonStar,
+  Sparkles,
+  TrendingUp,
+} from 'lucide-react';
 import type { CheckInInput, CheckInRecord, CheckInResult } from '@/contracts/types';
 import { CheckInForm } from '@/ui/components/CheckInForm';
 import { CheckInTrend, type CheckInTrendPoint } from '@/ui/charts/CheckInTrend';
+import { EmptyState, PageHeader, SectionHeading, TextLink } from '@/ui/components/ui';
 import { useAppState } from '@/app/AppState';
 import { loadCheckIns } from '@/storage';
+import { MISSION_SETTINGS } from '@/guidance';
+import { cn, timeAgo } from '@/ui/lib/format';
 
 export function CheckInPage() {
   const navigate = useNavigate();
-  const { crewId, viewDay, analysis, submitCheckIn } = useAppState();
+  const { crewId, crewName, missionSetting, viewDay, analysis, submitCheckIn } = useAppState();
   const [checkIns, setCheckIns] = useState<CheckInRecord[]>([]);
 
   const reload = useCallback(async () => {
@@ -47,39 +60,176 @@ export function CheckInPage() {
   };
 
   const hasCheckIns = checkIns.length > 0;
+  const setting = MISSION_SETTINGS[missionSetting];
+  const latest = [...checkIns].sort((a, b) => b.day - a.day)[0];
+  const checkInDays = checkIns.length;
 
   return (
-    <div className="max-w-2xl mx-auto px-4 py-6 flex flex-col gap-8">
-      <div>
-        <h1 className="text-2xl sm:text-3xl font-bold text-ink">Wellbeing check-in</h1>
-        <p className="text-xs sm:text-sm text-ink-soft">
-          A short self-check for mission day {viewDay}. Notes stay on this device.
-        </p>
-      </div>
-
-      <CheckInForm
-        crewId={crewId}
-        day={viewDay}
-        onSubmit={handleSubmit}
-        onNeedHelpNow={() => navigate('/urgent')}
+    <div className="page-wrap flex flex-col gap-5">
+      <PageHeader
+        kicker="Wellbeing check-in"
+        title="How are you feeling today?"
+        description={
+          <>
+            A short self-check for <span className="font-semibold text-ink">{crewName}</span> on mission
+            day {viewDay}. Ratings and notes are stored only on this device.
+          </>
+        }
+        meta={
+          <>
+            <span className="chip chip-primary">
+              <CalendarDays className="h-3 w-3" aria-hidden="true" />
+              Day {viewDay}
+            </span>
+            <span className="chip chip-neutral">
+              <ClipboardCheck className="h-3 w-3" aria-hidden="true" />
+              {checkInDays} check-in{checkInDays === 1 ? '' : 's'} on record
+            </span>
+            <span className="chip chip-neutral">{setting.label}</span>
+          </>
+        }
+        actions={
+          <>
+            <TextLink to="/log">Health monitor</TextLink>
+            <Link to="/urgent" className="btn btn-danger">
+              <LifeBuoy className="h-4 w-4" aria-hidden="true" />
+              Emergency support
+            </Link>
+          </>
+        }
       />
 
-      <section
-        aria-label="30-day wellbeing and sleep trend"
-        className="bg-panel border border-line rounded-sheet p-5"
-      >
-        <h2 className="text-base font-bold text-ink mb-1">30-day trends</h2>
-        <p className="text-xs text-ink-soft mb-4">
-          Saved check-ins are shown next to sleep hours for the same days. Days without a
-          check-in stay blank.
-        </p>
-        {hasCheckIns ? (
-          <CheckInTrend data={trendData} />
-        ) : (
-          <p className="text-sm text-ink-soft">
-            No check-ins saved yet. Save one to start the trend.
-          </p>
-        )}
+      <div className="grid grid-cols-1 gap-4 xl:grid-cols-[minmax(0,1fr)_320px]">
+        <div className="min-w-0">
+          <CheckInForm
+            crewId={crewId}
+            day={viewDay}
+            onSubmit={handleSubmit}
+            onNeedHelpNow={() => navigate('/urgent')}
+          />
+        </div>
+
+        <aside className="flex min-w-0 flex-col gap-3">
+          <section className="relative overflow-hidden rounded-[20px] border border-white/15 panel-dark p-4">
+            <div
+              className="pointer-events-none absolute -right-14 -top-16 h-44 w-44 rounded-full border border-white/10"
+              aria-hidden="true"
+            />
+            <div className="relative flex items-start justify-between gap-3">
+              <div>
+                <p className="text-[0.58rem] font-bold uppercase tracking-[0.15em] text-blue-200/80">
+                  Why this matters
+                </p>
+                <p className="mt-1.5 font-display text-[1rem] font-bold leading-snug tracking-[-0.02em]">
+                  Self-report catches what sensors miss
+                </p>
+              </div>
+              <span className="flex h-9 w-9 shrink-0 items-center justify-center rounded-xl bg-white/10 text-blue-100">
+                <Sparkles className="h-4 w-4" strokeWidth={1.9} aria-hidden="true" />
+              </span>
+            </div>
+            <p className="relative mt-2 text-[0.68rem] leading-relaxed text-blue-100/75">
+              Mood, stress, and energy are compared with your own record across the mission. The
+              check-in does not diagnose; it surfaces changes worth discussing.
+            </p>
+            <div className="relative mt-3 grid grid-cols-3 gap-2">
+              {[
+                ['Mood', latest?.mood],
+                ['Stress', latest?.stress],
+                ['Energy', latest?.energy],
+              ].map(([label, value]) => (
+                <div key={String(label)} className="rounded-xl border border-white/10 bg-white/5 px-2 py-1.5 text-center">
+                  <p className="text-[0.55rem] font-semibold uppercase tracking-wide text-blue-200/70">{label}</p>
+                  <p className="font-display text-[1rem] font-extrabold tabular-nums">
+                    {typeof value === 'number' ? value : '—'}
+                    <span className="text-[0.58rem] font-semibold text-blue-100/50">/5</span>
+                  </p>
+                </div>
+              ))}
+            </div>
+            <p className="relative mt-2 text-[0.58rem] text-blue-100/60">
+              {latest ? `Latest entry: day ${latest.day} · ${timeAgo(latest.createdAt)}` : 'No check-ins saved yet.'}
+            </p>
+          </section>
+
+          <section className="panel p-3.5">
+            <h2 className="text-[0.8rem] font-bold text-ink">After you save</h2>
+            <ol className="mt-2.5 space-y-2">
+              {[
+                'The rating is stored for this mission day on this device.',
+                'Mood and stress feed the behavioural domain as self-check signals.',
+                'The 30-day trend compares ratings with recorded sleep.',
+                'Emergency routes stay available without waiting for a reply.',
+              ].map((step, index) => (
+                <li key={step} className="flex gap-2 text-[0.68rem] leading-relaxed text-ink-soft">
+                  <span className="mt-0.5 flex h-4 w-4 shrink-0 items-center justify-center rounded-full bg-surface3 text-[0.54rem] font-bold tabular-nums text-ink-soft">
+                    {index + 1}
+                  </span>
+                  {step}
+                </li>
+              ))}
+            </ol>
+          </section>
+
+          <section className="rounded-[18px] border border-status-urgent/25 bg-status-urgent-soft/70 p-3.5">
+            <p className="text-[0.62rem] font-bold uppercase tracking-[0.1em] text-status-urgent">
+              If you feel unwell
+            </p>
+            <p className="mt-1 text-[0.68rem] leading-relaxed text-ink-2">
+              Do not wait for a rating or a reply. Follow your emergency procedures and contact the
+              crew medical officer.
+            </p>
+            <Link
+              to="/urgent"
+              className="mt-2 inline-flex items-center gap-1 text-[0.66rem] font-bold text-status-urgent hover:underline"
+            >
+              Open emergency support
+              <ArrowRight className="h-3 w-3" aria-hidden="true" />
+            </Link>
+          </section>
+        </aside>
+      </div>
+
+      <section aria-label="30-day wellbeing and sleep trend" className="panel overflow-hidden">
+        <header className="border-b border-line/80 px-4 py-3">
+          <SectionHeading
+            title="30-day trends"
+            subtitle="Saved check-ins next to sleep hours for the same days. Days without a check-in stay blank."
+            action={
+              <span className="inline-flex items-center gap-1.5 rounded-full border border-line bg-white/70 px-2.5 py-1 text-[0.62rem] font-semibold text-ink-soft">
+                <TrendingUp className="h-3 w-3 text-instrument" aria-hidden="true" />
+                Days {Math.max(1, viewDay - 29)}–{viewDay}
+              </span>
+            }
+          />
+        </header>
+
+        <div className="p-4">
+          {hasCheckIns ? (
+            <CheckInTrend data={trendData} />
+          ) : (
+            <EmptyState
+              icon={<MoonStar className="h-5 w-5" />}
+              title="No check-ins saved yet"
+              description="Save one check-in to start the trend. Ratings and sleep hours appear here day by day as the record grows."
+            />
+          )}
+        </div>
+
+        <footer className="flex flex-wrap items-center justify-between gap-2 border-t border-line/80 bg-surface2/60 px-4 py-2.5">
+          <span className="inline-flex items-center gap-1.5 text-[0.62rem] font-medium text-ink-soft">
+            <HeartPulse className="h-3 w-3 text-instrument" aria-hidden="true" />
+            Self-reported ratings are not a diagnosis.
+          </span>
+          <span
+            className={cn(
+              'text-[0.62rem] font-semibold',
+              latest ? 'text-status-ok' : 'text-ink-faint',
+            )}
+          >
+            {latest ? `Last saved on day ${latest.day}` : 'Awaiting first check-in'}
+          </span>
+        </footer>
       </section>
     </div>
   );

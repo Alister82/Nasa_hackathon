@@ -371,12 +371,45 @@ async function main() {
   };
 
   const cardData = async () =>
-    evaluate(`[...document.querySelectorAll('article')]
-      .filter((article) => article.querySelector('h2[id^="card-title-"]'))
-      .map((article) => ({
-        title: article.querySelector('h2[id^="card-title-"]').innerText.trim(),
-        text: article.innerText
-      }))`);
+    evaluate(`(() => {
+      const tiles = [...document.querySelectorAll('button[data-attention-title]')].map((tile) => ({
+        title: tile.getAttribute('data-attention-title') ?? '',
+        text: tile.innerText,
+      }));
+      const articles = [...document.querySelectorAll('article')]
+        .filter((article) => article.querySelector('h2[id^="card-title-"]'))
+        .map((article) => ({
+          title: article.querySelector('h2[id^="card-title-"]').innerText.trim(),
+          text: article.innerText,
+        }));
+      return [...tiles, ...articles];
+    })()`);
+
+  const openAttention = async (titlePart) => {
+    const opened = await evaluate(`(() => {
+      const tile = [...document.querySelectorAll('button[data-attention-title]')]
+        .find((candidate) => (candidate.getAttribute('data-attention-title') ?? '').includes(${JSON.stringify(titlePart)}));
+      if (!tile) return false;
+      tile.click();
+      return true;
+    })()`);
+    if (!opened) throw new Error(`Attention tile not found: ${titlePart}`);
+    await waitFor(async () => await evaluate(`Boolean(document.querySelector('[role="dialog"]'))`), `attention dialog: ${titlePart}`);
+  };
+
+  const attentionText = async () =>
+    evaluate(`document.querySelector('[role="dialog"]')?.innerText ?? ''`);
+
+  const closeAttention = async () => {
+    const closed = await evaluate(`(() => {
+      const close = document.querySelector('[role="dialog"] button[aria-label="Close alert details"]');
+      if (!close) return false;
+      close.click();
+      return true;
+    })()`);
+    if (!closed) throw new Error('Attention detail close button not found');
+    await waitFor(async () => !(await evaluate(`Boolean(document.querySelector('[role="dialog"]'))`)), 'attention detail close');
+  };
 
   const horizontal = async () =>
     evaluate(`(() => {
@@ -488,7 +521,7 @@ async function main() {
     await setViewport(1024, 768);
     await cdp.call('Page.navigate', { url: APP_URL });
     await waitForApp();
-    await waitFor(async () => (await bodyText()).includes('Crew 1, day 120'), 'initial demo state');
+    await waitFor(async () => (await bodyText()).includes('Crew 1 · Day 120'), 'initial demo state');
     record('initial demo state is Crew 1, day 120', true);
 
     let serviceWorkerState = 'not-registered';
@@ -510,19 +543,25 @@ async function main() {
     await waitFor(async () => (await bodyText()).includes('Several measures shifted together'), 'demo pattern card');
     const demoText = await bodyText();
     record('demo story shows a review pattern card', demoText.includes('Several measures shifted together'));
-    record('deep-space review card shows 34-minute reply', demoText.includes('34 minutes') && demoText.includes('Reply expected in at least 34 minutes'));
-    await captureElement('alert-card-1024.png', 'article');
+    await openAttention('Several measures shifted together');
+    await waitFor(async () => (await attentionText()).includes('Reply expected in at least 34 minutes'), 'attention detail modal');
+    const dialogText = await attentionText();
+    record('deep-space review card shows 34-minute reply', dialogText.includes('34 minutes') && dialogText.includes('Reply expected in at least 34 minutes'));
+    await sleep(350);
+    await screenshot('alert-card-1024.png');
     record('alert card screenshot captured', fs.existsSync(path.join(SCREENSHOT_DIR, 'alert-card-1024.png')));
+    await closeAttention();
+    record('attention detail modal closes', true);
 
     phase('demo and crew scenarios checked');
     await selectValue('#crew-select', 'crew-2');
-    await waitFor(async () => (await bodyText()).includes('Crew 2, day 120'), 'Crew 2');
+    await waitFor(async () => (await bodyText()).includes('Crew 2 · Day 120'), 'Crew 2');
     await waitFor(async () => !(await bodyText()).includes('Several measures shifted together'), 'Crew 2 no demo pattern');
     const crew2Cards = await cardData();
     record('Crew 2 has no review or urgent card', !crew2Cards.some((card) => /Review|Urgent/.test(card.text)), crew2Cards.map((card) => card.title));
 
     await selectValue('#crew-select', 'crew-3');
-    await waitFor(async () => (await bodyText()).includes('Crew 3, day 120'), 'Crew 3');
+    await waitFor(async () => (await bodyText()).includes('Crew 3 · Day 120'), 'Crew 3');
     const crew3At120 = await cardData();
     report.knownIssues.push({
       id: 'TASKS-8-2-crew-3-day-120',
@@ -538,28 +577,34 @@ async function main() {
     await waitFor(async () => (await bodyText()).includes('Day 120'), 'restore day 120');
 
     await clickButton('Play demo story');
-    await waitFor(async () => (await bodyText()).includes('Crew 1, day 120'), 'demo reset for mission test');
+    await waitFor(async () => (await bodyText()).includes('Crew 1 · Day 120'), 'demo reset for mission test');
     phase('mission, supply, check-in, and log checked');
-    await go('#/mission', 'Mission setting');
+    await go('#/mission', 'Mission context');
     await clickRadio('input[name="mission-setting"][value="station"]');
     await waitFor(async () => evaluate('document.querySelector(\'input[name="mission-setting"][value="station"]\')?.checked === true'), 'station selected');
     await go('#/');
-    await waitFor(async () => (await bodyText()).includes('Ask the flight surgeon for a call today.'), 'station escalation');
-    const stationText = await bodyText();
+    await waitFor(async () => (await bodyText()).includes('Several measures shifted together'), 'station demo card');
+    await openAttention('Several measures shifted together');
+    await waitFor(async () => (await attentionText()).includes('Ask the flight surgeon for a call today.'), 'station escalation');
+    const stationText = await attentionText();
     record('station setting changes escalation text', stationText.includes('Ask the flight surgeon for a call today.'));
     record('station setting removes the deep-space reply line', !stationText.includes('Reply expected in at least 34 minutes.'));
+    await closeAttention();
 
-    await go('#/mission', 'Mission setting');
+    await go('#/mission', 'Mission context');
     await clickRadio('input[name="mission-setting"][value="deep_space"]');
     await waitFor(async () => evaluate('document.querySelector(\'input[name="mission-setting"][value="deep_space"]\')?.checked === true'), 'deep space selected');
     const supplyState = await setSupply('Blood pressure cuff', false);
     record('blood pressure cuff can be marked unavailable', supplyState === false);
     await go('#/');
-    await waitFor(async () => (await bodyText()).includes('No Blood pressure cuff aboard'), 'cuff alternative');
-    const alternativeText = await bodyText();
+    await waitFor(async () => (await bodyText()).includes('Several measures shifted together'), 'cuff demo card');
+    await openAttention('Several measures shifted together');
+    await waitFor(async () => (await attentionText()).includes('No Blood pressure cuff aboard'), 'cuff alternative');
+    const alternativeText = await attentionText();
     record('missing cuff shows an alternative action', alternativeText.includes('cuff reading is not available') && alternativeText.includes('No Blood pressure cuff aboard'));
+    await closeAttention();
 
-    await go('#/checkin', 'Wellbeing check-in');
+    await go('#/checkin', 'How are you feeling');
     await setRange('#mood-slider', 1);
     await setRange('#stress-slider', 5);
     const sliderText = await evaluate(`document.querySelector('#mood-slider')?.getAttribute('aria-valuetext')`);
@@ -572,7 +617,7 @@ async function main() {
     const urgentText = await bodyText();
     record('urgent screen opens and shows deep-space line', urgentText.includes('A reply from ground may take a while'));
 
-    await go('#/log', 'Log measurements');
+    await go('#/log', 'Measurements and trends');
     await setText('#input-bp_sys', 185);
     await setText('#input-bp_dia', 95);
     await waitFor(async () => (await bodyText()).includes('Urgent attention'), 'BP urgent callout');
@@ -594,7 +639,7 @@ async function main() {
     const proofText = await bodyText();
     record('Proof page renders harness numbers', proofText.includes('0.69') && proofText.includes('0.84'));
 
-    await go('#/journal', 'Investigation journal');
+    await go('#/journal', 'Record what happened');
     await setText('#journal-obs', 'QA reset check');
     await setText('#journal-action', 'Recorded for checklist');
     await clickButton('Add journal entry');
@@ -602,10 +647,10 @@ async function main() {
     const countsBeforeReset = await dbCounts();
     record('entries, check-ins, and journal records exist before reset', countsBeforeReset.entries > 0 && countsBeforeReset.checkins > 0 && countsBeforeReset.log > 0, countsBeforeReset);
 
-    await go('#/mission', 'Mission setting');
+    await go('#/mission', 'Mission context');
     await evaluate('window.confirm = () => true');
     await clickButton('Reset demo data');
-    await waitFor(async () => (await bodyText()).includes('Crew 1, day 120'), 'reset returns to Today');
+    await waitFor(async () => (await bodyText()).includes('Crew 1 · Day 120'), 'reset returns to Today');
     const countsAfterReset = await dbCounts();
     record('reset clears entries, check-ins, and journal', countsAfterReset.entries === 0 && countsAfterReset.checkins === 0 && countsAfterReset.log === 0, countsAfterReset);
 
@@ -621,7 +666,7 @@ async function main() {
       });
       await reloadAndWait();
       const offlineText = await bodyText();
-      record('offline reload renders Today', offlineText.includes('Today') && offlineText.includes('Crew 1, day 120'));
+      record('offline reload renders Today', offlineText.includes('Today') && offlineText.includes('Crew 1 · Day 120'));
       const offlineRoutes = ['#/log', '#/checkin', '#/urgent', '#/lab', '#/proof', '#/mission', '#/journal', '#/about', '#/domain/cardiovascular'];
       for (const hash of offlineRoutes) {
         await go(hash);
@@ -667,20 +712,20 @@ async function main() {
     const finalDesktopWidth = await horizontal();
     record('1024px final layout has no horizontal scroll', finalDesktopWidth.scrollWidth <= finalDesktopWidth.innerWidth + 1, finalDesktopWidth);
 
-    await go('#/log', 'Log measurements');
+    await go('#/log', 'Measurements and trends');
     const focusedAfterRoute = await evaluate(`({ tag: document.activeElement?.tagName ?? '', text: document.activeElement?.innerText?.trim() ?? '' })`);
     record('route change focuses the screen title', focusedAfterRoute.tag === 'H1', focusedAfterRoute);
 
     await go('#/');
     const keyboardOpened = await evaluate(`(() => {
-      const region = document.querySelector('g[role="button"][aria-label^="Heart and blood pressure"]');
+      const region = document.querySelector('button[aria-label^="Heart and blood pressure"]');
       if (!region) return false;
       region.focus();
       region.dispatchEvent(new KeyboardEvent('keydown', { key: 'Enter', bubbles: true }));
       return true;
     })()`);
     if (keyboardOpened) {
-      await waitFor(async () => (await evaluate(`document.querySelector('h1')?.innerText ?? ''`)).includes('Cardiovascular'), 'body map keyboard');
+      await waitFor(async () => (await evaluate(`document.querySelector('h1')?.innerText ?? ''`)).includes('Heart and blood pressure'), 'body map keyboard');
       record('body map keyboard Enter opens the domain', true);
     } else {
       record('body map keyboard Enter opens the domain', false, 'region not found');
@@ -692,6 +737,8 @@ async function main() {
         .filter((element) => {
           const style = getComputedStyle(element);
           const rect = element.getBoundingClientRect();
+          // The skip link is deliberately 1x1 until it receives keyboard focus.
+          if (element.classList.contains('sr-only-focusable') && !element.matches(':focus')) return false;
           return style.display !== 'none' && style.visibility !== 'hidden' && rect.width > 0 && rect.height > 0;
         })
         .map((element) => ({

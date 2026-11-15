@@ -1,6 +1,9 @@
 import React from 'react';
+import { Check, Radio, Satellite, Telescope } from 'lucide-react';
+import type { LucideIcon } from 'lucide-react';
 import type { MissionSetting, MissionSettingId } from '@/contracts/types';
-import { MISSION_SETTINGS } from '@/guidance';
+import { MISSION_SETTINGS, expectedReplyMinutes } from '@/guidance';
+import { cn } from '@/ui/lib/format';
 
 export interface MissionPickerProps {
   value: MissionSettingId;
@@ -9,29 +12,47 @@ export interface MissionPickerProps {
 
 const ORDER: MissionSettingId[] = ['station', 'lunar_base', 'deep_space'];
 
+const SETTING_ICONS: Record<MissionSettingId, LucideIcon> = {
+  station: Satellite,
+  lunar_base: Telescope,
+  deep_space: Radio,
+};
+
 export function MissionPicker({ value, onChange }: MissionPickerProps) {
   return (
-    <fieldset className="bg-panel border border-line rounded-sheet p-5">
-      <legend className="text-base sm:text-lg font-bold text-ink mb-2 px-1">
-        Operational setting
-      </legend>
-      <p className="text-xs sm:text-sm text-ink-soft mb-4">
-        The setting changes escalation text, expected reply time, and the expected radiation
-        rate for the mission.
-      </p>
+    <fieldset className="panel overflow-hidden">
+      <legend className="sr-only">Operational setting</legend>
+      <header className="border-b border-line/80 bg-surface2/55 px-4 py-3">
+        <div className="flex items-center gap-2">
+          <span className="flex h-8 w-8 items-center justify-center rounded-lg bg-instrument-soft text-instrument">
+            <Radio className="h-4 w-4" aria-hidden="true" />
+          </span>
+          <div>
+            <h2 className="font-display text-[0.95rem] font-extrabold tracking-[-0.02em] text-ink">
+              Operational setting
+            </h2>
+            <p className="text-[0.64rem] text-ink-soft">
+              Changes escalation text, expected reply time, and the expected radiation rate.
+            </p>
+          </div>
+        </div>
+      </header>
 
-      <div className="space-y-3">
+      <div className="grid grid-cols-1 gap-2.5 p-3.5 md:grid-cols-3">
         {ORDER.map((id) => {
           const setting: MissionSetting = MISSION_SETTINGS[id];
           const isSelected = value === id;
+          const Icon = SETTING_ICONS[id];
+          const reply = expectedReplyMinutes(id);
           return (
             <label
               key={id}
-              className={`flex items-start gap-3 p-3.5 rounded-sheet border cursor-pointer min-h-[44px] ${
+              className={cn(
+                'group relative flex cursor-pointer flex-col gap-2 rounded-[16px] border px-3.5 py-3 transition-all',
                 isSelected
-                  ? 'border-instrument bg-instrument-soft/40 text-ink'
-                  : 'border-line bg-panel hover:bg-ceramic/50 text-ink'
-              }`}
+                  ? 'border-instrument/40 bg-instrument-soft/60 shadow-xs ring-1 ring-instrument/15'
+                  : 'border-line bg-white/70 hover:border-line-strong hover:bg-white',
+              )}
             >
               <input
                 type="radio"
@@ -39,14 +60,48 @@ export function MissionPicker({ value, onChange }: MissionPickerProps) {
                 value={id}
                 checked={isSelected}
                 onChange={() => onChange(id)}
-                className="mt-1 h-4 w-4 accent-instrument cursor-pointer"
+                className="sr-only"
               />
-              <span className="flex flex-col">
-                <span className="font-bold text-sm sm:text-base text-ink">{setting.label}</span>
-                <span className="text-xs sm:text-sm text-ink-soft">{setting.description}</span>
-                <span className="text-xs font-semibold text-instrument mt-1">
-                  {setting.oneWayDelayMinutes} minutes one-way delay
+              <span className="flex items-start justify-between gap-2">
+                <span
+                  className={cn(
+                    'flex h-8 w-8 items-center justify-center rounded-lg',
+                    isSelected ? 'bg-white text-instrument shadow-xs' : 'bg-surface3 text-ink-soft',
+                  )}
+                  aria-hidden="true"
+                >
+                  <Icon className="h-4 w-4" strokeWidth={1.9} />
                 </span>
+                <span
+                  className={cn(
+                    'flex h-5 w-5 items-center justify-center rounded-full border transition-colors',
+                    isSelected
+                      ? 'border-instrument bg-instrument text-white'
+                      : 'border-line-strong bg-white text-transparent',
+                  )}
+                  aria-hidden="true"
+                >
+                  <Check className="h-3 w-3" strokeWidth={3} />
+                </span>
+              </span>
+
+              <span className="min-w-0">
+                <span className="block text-[0.82rem] font-bold text-ink">{setting.label}</span>
+                <span className="mt-0.5 block text-[0.66rem] leading-relaxed text-ink-soft">
+                  {setting.description}
+                </span>
+              </span>
+
+              <span className="mt-auto flex flex-wrap items-center gap-1.5 pt-1">
+                <span
+                  className={cn(
+                    'chip !py-0.5 !text-[0.58rem]',
+                    isSelected ? 'chip-primary' : 'chip-neutral',
+                  )}
+                >
+                  {setting.oneWayDelayMinutes} min one-way
+                </span>
+                <span className="chip chip-neutral !py-0.5 !text-[0.58rem]">≥ {reply} min reply</span>
               </span>
             </label>
           );
