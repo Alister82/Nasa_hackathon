@@ -130,7 +130,7 @@ export function TopBar({ onOpenMobileNav, onOpenSearch }: TopBarProps) {
 
             {notificationsOpen && (
               <div
-                className="absolute right-0 top-[calc(100%+8px)] z-50 w-[min(360px,calc(100vw-1.5rem))] overflow-hidden rounded-[18px] border border-white/80 bg-white/97 shadow-[0_30px_80px_-24px_rgba(12,38,72,0.45)] backdrop-blur-2xl"
+                className="glass-notification absolute right-0 top-[calc(100%+8px)] z-50 w-[min(360px,calc(100vw-1.5rem))] overflow-hidden rounded-[18px]"
                 role="dialog"
                 aria-label="Current health alerts"
               >
