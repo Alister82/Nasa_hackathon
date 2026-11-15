@@ -1,5 +1,5 @@
 import React from 'react';
-import { Activity, ExternalLink, Radio, Satellite, Stethoscope } from 'lucide-react';
+import { Activity, ExternalLink, Radio, Satellite, Stethoscope, Waves } from 'lucide-react';
 import { MISSION_SETTINGS, SOURCES } from '@/guidance';
 
 const GROUNDING = [
@@ -21,6 +21,12 @@ const GROUNDING = [
     body: 'Russell et al. describe a commonly non-physician CMO with approximately 40 hours of medical training and exploration missions with communication delays exceeding 20 minutes one way. NASA ExMC’s IMPACT tool evaluates medical capability trade spaces, including resource constraints. Vigil borrows the workflow goals—guided procedures, explicit inventory status, and a structured asynchronous packet—but is not a validated NASA CDSS, does not transmit telemetry, and does not execute IMPACT logic.',
     sources: ['src_eimo_cdss', 'src_exmc_hrp_48036', 'src_nasa_mars_owlt'],
   },
+  {
+    title: 'Empirical simulation calibration',
+    icon: Waves,
+    body: 'Sleep uses NASA ISS actigraphy group means: 6.41 h at the baseline assessment, 5.86 h 11 days before launch, and 6.09 h in flight (aggregate SD 0.67 h). These are period-level anchors; applying the in-flight SD to synthetic daily values is an explicit approximation. The cited NASA CIRCA results do not support a generic HR/BP shift, so the model has no blanket cardiovascular adaptation offset. Other crew baselines, variation, temporal correlation, missingness, and scenario effects remain labeled simulation assumptions; no individual NASA telemetry is reproduced.',
+    sources: ['src_nasa_sleep_actigraphy', 'src_nasa_circa'],
+  },
 ];
 
 export function ScientificGroundingPanel() {
@@ -35,7 +41,7 @@ export function ScientificGroundingPanel() {
         </p>
       </header>
 
-      <div className="grid gap-0 divide-y divide-line/70 lg:grid-cols-3 lg:divide-x lg:divide-y-0">
+      <div className="grid gap-0 divide-y divide-line/70 lg:grid-cols-4 lg:divide-x lg:divide-y-0">
         {GROUNDING.map(({ title, icon: Icon, body, sources }) => (
           <article key={title} className="p-4">
             <h3 className="flex items-center gap-2 text-[0.74rem] font-bold text-ink">

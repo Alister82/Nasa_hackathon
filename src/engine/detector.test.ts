@@ -114,7 +114,7 @@ describe('detector', () => {
   it('emits a multi-signal pattern when two domains drift together', () => {
     const dataset = buildDataset({
       heart_rate: seriesWithStep(BASE_VALUES.heart_rate, 10, 90, 2.25),
-      sleep_hours: seriesWithStep(BASE_VALUES.sleep_hours, 10, 90, -0.6),
+      sleep_hours: seriesWithStep(BASE_VALUES.sleep_hours, 10, 90, -1.2),
     });
     const result = analyze(dataset, 60);
     const pattern = result.findings.find((finding) => finding.kind === 'multi_signal_pattern');

@@ -6,8 +6,8 @@ import { SUPPLIES, DEFAULT_SUPPLIES } from './supplies';
 // G1 acceptance: exports match CONTRACTS.md; all 3 settings present, delays 0, 0.02, 12.
 
 describe('G1: sources', () => {
-  it('has 20 source entries', () => {
-    expect(Object.keys(SOURCES)).toHaveLength(20);
+  it('has 22 source entries', () => {
+    expect(Object.keys(SOURCES)).toHaveLength(22);
   });
 
   it('organizer sources have verified status and non-null URLs', () => {

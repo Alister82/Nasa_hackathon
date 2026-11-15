@@ -81,6 +81,18 @@ export const SOURCES: Record<string, SourceRef> = {
     url: 'https://science.nasa.gov/biological-physical/data/osdr/',
     status: 'verified',
   },
+  src_nasa_sleep_actigraphy: {
+    id: 'src_nasa_sleep_actigraphy',
+    title: 'NASA OCHMO Technical Brief OCHMO-TB-041: Sleep Accommodations (sleep-wake actigraphy during spaceflight)',
+    url: 'https://www.nasa.gov/wp-content/uploads/2023/12/ochmo-tb-041-sleep-accommodations.pdf',
+    status: 'verified',
+  },
+  src_nasa_circa: {
+    id: 'src_nasa_circa',
+    title: 'NASA ISS Technical Publication: 24-Hour Pattern of Blood Pressure and Heart Rate in Weightlessness (CIRCA)',
+    url: 'https://www.nasa.gov/wp-content/uploads/2022/03/iss_technical_publication_030116.pdf',
+    status: 'verified',
+  },
   src_osd_530: {
     id: 'src_osd_530',
     title: 'NASA OSDR OSD-530: JAXA Cell-Free Epigenome study',

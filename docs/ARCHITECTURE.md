@@ -126,7 +126,7 @@ Plausible entry ranges (validation of manual input): heart_rate 30–220; bp_sys
 | bp_dia | 74 | 5 | 3.0 | 0.2 | 40–130 |
 | body_temp | 36.6 | 0.15 | 0.15 | 0.3 | 34–41 |
 | glucose | 90 | 6 | 5.0 | 0.2 | 40–400 |
-| sleep_hours | 6.8 | 0.5 | 0.6 | 0.3 | 2–10 |
+| sleep_hours | 6.41 | 0.5 | 0.67 | 0.3 | 2–10 |
 | exercise_minutes | 120 | 10 | 15 | 0.2 | 0–240 |
 | mood | 3.8 | 0.3 | 0.4 | 0.4 | 1–5 |
 | stress | 2.2 | 0.3 | 0.4 | 0.4 | 1–5 |
@@ -134,15 +134,11 @@ Plausible entry ranges (validation of manual input): heart_rate 30–220; bp_sys
 
 Radiation (mSv/day, illustrative): preflight 0.007 with 10 percent relative noise. In mission: station 0.5, lunar_base 1.0, deep_space 1.8, each with 8 percent relative noise. A human must verify these against the CSA and NASA radiation sources before the project page quotes them.
 
-Adaptation offsets (illustrative), applied for mission days 1 to 14, decaying linearly: `offset(d) = max × max(0, (15 − d) / 14)` for d ≥ 1, zero after day 14.
+Sleep is the only empirical aggregate calibration in this table. NASA OCHMO-TB-041 reports ISS actigraphy group means of 6.41 h at the baseline assessment, 5.86 h 11 days prelaunch, and 6.09 h in flight (in-flight aggregate SD 0.67 h). The simulator uses these as period anchors (baseline before day −11, prelaunch days −11..0, in flight days 1..180); the group SD is an approximate daily-noise calibration, not an individual-level estimate. Other population/spread values remain explicit synthetic assumptions. NASA's CIRCA summary reports HR/BP were generally not greatly changed in flight, with day/night-specific exceptions; this daily model applies no blanket HR/BP adaptation offset.
 
-| Indicator | max offset |
+| Indicator | In-flight mean shift relative to baseline |
 |---|---|
-| heart_rate | +3 |
-| bp_sys | −4 |
-| bp_dia | −3 |
-| sleep_hours | −0.6 |
-| energy | −0.3 |
+| sleep_hours | −0.32 in flight relative to the 6.41 h baseline mean |
 | all others | 0 |
 
 ### 6.3 Randomness (exact)
@@ -172,7 +168,7 @@ For each indicator except radiation_dose, for each day `d` from `−29` to `180`
 
 1. `crewBase = popMean + N(0, betweenSD)` (draw once per crew and indicator, first draw of the stream).
 2. AR(1) noise: `n_d = φ·n_{d−1} + sqrt(1 − φ²)·withinSD·ε_d`, `n_start ~ N(0, withinSD²)`.
-3. `value = crewBase + phaseOffset(d) + n_d + effects(d)`.
+3. `value = crewBase + empirical sleep-period shift (sleep only) + n_d + effects(d)`.
 4. Clip to the table range, round to the indicator decimals.
 5. Missingness: each value independently set to `null` with probability 0.02 (stream `missing`). Radiation 0.01.
 

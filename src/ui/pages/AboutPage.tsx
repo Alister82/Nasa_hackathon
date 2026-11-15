@@ -138,8 +138,9 @@ export function AboutPage() {
         <div className="relative flex items-start gap-2.5">
           <Info className="mt-0.5 h-4 w-4 shrink-0 text-instrument" aria-hidden="true" />
           <p className="text-[0.76rem] font-medium leading-relaxed text-ink-2">
-            {DISCLAIMER_BANNER} Reference ranges, adaptation offsets, scenarios, and radiation
-            rates are illustrative and have not been verified for clinical use.
+            {DISCLAIMER_BANNER} Sleep period means use published NASA ISS group summaries as an
+            approximate calibration. Other crew distributions and scenario effects are synthetic
+            assumptions; no outputs are clinically validated.
           </p>
         </div>
       </section>

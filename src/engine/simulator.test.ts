@@ -70,7 +70,7 @@ describe('simulator', () => {
     expect(fraction).toBeLessThan(0.03);
   });
 
-  it('shows the early adaptation offset on heart rate over 50 seeds', () => {
+  it('does not invent a blanket in-flight heart-rate offset unsupported by the cited NASA study', () => {
     let sum = 0;
     for (let seed = 1; seed <= 50; seed++) {
       const dataset = generateScenario(normalConfig(seed));
@@ -79,7 +79,21 @@ describe('simulator', () => {
       sum += early - preflight;
     }
     const average = sum / 50;
-    expect(average).toBeGreaterThan(2);
-    expect(average).toBeLessThan(4);
+    expect(Math.abs(average)).toBeLessThan(1);
+  });
+
+  it('anchors sleep periods to the NASA ISS actigraphy group means', () => {
+    let baseline = 0;
+    let prelaunch = 0;
+    let inflight = 0;
+    for (let seed = 1; seed <= 50; seed++) {
+      const dataset = generateScenario(normalConfig(seed));
+      baseline += mean(values(dataset, 'sleep_hours', -29, -12));
+      prelaunch += mean(values(dataset, 'sleep_hours', -11, 0));
+      inflight += mean(values(dataset, 'sleep_hours', 1, 14));
+    }
+    expect(baseline / 50).toBeCloseTo(6.41, 0);
+    expect(prelaunch / 50).toBeCloseTo(5.86, 0);
+    expect(inflight / 50).toBeCloseTo(6.09, 0);
   });
 });
