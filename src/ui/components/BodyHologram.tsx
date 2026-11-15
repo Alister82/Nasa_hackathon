@@ -367,23 +367,33 @@ export function BodyHologram({
         scene.add(bodyGroup);
 
         if (realisticScene) {
+          const bodyRoot = realisticScene.getObjectByName('base_male_body');
+          let visibleBodyParts = 0;
           realisticScene.traverse((object) => {
             if (!(object instanceof THREE.Mesh)) return;
-            // Use the full anatomical base mesh; the separate high-poly entry
-            // is a small overlapping detail mesh and would z-fight at this scale.
-            object.visible = object.name === 'base_male_body';
-            if (object.visible) object.material = bodyMaterial;
+            // GLTFLoader wraps the base mesh's six material primitives in a
+            // named group, leaving the actual child meshes unnamed.
+            const belongsToBase = bodyRoot?.getObjectById(object.id) === object;
+            object.visible = bodyRoot ? belongsToBase : false;
+            if (object.visible) {
+              object.material = bodyMaterial;
+              visibleBodyParts += 1;
+            }
           });
-          realisticScene.updateMatrixWorld(true);
-          const bounds = new THREE.Box3().setFromObject(realisticScene);
-          const size = bounds.getSize(new THREE.Vector3());
-          const center = bounds.getCenter(new THREE.Vector3());
-          const scale = 3.0 / Math.max(size.y, 0.001);
-          fillUniforms.uBodyHeightScale.value = 1 / Math.max(size.y, 0.001);
-          realisticScene.scale.setScalar(scale);
-          realisticScene.position.set(-center.x * scale, 0.08 - center.y * scale, -center.z * scale);
-          realisticScene.updateMatrixWorld(true);
-          bodyGroup.add(realisticScene);
+          if (visibleBodyParts > 0) {
+            realisticScene.updateMatrixWorld(true);
+            const bounds = new THREE.Box3().setFromObject(realisticScene);
+            const size = bounds.getSize(new THREE.Vector3());
+            const center = bounds.getCenter(new THREE.Vector3());
+            const scale = 3.0 / Math.max(size.y, 0.001);
+            fillUniforms.uBodyHeightScale.value = 1 / Math.max(size.y, 0.001);
+            realisticScene.scale.setScalar(scale);
+            realisticScene.position.set(-center.x * scale, 0.08 - center.y * scale, -center.z * scale);
+            realisticScene.updateMatrixWorld(true);
+            bodyGroup.add(realisticScene);
+          } else {
+            realisticScene = null;
+          }
         }
 
         const geometries: THREE_NS.BufferGeometry[] = [];
