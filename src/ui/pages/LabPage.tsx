@@ -252,7 +252,7 @@ export function LabPage() {
         ) : (
           <div className="grid grid-cols-1 gap-3 2xl:grid-cols-2">
             {cards.map((card) => (
-              <AlertCardView key={card.id} card={card} sources={SOURCES} />
+              <AlertCardView key={card.id} card={card} sources={SOURCES} modalOnExpand />
             ))}
           </div>
         )}

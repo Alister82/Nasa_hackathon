@@ -1,4 +1,4 @@
-import React, { useId, useState } from 'react';
+import React, { useEffect, useId, useRef, useState } from 'react';
 import { createPortal } from 'react-dom';
 import {
   Activity,
@@ -26,6 +26,8 @@ export interface AlertCardViewProps {
   onLog?: (card: AlertCard) => void;
   defaultOpen?: boolean;
   detailMode?: boolean;
+  modalOnExpand?: boolean;
+  onClose?: () => void;
   telemetry?: {
     missionSetting: MissionSettingId;
     analysis: AnalysisResult;
@@ -54,8 +56,8 @@ function mean(values: number[]): number | null {
   return values.length ? values.reduce((sum, value) => sum + value, 0) / values.length : null;
 }
 
-export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, telemetry }: AlertCardViewProps) {
-  const isDefaultOpen = defaultOpen ?? (card.severity === 'review' || card.severity === 'urgent');
+export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, modalOnExpand, onClose, telemetry }: AlertCardViewProps) {
+  const isDefaultOpen = modalOnExpand ? false : defaultOpen ?? (card.severity === 'review' || card.severity === 'urgent');
   const [isOpen, setIsOpen] = useState(isDefaultOpen);
   const [packetOpen, setPacketOpen] = useState(false);
   const showDetails = detailMode || isOpen;
@@ -66,6 +68,8 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, t
   const panelId = `card-panel-${card.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
   const titleId = `card-title-${card.id.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
   const rawId = useId().replace(/:/g, '');
+  const modalRef = useRef<HTMLDivElement>(null);
+  const tileRef = useRef<HTMLButtonElement>(null);
   const setting = telemetry ? MISSION_SETTINGS[telemetry.missionSetting] : null;
   const supplyActions = card.recommendedActions.filter((action) => action.requiresSupply);
   const trajectoryRows = telemetry
@@ -85,6 +89,101 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, t
   const toggleEvidenceDays = (index: number) => {
     setExpandedEvidence((previous) => ({ ...previous, [index]: !previous[index] }));
   };
+
+  useEffect(() => {
+    if (!modalOnExpand || !isOpen) return;
+    const previousOverflow = document.body.style.overflow;
+    document.body.style.overflow = 'hidden';
+    modalRef.current?.focus();
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsOpen(false);
+        return;
+      }
+      if (event.key !== 'Tab' || !modalRef.current) return;
+      const focusable = modalRef.current.querySelectorAll<HTMLElement>(
+        'button:not([disabled]), a[href], input:not([disabled]), select:not([disabled]), textarea:not([disabled]), [tabindex]:not([tabindex="-1"])',
+      );
+      if (!focusable.length) return;
+      const first = focusable[0]!;
+      const last = focusable[focusable.length - 1]!;
+      if (event.shiftKey && document.activeElement === first) {
+        event.preventDefault();
+        last.focus();
+      } else if (!event.shiftKey && document.activeElement === last) {
+        event.preventDefault();
+        first.focus();
+      }
+    };
+    document.addEventListener('keydown', handleKeyDown);
+    return () => {
+      document.body.style.overflow = previousOverflow;
+      document.removeEventListener('keydown', handleKeyDown);
+      tileRef.current?.focus();
+    };
+  }, [modalOnExpand, isOpen]);
+
+  if (modalOnExpand) {
+    return (
+      <>
+        <button
+          ref={tileRef}
+          type="button"
+          onClick={() => setIsOpen(true)}
+          className={cn(
+            'group relative flex min-h-[170px] w-full flex-col overflow-hidden rounded-[20px] border bg-white/80 p-4 text-left shadow-card backdrop-blur-md transition-all duration-300 hover:-translate-y-1 hover:bg-white/95 hover:shadow-float focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-instrument focus-visible:ring-offset-2',
+            card.severity === 'urgent' ? 'border-status-urgent/35' : card.severity === 'review' ? 'border-status-review/30' : 'border-line',
+          )}
+          aria-haspopup="dialog"
+          aria-expanded={isOpen}
+          aria-label={`Open alert details: ${card.title}`}
+        >
+          <span className={cn('absolute inset-y-0 left-0 w-1', style.accent)} aria-hidden="true" />
+          <span className={cn('pointer-events-none absolute -right-12 -top-14 h-36 w-36 rounded-full opacity-[0.12] blur-2xl transition-opacity group-hover:opacity-25', style.accent)} aria-hidden="true" />
+          <span className="relative flex w-full items-center justify-between gap-2 pl-1">
+            <span className="flex min-w-0 flex-wrap items-center gap-2">
+              <SeverityMark severity={card.severity} />
+              <span className={cn('chip', style.soft, style.text, 'capitalize')}>{style.label}</span>
+              <span className="text-[0.62rem] font-semibold text-ink-faint">Day {card.day}</span>
+            </span>
+            <ChevronDown className="h-4 w-4 shrink-0 -rotate-90 text-ink-faint transition-transform duration-300 group-hover:translate-x-1 group-hover:text-instrument" aria-hidden="true" />
+          </span>
+          <span className="relative mt-3 pl-1 font-display text-[0.94rem] font-bold leading-snug text-ink">{card.title}</span>
+          <span className="relative mt-1 line-clamp-2 pl-1 text-[0.72rem] leading-relaxed text-ink-soft">{card.observation}</span>
+          <span className="relative mt-auto flex flex-wrap gap-x-1 pl-1 pt-3 text-[0.6rem] font-medium capitalize text-ink-faint">
+            {card.domains.map((domain, index) => <React.Fragment key={domain}>{index > 0 && <span>·</span>}{domain.replace(/_/g, ' ')}</React.Fragment>)}
+            <span className="ml-auto font-semibold text-instrument">Open details</span>
+          </span>
+        </button>
+        {isOpen && createPortal(
+          <div
+            className="attention-overlay fixed inset-0 z-[100] flex items-center justify-center bg-[#06152b]/60 p-3 backdrop-blur-md sm:p-6"
+            onMouseDown={(event) => { if (event.target === event.currentTarget) setIsOpen(false); }}
+          >
+            <div
+              ref={modalRef}
+              role="dialog"
+              aria-modal="true"
+              aria-label={`Alert details: ${card.title}`}
+              tabIndex={-1}
+              className="attention-dialog max-h-[92dvh] w-[min(820px,100%)] overflow-y-auto rounded-[26px] border border-white/60 bg-[linear-gradient(155deg,rgba(255,255,255,0.93),rgba(232,242,255,0.86))] shadow-[0_40px_120px_-30px_rgba(3,15,35,0.72)] backdrop-blur-2xl"
+            >
+              <AlertCardView
+                card={card}
+                sources={sources}
+                onLog={onLog}
+                telemetry={telemetry}
+                detailMode
+                defaultOpen
+                onClose={() => setIsOpen(false)}
+              />
+            </div>
+          </div>,
+          document.body,
+        )}
+      </>
+    );
+  }
 
   return (
     <>
@@ -137,6 +236,11 @@ export function AlertCardView({ card, sources, onLog, defaultOpen, detailMode, t
           >
             {isOpen ? 'Collapse' : 'Show details'}
             <ChevronDown className={cn('h-3.5 w-3.5 transition-transform', isOpen && 'rotate-180')} aria-hidden="true" />
+          </button>
+        )}
+        {onClose && (
+          <button type="button" onClick={onClose} className="icon-btn shrink-0" aria-label="Close alert details">
+            <X className="h-4 w-4" aria-hidden="true" />
           </button>
         )}
       </div>
