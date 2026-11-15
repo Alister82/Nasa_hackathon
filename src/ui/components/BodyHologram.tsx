@@ -171,10 +171,11 @@ function HologramFallback({
     <div className="flex h-full w-full items-center justify-center">
       <svg viewBox="0 0 220 380" className="h-full max-h-[360px] w-auto" aria-hidden="false">
         <defs>
-          <linearGradient id="body-fallback-fill" x1="0" y1="0" x2="1" y2="1">
-            <stop offset="0%" stopColor={risk.rimCss} stopOpacity="0.56" />
-            <stop offset="55%" stopColor={risk.baseCss} stopOpacity="0.34" />
-            <stop offset="100%" stopColor={risk.baseCss} stopOpacity="0.2" />
+          <linearGradient id="body-fallback-fill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stopColor="#9bd9ff" stopOpacity="0.5" />
+            <stop offset={`${Math.max(0, (1 - risk.fill) * 100 - 1)}%`} stopColor="#3b82f6" stopOpacity="0.34" />
+            <stop offset={`${(1 - risk.fill) * 100}%`} stopColor="#ff2020" stopOpacity="0.88" />
+            <stop offset="100%" stopColor="#dc2626" stopOpacity="0.62" />
           </linearGradient>
           <filter id="body-fallback-glow">
             <feGaussianBlur stdDeviation="3" result="blur" />
@@ -185,7 +186,7 @@ function HologramFallback({
           </filter>
         </defs>
         <ellipse cx="110" cy="350" rx="64" ry="12" fill={risk.baseCss} opacity="0.16" />
-        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke={risk.rimCss} strokeWidth="1.1">
+        <g filter="url(#body-fallback-glow)" fill="url(#body-fallback-fill)" stroke="#7dd3fc" strokeWidth="1.1">
           {region('behavioral', <ellipse cx="110" cy="54" rx="24" ry="28" />, { x: 110, y: 54 })}
           {region('cardiovascular', <path d="M88 88c0-8 8-14 22-14s22 6 22 14l-4 38c-1 7-9 11-18 11s-17-4-18-11z" />, { x: 110, y: 102 })}
           {region('metabolic_general', <path d="M91 130h38l-3 48c-1 8-7 12-16 12s-15-4-16-12z" />, { x: 110, y: 152 })}
@@ -276,25 +277,25 @@ export function BodyHologram({
         camera.lookAt(0, 0.1, 0);
 
         /* Lights -------------------------------------------------- */
-        scene.add(new THREE.AmbientLight(risk.ambient, 0.72));
-        const key = new THREE.DirectionalLight(risk.key, 2.2);
+        scene.add(new THREE.AmbientLight(0x86b4ff, 0.72));
+        const key = new THREE.DirectionalLight(0xdcecff, 2.2);
         key.position.set(2.4, 3.4, 4);
         scene.add(key);
-        const rim = new THREE.DirectionalLight(risk.rim, 4.2);
+        const rim = new THREE.DirectionalLight(0x5b9dff, 4.2);
         rim.position.set(-3.4, 1.4, -2.4);
         scene.add(rim);
-        const warm = new THREE.PointLight(risk.warm, 5, 7);
+        const warm = new THREE.PointLight(0x8ad4ff, 5, 7);
         warm.position.set(0.5, 0.8, 2.2);
         scene.add(warm);
-        const under = new THREE.PointLight(risk.under, 4, 6);
+        const under = new THREE.PointLight(0x2a6fe0, 4, 6);
         under.position.set(0, -1.4, 1.2);
         scene.add(under);
 
         /* Materials ----------------------------------------------- */
         const bodyMaterial = new THREE.MeshPhysicalMaterial({
-          color: risk.base,
-          emissive: risk.emissive,
-          emissiveIntensity: 0.62,
+          color: 0x2563a8,
+          emissive: 0x08284d,
+          emissiveIntensity: 0.48,
           roughness: 0.3,
           metalness: 0.2,
           clearcoat: 0.8,
@@ -318,7 +319,7 @@ export function BodyHologram({
             '#include <common>\nuniform float uBodyHeightMin;\nuniform float uBodyHeightInvRange;\nvarying float vBodyHeight;',
           ).replace(
             '#include <project_vertex>',
-            'vBodyHeight = (transformed.y - uBodyHeightMin) * uBodyHeightInvRange;\n#include <project_vertex>',
+            'vBodyHeight = (position.y - uBodyHeightMin) * uBodyHeightInvRange;\n#include <project_vertex>',
           );
           shader.fragmentShader = shader.fragmentShader.replace(
             '#include <common>',
@@ -331,6 +332,10 @@ export function BodyHologram({
              float waterEdge = 1.0 - smoothstep(0.0, 0.025, abs(vBodyHeight - waterline));
              diffuseColor.rgb = mix(diffuseColor.rgb, uRiskColor, submerged * 0.92);
              diffuseColor.rgb += uRiskColor * waterEdge * 0.85;`,
+          );
+          shader.fragmentShader = shader.fragmentShader.replace(
+            '#include <emissivemap_fragment>',
+            '#include <emissivemap_fragment>\ntotalEmissiveRadiance = mix(totalEmissiveRadiance, uRiskColor * 0.32, submerged);',
           );
         };
 
@@ -612,7 +617,7 @@ export function BodyHologram({
         starGeometry.setAttribute('position', new THREE.BufferAttribute(starPositions, 3));
         geometries.push(starGeometry);
         const starMaterial = new THREE.PointsMaterial({
-          color: risk.star,
+          color: 0xbfdbfe,
           size: 0.018,
           transparent: true,
           opacity: 1,
@@ -664,7 +669,7 @@ export function BodyHologram({
         particleGeometry.setAttribute('position', new THREE.BufferAttribute(particlePositions, 3));
         geometries.push(particleGeometry);
         const particleMaterial = new THREE.PointsMaterial({
-          color: risk.star,
+          color: 0xbfdbfe,
           size: 0.018,
           transparent: true,
           opacity: 0.55,
