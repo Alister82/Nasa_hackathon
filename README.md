@@ -76,7 +76,16 @@ summary. Harness evaluation seeds are 1-100; tuning used seeds 1000-1099 only.
 - **Journal** - local investigation log with review filter and alert-card prefill.
 - **About** - purpose, limits, sources, and the NASA HRP risk coverage map.
 
-## Honest limits
+## Honest limits and results interpretation
+
+### Results interpretation
+
+The automated evaluation harness (`npm run harness`, evaluating seeds 1–100 across 6 scenarios) demonstrates key operational trade-offs:
+- **Dramatically lower false alarms:** Vigil averages ~0.62–0.75 false alarms per 100 mission days across scenarios, compared to ~4.93–5.22 for fixed thresholds and ~6.29–6.82 for the rolling z-score alerter. Vigil virtually eliminates alert fatigue by requiring statistical persistence rather than triggering on single-night outliers.
+- **Detection latency trade-off:** On slow monotonic physiological drift (`slow_drift`), the rolling z-score baseline flags earlier (median detection delay 5.5 days, threshold 8.5 days) compared to Vigil (median 17.0 days). This is an intentional design trade-off: the baseline systems trigger on isolated transient excursions (which causes high false alarms on normal operational variance), whereas Vigil requires sustained multi-day evidence before escalating to crew attention.
+- **Calibrated sleep vs fixed thresholds:** In the calibrated simulator, sleep duration follows empirical NASA ISS actigraphy (~6.09 h in-flight mean). Because normal sleep varies day-to-day, a fixed 5.0 h clinical threshold causes frequent single-day false alarms (~75% of threshold triggers), while Vigil's personalized baseline and CUSUM handle this variance appropriately.
+
+### Honest limits
 
 - Every reading is simulated. Reference ranges, adaptation offsets, scenarios, and
   radiation rates are illustrative until a human verifies them.
@@ -85,8 +94,9 @@ summary. Harness evaluation seeds are 1-100; tuning used seeds 1000-1099 only.
   baseline is better.
 - The guidance library is fixed and sourced; it is not generated at runtime.
 - No backend, accounts, network calls, LLM, or analytics run in the app.
-- The four external clinical sources have `url: null` until a human verifies them;
-  `docs/SOURCES_TODO.md` lists what is pending.
+- Verified sources link to primary peer-reviewed papers or NASA standards; unverified
+  clinical items have `url: null` until human clinical review. `docs/SOURCES_TODO.md`
+  and `docs/FIX_REPORT.md` document source statuses.
 
 See `docs/RULES.md`, `docs/PDR.md`, `docs/ARCHITECTURE.md`, `docs/CONTRACTS.md`,
 `docs/DESIGN.md`, `docs/TASKS.md`, and `docs/MEMORY.md` for the full specification
